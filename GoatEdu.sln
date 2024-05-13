@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoatEdu.API", "GoatEdu.API\GoatEdu.API.csproj", "{BDC92A60-37F2-4EC3-A859-F66EA7398C71}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoatEdu.Core", "GoatEdu.Core\GoatEdu.Core.csproj", "{0D0E9630-37F7-4904-BAE6-85F186942A71}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{0E73FDD7-3422-42A5-94B8-7AA0F2CAD509}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{BDC92A60-37F2-4EC3-A859-F66EA7398C71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDC92A60-37F2-4EC3-A859-F66EA7398C71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDC92A60-37F2-4EC3-A859-F66EA7398C71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D0E9630-37F7-4904-BAE6-85F186942A71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D0E9630-37F7-4904-BAE6-85F186942A71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D0E9630-37F7-4904-BAE6-85F186942A71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D0E9630-37F7-4904-BAE6-85F186942A71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E73FDD7-3422-42A5-94B8-7AA0F2CAD509}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E73FDD7-3422-42A5-94B8-7AA0F2CAD509}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E73FDD7-3422-42A5-94B8-7AA0F2CAD509}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E73FDD7-3422-42A5-94B8-7AA0F2CAD509}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
