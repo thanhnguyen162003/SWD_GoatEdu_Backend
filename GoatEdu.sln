@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoatEdu.API", "GoatEdu.API\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoatEdu.Core", "GoatEdu.Core\GoatEdu.Core.csproj", "{0D0E9630-37F7-4904-BAE6-85F186942A71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{0E73FDD7-3422-42A5-94B8-7AA0F2CAD509}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoatEdu.Infrastructure", "GoatEdu.Infrastructure\GoatEdu.Infrastructure.csproj", "{0E73FDD7-3422-42A5-94B8-7AA0F2CAD509}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
