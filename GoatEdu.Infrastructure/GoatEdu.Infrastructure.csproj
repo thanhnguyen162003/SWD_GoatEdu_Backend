@@ -10,7 +10,6 @@
     <ItemGroup>
       <Folder Include="Data\" />
       <Folder Include="Repositories\" />
-      <Folder Include="Ultils\" />
     </ItemGroup>
 
     <ItemGroup>
