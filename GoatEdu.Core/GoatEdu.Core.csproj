@@ -5,24 +5,20 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\GoatEdu.Infrastructure\GoatEdu.Infrastructure.csproj" />
-    </ItemGroup>
+    
 
     <ItemGroup>
       <Folder Include="CustomEntities\" />
-      <Folder Include="DTOs\" />
-      <Folder Include="Enumerations\" />
       <Folder Include="Exceptions\" />
-      <Folder Include="Interfaces\" />
       <Folder Include="Mappings\" />
       <Folder Include="QueriesFilter\" />
-      <Folder Include="Services\" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="13.0.1" />
+      <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.29" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.29" />
     </ItemGroup>
 
 </Project>

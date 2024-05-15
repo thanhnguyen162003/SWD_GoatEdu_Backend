@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using GoatEdu.Core;
 using Infrastructure.Models;
 
 namespace Infrastructure.Data
@@ -223,17 +224,7 @@ namespace Infrastructure.Data
                     .HasForeignKey(d => d.TheoryId)
                     .HasConstraintName("theory_flashcard_content_theory_id_fkey");
             });
-
-            modelBuilder.Entity<Transaction>(entity =>
-            {
-                entity.Property(e => e.TransactionId).HasDefaultValueSql("uuid_generate_v4()");
-
-                entity.HasOne(d => d.Subscription)
-                    .WithMany(p => p.Transactions)
-                    .HasForeignKey(d => d.SubscriptionId)
-                    .HasConstraintName("transactions_subscription_id_fkey");
-            });
-
+            
             modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(e => e.UserId).HasDefaultValueSql("uuid_generate_v4()");
@@ -266,15 +257,30 @@ namespace Infrastructure.Data
             {
                 entity.Property(e => e.WalletId).HasDefaultValueSql("uuid_generate_v4()");
 
-                entity.HasOne(d => d.Transaction)
-                    .WithMany(p => p.Wallets)
-                    .HasForeignKey(d => d.TransactionId)
-                    .HasConstraintName("wallets_transaction_id_fkey");
-
                 entity.HasOne(d => d.User)
-                    .WithMany(p => p.Wallets)
-                    .HasForeignKey(d => d.UserId)
+                    .WithOne(p => p.Wallet)
+                    .HasForeignKey<Wallet>(d => d.UserId) // Define the one-to-one relationship
                     .HasConstraintName("wallets_user_id_fkey");
+
+                entity.HasMany(d => d.Transactions) // Define one-to-many relationship
+                    .WithOne(p => p.Wallet)
+                    .HasForeignKey(p => p.WalletId)
+                    .HasConstraintName("transactions_wallet_id_fkey");
+            });
+            modelBuilder.Entity<Transaction>(entity =>
+            {
+                entity.Property(e => e.TransactionId).HasDefaultValueSql("uuid_generate_v4()");
+
+                //transtraction ddeo noi voi user ?
+                // entity.HasOne(d => d.User)
+                //     .WithMany(p => p.Transactions)
+                //     .HasForeignKey(d => d.UserId)
+                //     .HasConstraintName("transactions_user_id_fkey");
+
+                entity.HasOne(d => d.Wallet)
+                    .WithMany(p => p.Transactions)
+                    .HasForeignKey(d => d.WalletId)
+                    .HasConstraintName("transactions_wallet_id_fkey");
             });
 
             OnModelCreatingPartial(modelBuilder);
