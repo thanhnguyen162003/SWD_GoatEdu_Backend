@@ -8,4 +8,5 @@ public interface IUserRepository : IRepository<User>
 {
     IEnumerable<User> GetUserByName(string name);
     Task<User> GetUserByUsername(string username);
+    Task<User> AddUser(User user);
 }

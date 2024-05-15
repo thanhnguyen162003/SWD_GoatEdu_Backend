@@ -11,12 +11,13 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly JWTGenerator _tokenGenerator;
-   
-    public UserService(IUserRepository userRepository,JWTGenerator tokenGenerator)
+
+    public UserService(IUserRepository userRepository, JWTGenerator tokenGenerator)
     {
         _userRepository = userRepository;
         _tokenGenerator = tokenGenerator;
     }
+
     public async Task<User> GetUserByUsername(string username)
     {
         return await _userRepository.GetUserByUsername(username);
@@ -29,29 +30,55 @@ public class UserService : IUserService
 
     public async Task<ResponseDto> GetLoginByCredentials(LoginDtoRequest login)
     {
-        
         var user = await _userRepository.GetUserByUsername(login.Username);
-        if(user == null)
+        if (user == null)
         {
             return new ResponseDto(HttpStatusCode.NotFound, "UserName or Email not existed!");
         }
+
         if (!BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
         {
             return new ResponseDto(HttpStatusCode.BadRequest, "Wrong password!");
         }
+
         if (user.IsDeleted == true)
         {
             return new ResponseDto(HttpStatusCode.Forbidden, "Your account is suspense!");
         }
-        var token =  _tokenGenerator.GenerateToken(login);
-        return new ResponseDto(HttpStatusCode.OK, "Login successfully!", token );
-        
+
+        var token = _tokenGenerator.GenerateToken(login);
+        return new ResponseDto(HttpStatusCode.OK, "Login successfully!", token);
     }
 
-    public Task<ResponseDto> Register(ResponseDto registerUser)
+    public async Task<ResponseDto> Register(RegisterDto registerUser)
     {
-        throw new NotImplementedException();
-    }
+        //check email exist???
+        var isUserExits = await _userRepository.GetUserByUsername(registerUser.Username);
+        if (isUserExits != null)
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "Username has been taken!");
+        }
 
- 
+        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerUser.Password);
+        User user = new User()
+        {
+            Username = registerUser.Username,
+            Password = hashedPassword,
+            RoleId = registerUser.RoleId,
+            PhoneNumber = null,
+            Email = registerUser.Email,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now,
+            IsDeleted = false
+        };
+        var result = await _userRepository.AddUser(user);
+        //send confirm email here!!!
+        
+        if (result == null)
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "Somethings has error!");
+        }
+
+        return new ResponseDto(HttpStatusCode.OK, "Register Successful, please check your email!");
+    }
 }

@@ -14,8 +14,8 @@ public class RegisterDto
     [Required(ErrorMessage = "Password is required")]
     public string? Password { get; set; }
     
-    [Required(ErrorMessage = "Phone Number is required")]
-    public string? PhoneNumber { get; set; }
+    // [Required(ErrorMessage = "Phone Number is required")]
+    // public string? PhoneNumber { get; set; }
     
     [Required(ErrorMessage = "Role is required")]
     public Guid? RoleId { get; set; }

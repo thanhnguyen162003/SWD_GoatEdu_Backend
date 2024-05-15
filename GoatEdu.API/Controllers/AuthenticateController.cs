@@ -30,8 +30,8 @@ public class AuthenticateController : ControllerBase
 
     [HttpPost]
     [Route("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterDto model)
+    public async Task<ResponseDto> Register([FromBody] RegisterDto model)
     {
-        return null;
+        return await _userService.Register(model);
     }
 }

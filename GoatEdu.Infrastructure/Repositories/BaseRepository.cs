@@ -14,6 +14,12 @@ public class BaseRepository<T> : IRepository<T> where T : BaseEntity
         _context = context;
         _entities = context.Set<T>();
     }
+
+    public T GetById(Guid? id)
+    {
+        return _entities.Find(id);
+    }
+
     public void Add(T entity)
     {
         entity.IsDeleted = false;
@@ -24,12 +30,6 @@ public class BaseRepository<T> : IRepository<T> where T : BaseEntity
     {
         return _entities.Where(x => x.IsDeleted == false).AsEnumerable().ToList();
     }
-
-    public T GetById(int? id)
-    {
-        return _entities.Find(id);
-    }
-
     public void Update(T entity)
     {
         _entities.Update(entity);
