@@ -4,5 +4,5 @@ namespace GoatEdu.Core.Interfaces.Security;
 
 public interface JWTGenerator
 {
-    string? GenerateToken(LoginDtoRequest user);
+    string GenerateToken(LoginDtoRequest user);
 }

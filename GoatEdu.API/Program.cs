@@ -1,5 +1,7 @@
 using System.Text;
+using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
+using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.Security;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using GoatEdu.Core.Services;
@@ -19,6 +21,10 @@ builder.Services.AddDbContext<GoatEduContext>(options =>
 builder.Services.AddCors();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+
+
 builder.Services.AddScoped<JWTGenerator, JWTConfig>();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
@@ -30,21 +36,6 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 });
-
-// Adding Jwt Bearer
-    // .AddJwtBearer(options =>
-    // {
-    //     options.SaveToken = true;
-    //     options.RequireHttpsMetadata = false;
-    //     options.TokenValidationParameters = new TokenValidationParameters()
-    //     {
-    //         ValidateIssuer = true,
-    //         ValidateAudience = true,
-    //         ValidAudience = configuration["JWT:ValidAudience"],
-    //         ValidIssuer = configuration["JWT:ValidIssuer"],
-    //         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Securitykey"]))
-    //     };
-    // });
 
     builder.Services.AddAuthentication(opt =>
     {

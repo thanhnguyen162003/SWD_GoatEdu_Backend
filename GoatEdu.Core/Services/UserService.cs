@@ -31,6 +31,7 @@ public class UserService : IUserService
     public async Task<ResponseDto> GetLoginByCredentials(LoginDtoRequest login)
     {
         var user = await _userRepository.GetUserByUsername(login.Username);
+        // var emailUser = await _userRepository.GetUserByEmail(login.Username);
         if (user == null)
         {
             return new ResponseDto(HttpStatusCode.NotFound, "UserName or Email not existed!");

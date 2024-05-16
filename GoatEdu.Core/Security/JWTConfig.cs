@@ -24,28 +24,29 @@ public class JWTConfig : JWTGenerator
         _userRepository = userRepository;
     }
 
-    public string? GenerateToken(LoginDtoRequest userDTO)
+    public string GenerateToken(LoginDtoRequest userDTO)
     {
         var user = _userRepository.GetUserByUsername(userDTO.Username);
         if (user == null)
         {
             return "Error! Unauthorized.";
         }
-        var tokenhandler = new JwtSecurityTokenHandler();
-        var tokenkey = Encoding.UTF8.GetBytes(_jwtSetting.SecurityKey);
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var tokenKey = Encoding.UTF8.GetBytes(_jwtSetting.SecurityKey);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Name, userDTO.Username),
+                new Claim("UserId", user.Result.UserId.ToString())
                 
             }),
             Expires = DateTime.UtcNow.AddDays(7),
             Issuer = _jwtSetting.Issuer,
             Audience = _jwtSetting.Audience,
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenkey), SecurityAlgorithms.HmacSha256)
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256)
         };
-        var token = tokenhandler.CreateToken(tokenDescriptor);
-        return tokenhandler.WriteToken(token);
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
     }
 }

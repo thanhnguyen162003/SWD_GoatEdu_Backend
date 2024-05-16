@@ -26,7 +26,9 @@ public class UserRepository : BaseRepository<User>, IUserRepository
     
     public async Task<User> GetUserByUsername(string username)
     {
-        return await _entities.Where(x => x.Username == username && x.IsDeleted == false).FirstOrDefaultAsync();
+        return await _entities.Where(
+            x => x.Username == username && x.IsDeleted == false || x.Email == username && x.IsDeleted == false
+            ).FirstOrDefaultAsync();
     }
     
     public async Task<User> AddUser(User user)
