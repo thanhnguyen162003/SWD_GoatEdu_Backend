@@ -1,11 +1,6 @@
-using System.Data;
-using System.Net;
-using GoatEdu.Core.DTOs;
-using GoatEdu.Core.Interfaces.Security;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using Infrastructure.Data;
 using Infrastructure.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
@@ -18,10 +13,10 @@ public class UserRepository : BaseRepository<User>, IUserRepository
     {
         _context = context;
     }
-
-    public IEnumerable<User> GetUserByName(string name)
+    
+    public async Task<User> GetUserByUserId(Guid userId)
     {
-        throw new NotImplementedException();
+        return await _entities.Where(x => x.UserId == userId && x.IsDeleted == false).FirstOrDefaultAsync();
     }
     
     public async Task<User> GetUserByUsername(string username)

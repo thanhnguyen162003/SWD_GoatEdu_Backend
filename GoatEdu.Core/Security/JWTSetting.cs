@@ -25,8 +25,8 @@ public class JWTSetting
             .Build();
 
         this.SecurityKey = config["JWTSetting:SecurityKey"];
-        this.Issuer = config["JWTSetting:Issuer"];
-        this.Audience = config["JWTSetting:Audience"];
+        this.Issuer = config["JWTSetting:ValidIssuer"];
+        this.Audience = config["JWTSetting:ValidAudience"];
         this.TokenExpiry = Convert.ToDouble(config["JWTSetting:TokenExpiry"]);
 
     }

@@ -23,11 +23,6 @@ public class UserService : IUserService
         return await _userRepository.GetUserByUsername(username);
     }
 
-    public IEnumerable<User> GetUserByName(string name)
-    {
-        return _userRepository.GetUserByName(name);
-    }
-
     public async Task<ResponseDto> GetLoginByCredentials(LoginDtoRequest login)
     {
         var user = await _userRepository.GetUserByUsername(login.Username);

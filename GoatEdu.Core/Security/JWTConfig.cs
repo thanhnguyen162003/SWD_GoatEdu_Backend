@@ -38,15 +38,17 @@ public class JWTConfig : JWTGenerator
             Subject = new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Name, userDTO.Username),
-                new Claim("UserId", user.Result.UserId.ToString())
+                new Claim("UserId", user.Result.UserId.ToString()),
+                new Claim("RoleId",user.Result.RoleId.ToString())
                 
             }),
             Expires = DateTime.UtcNow.AddDays(7),
             Issuer = _jwtSetting.Issuer,
             Audience = _jwtSetting.Audience,
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256)
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
+    
 }

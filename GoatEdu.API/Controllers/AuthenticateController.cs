@@ -1,12 +1,7 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using GoatEdu.API.Responses;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.Interfaces.UserInterfaces;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace GoatEdu.API.Controllers;
 
@@ -26,6 +21,16 @@ public class AuthenticateController : ControllerBase
     public async Task<ResponseDto> Login([FromBody] LoginDtoRequest model)
     {
         return await _userService.GetLoginByCredentials(model);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public ActionResult<string> GetUserCurrent()
+    {
+        var username = User?.Identity?.Name;
+        var roleId = User?.FindFirst("RoleId")?.Value;
+        var userId = User?.FindFirst("UserId")?.Value;
+        return Ok(new {username, userId, roleId});
     }
 
     [HttpPost]
