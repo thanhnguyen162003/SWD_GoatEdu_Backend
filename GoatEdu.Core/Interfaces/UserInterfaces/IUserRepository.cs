@@ -1,6 +1,7 @@
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
-using Infrastructure.Models;
+using Infrastructure;
+
 
 namespace GoatEdu.Core.Interfaces.UserInterfaces;
 

@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Models
+namespace Infrastructure
 {
-    [Table("subscriptions")]
+    [Table("Subscription")]
     public partial class Subscription : BaseEntity
     {
         public Subscription()
@@ -15,17 +15,17 @@ namespace Infrastructure.Models
         }
 
         [Key]
-        [Column("subscription_id")]
-        public Guid SubscriptionId { get; set; }
-        [Column("subscription_name", TypeName = "character varying")]
+        [Column("id")]
+        public Guid Id { get; set; }
+        [Column("subscriptionName", TypeName = "character varying")]
         public string? SubscriptionName { get; set; }
-        [Column("subscription_body", TypeName = "character varying")]
+        [Column("subscriptionBody", TypeName = "character varying")]
         public string? SubscriptionBody { get; set; }
         [Column("price")]
         public double? Price { get; set; }
         [Column("duration")]
         public TimeSpan? Duration { get; set; }
-        [Column("created_at", TypeName = "timestamp without time zone")]
+        [Column("createdAt", TypeName = "timestamp without time zone")]
         public DateTime? CreatedAt { get; set; }
         [InverseProperty("Subscription")]
         public virtual ICollection<Transaction> Transactions { get; set; }

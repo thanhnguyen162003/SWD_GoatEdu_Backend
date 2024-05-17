@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Models
+namespace Infrastructure
 {
-    [Table("theory_flashcard_content")]
-    public partial class TheoryFlashcardContent : BaseEntity
+    [Table("TheoryFlashCardContent")]
+    public partial class TheoryFlashCardContent : BaseEntity
     {
         [Key]
         [Column("id")]
@@ -16,16 +16,16 @@ namespace Infrastructure.Models
         public string? Question { get; set; }
         [Column("answer", TypeName = "character varying")]
         public string? Answer { get; set; }
-        [Column("theory_id")]
+        [Column("theoryId")]
         public Guid? TheoryId { get; set; }
         [Column("status", TypeName = "character varying")]
         public string? Status { get; set; }
-        [Column("created_at", TypeName = "timestamp without time zone")]
+        [Column("createdAt", TypeName = "timestamp without time zone")]
         public DateTime? CreatedAt { get; set; }
-        [Column("updated_at", TypeName = "timestamp without time zone")]
+        [Column("updatedAt", TypeName = "timestamp without time zone")]
         public DateTime? UpdatedAt { get; set; }
         [ForeignKey("TheoryId")]
-        [InverseProperty("TheoryFlashcardContents")]
+        [InverseProperty("TheoryFlashCardContents")]
         public virtual Theory? Theory { get; set; }
     }
 }

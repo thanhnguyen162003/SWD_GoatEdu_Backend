@@ -4,37 +4,37 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Models
+namespace Infrastructure
 {
-    [Table("theories")]
+    [Table("Theory")]
     public partial class Theory : BaseEntity
     {
         public Theory()
         {
-            TheoryFlashcardContents = new HashSet<TheoryFlashcardContent>();
+            TheoryFlashCardContents = new HashSet<TheoryFlashCardContent>();
         }
 
         [Key]
-        [Column("theory_id")]
-        public Guid TheoryId { get; set; }
-        [Column("theory_name", TypeName = "character varying")]
+        [Column("id")]
+        public Guid Id { get; set; }
+        [Column("theoryName", TypeName = "character varying")]
         public string? TheoryName { get; set; }
         [Column("file", TypeName = "character varying")]
         public string? File { get; set; }
         [Column("image", TypeName = "character varying")]
         public string? Image { get; set; }
-        [Column("theory_content", TypeName = "character varying")]
+        [Column("theoryContent", TypeName = "character varying")]
         public string? TheoryContent { get; set; }
-        [Column("lesson_id")]
+        [Column("lessonId")]
         public Guid? LessonId { get; set; }
-        [Column("created_at", TypeName = "timestamp without time zone")]
+        [Column("createdAt", TypeName = "timestamp without time zone")]
         public DateTime? CreatedAt { get; set; }
-        [Column("updated_at", TypeName = "timestamp without time zone")]
+        [Column("updatedAt", TypeName = "timestamp without time zone")]
         public DateTime? UpdatedAt { get; set; }
         [ForeignKey("LessonId")]
         [InverseProperty("Theories")]
         public virtual Lesson? Lesson { get; set; }
         [InverseProperty("Theory")]
-        public virtual ICollection<TheoryFlashcardContent> TheoryFlashcardContents { get; set; }
+        public virtual ICollection<TheoryFlashCardContent> TheoryFlashCardContents { get; set; }
     }
 }

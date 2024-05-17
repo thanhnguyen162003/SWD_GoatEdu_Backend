@@ -1,6 +1,5 @@
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using Infrastructure.Data;
-using Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
@@ -16,7 +15,7 @@ public class UserRepository : BaseRepository<User>, IUserRepository
     
     public async Task<User> GetUserByUserId(Guid userId)
     {
-        return await _entities.Where(x => x.UserId == userId && x.IsDeleted == false).FirstOrDefaultAsync();
+        return await _entities.Where(x => x.Id == userId && x.IsDeleted == false).FirstOrDefaultAsync();
     }
     
     public async Task<User> GetUserByUsername(string username)

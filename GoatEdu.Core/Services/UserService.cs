@@ -3,7 +3,7 @@ using System.Net;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.Interfaces.Security;
 using GoatEdu.Core.Interfaces.UserInterfaces;
-using Infrastructure.Models;
+using Infrastructure;
 
 namespace GoatEdu.Core.Services;
 

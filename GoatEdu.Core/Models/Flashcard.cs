@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Models
+namespace Infrastructure
 {
-    [Table("flashcards")]
+    [Table("Flashcard")]
     public partial class Flashcard : BaseEntity
     {
         public Flashcard()
@@ -15,31 +15,30 @@ namespace Infrastructure.Models
         }
 
         [Key]
-        [Column("flashcard_id")]
-        public Guid FlashcardId { get; set; }
-        [Column("flashcard_name", TypeName = "character varying")]
+        [Column("id")]
+        public Guid Id { get; set; }
+        [Column("flashcardName", TypeName = "character varying")]
         public string? FlashcardName { get; set; }
-        [Column("flashcard_description", TypeName = "character varying")]
+        [Column("flashcardDescription", TypeName = "character varying")]
         public string? FlashcardDescription { get; set; }
-        [Column("user_id")]
+        [Column("userId")]
         public Guid? UserId { get; set; }
         [Column("tag", TypeName = "character varying")]
         public string? Tag { get; set; }
-        [Column("subject_id")]
+        [Column("subjectId")]
         public Guid? SubjectId { get; set; }
         [Column("status", TypeName = "character varying")]
         public string? Status { get; set; }
         [Column("star")]
         public int? Star { get; set; }
-        [Column("created_at", TypeName = "timestamp without time zone")]
+        [Column("createdAt", TypeName = "timestamp without time zone")]
         public DateTime? CreatedAt { get; set; }
-        [Column("created_by", TypeName = "character varying")]
+        [Column("createdBy", TypeName = "character varying")]
         public string? CreatedBy { get; set; }
-        [Column("updated_by", TypeName = "character varying")]
+        [Column("updatedBy", TypeName = "character varying")]
         public string? UpdatedBy { get; set; }
-        [Column("updated_at", TypeName = "timestamp without time zone")]
+        [Column("updatedAt", TypeName = "timestamp without time zone")]
         public DateTime? UpdatedAt { get; set; }
-       
         [ForeignKey("SubjectId")]
         [InverseProperty("Flashcards")]
         public virtual Subject? Subject { get; set; }

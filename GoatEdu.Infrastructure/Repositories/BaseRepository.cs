@@ -1,6 +1,5 @@
 using GoatEdu.Core.Interfaces.GenericInterfaces;
 using Infrastructure.Data;
-using Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;

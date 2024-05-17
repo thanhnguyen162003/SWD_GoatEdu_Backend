@@ -4,21 +4,21 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Models
+namespace Infrastructure
 {
-    [Table("notifications")]
-    public partial class Notification : BaseEntity
+    [Table("Notification")]
+    public partial class Notification 
     {
         [Key]
-        [Column("notification_id")]
-        public Guid NotificationId { get; set; }
-        [Column("notification_name", TypeName = "character varying")]
+        [Column("id")]
+        public Guid Id { get; set; }
+        [Column("notificationName", TypeName = "character varying")]
         public string? NotificationName { get; set; }
-        [Column("notification_message", TypeName = "character varying")]
+        [Column("notificationMessage", TypeName = "character varying")]
         public string? NotificationMessage { get; set; }
-        [Column("user_id")]
+        [Column("userId")]
         public Guid? UserId { get; set; }
-        [Column("read_at", TypeName = "timestamp without time zone")]
+        [Column("readAt", TypeName = "timestamp without time zone")]
         public DateTime? ReadAt { get; set; }
 
         [ForeignKey("UserId")]

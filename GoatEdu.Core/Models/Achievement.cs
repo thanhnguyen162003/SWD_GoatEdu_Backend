@@ -4,22 +4,23 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Models
+namespace Infrastructure
 {
-    [Table("achievements")]
+    [Table("Achievement")]
     public partial class Achievement : BaseEntity
     {
         [Key]
-        [Column("achievement_id")]
-        public Guid AchievementId { get; set; }
-        [Column("achievement_name", TypeName = "character varying")]
+        [Column("id")]
+        public Guid Id { get; set; }
+        [Column("achievementName", TypeName = "character varying")]
         public string? AchievementName { get; set; }
-        [Column("achievement_content", TypeName = "character varying")]
+        [Column("achievementContent", TypeName = "character varying")]
         public string? AchievementContent { get; set; }
-        [Column("user_id")]
+        [Column("userId")]
         public Guid? UserId { get; set; }
-        [Column("created_at", TypeName = "timestamp without time zone")]
+        [Column("createdAt", TypeName = "timestamp without time zone")]
         public DateTime? CreatedAt { get; set; }
+       
         [ForeignKey("UserId")]
         [InverseProperty("Achievements")]
         public virtual User? User { get; set; }

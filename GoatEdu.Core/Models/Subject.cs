@@ -4,25 +4,26 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Models
+namespace Infrastructure
 {
-    [Table("subjects")]
+    [Table("Subject")]
     public partial class Subject : BaseEntity
     {
         public Subject()
         {
             Chapters = new HashSet<Chapter>();
             Discussions = new HashSet<Discussion>();
+            Enrollments = new HashSet<Enrollment>();
             Flashcards = new HashSet<Flashcard>();
-            UserSubjects = new HashSet<UserSubject>();
+            Quizzes = new HashSet<Quiz>();
         }
 
         [Key]
-        [Column("subject_id")]
-        public Guid SubjectId { get; set; }
-        [Column("subject_name", TypeName = "character varying")]
+        [Column("id")]
+        public Guid Id { get; set; }
+        [Column("subjectName", TypeName = "character varying")]
         public string? SubjectName { get; set; }
-        [Column("subject_code", TypeName = "character varying")]
+        [Column("subjectCode", TypeName = "character varying")]
         public string? SubjectCode { get; set; }
         [Column("information", TypeName = "character varying")]
         public string? Information { get; set; }
@@ -30,9 +31,9 @@ namespace Infrastructure.Models
         public string? Class { get; set; }
         [Column("image", TypeName = "character varying")]
         public string? Image { get; set; }
-        [Column("created_at", TypeName = "timestamp without time zone")]
+        [Column("createdAt", TypeName = "timestamp without time zone")]
         public DateTime? CreatedAt { get; set; }
-        [Column("updated_at", TypeName = "timestamp without time zone")]
+        [Column("updatedAt", TypeName = "timestamp without time zone")]
         public DateTime? UpdatedAt { get; set; }
 
         [InverseProperty("Subject")]
@@ -40,8 +41,10 @@ namespace Infrastructure.Models
         [InverseProperty("Subject")]
         public virtual ICollection<Discussion> Discussions { get; set; }
         [InverseProperty("Subject")]
+        public virtual ICollection<Enrollment> Enrollments { get; set; }
+        [InverseProperty("Subject")]
         public virtual ICollection<Flashcard> Flashcards { get; set; }
         [InverseProperty("Subject")]
-        public virtual ICollection<UserSubject> UserSubjects { get; set; }
+        public virtual ICollection<Quiz> Quizzes { get; set; }
     }
 }

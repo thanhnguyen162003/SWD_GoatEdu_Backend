@@ -4,25 +4,25 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Models
+namespace Infrastructure
 {
     [Keyless]
-    [Table("calculations")]
-    public partial class Calculation : BaseEntity
+    [Table("Calculation")]
+    public partial class Calculation
     {
-        [Column("subject_id")]
-        public Guid? SubjectId { get; set; }
-        [Column("lesson_count")]
+        [Column("id")]
+        public Guid? Id { get; set; }
+        [Column("lessonCount")]
         public int? LessonCount { get; set; }
-        [Column("chapter_count")]
+        [Column("chapterCount")]
         public int? ChapterCount { get; set; }
-        [Column("quiz_count")]
+        [Column("quizCount")]
         public int? QuizCount { get; set; }
-        [Column("theory_count")]
+        [Column("theoryCount")]
         public int? TheoryCount { get; set; }
-        [Column("created_at", TypeName = "timestamp without time zone")]
+        [Column("createdAt", TypeName = "timestamp without time zone")]
         public DateTime? CreatedAt { get; set; }
-        [Column("updated_at", TypeName = "timestamp without time zone")]
+        [Column("updatedAt", TypeName = "timestamp without time zone")]
         public DateTime? UpdatedAt { get; set; }
     }
 }

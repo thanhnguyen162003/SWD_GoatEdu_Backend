@@ -4,31 +4,28 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Models
+namespace Infrastructure
 {
-    [Table("wallets")]
+    [Table("Wallet")]
     public partial class Wallet : BaseEntity
     {
         public Wallet()
         {
-            Transactions = new HashSet<Transaction>();
+            Users = new HashSet<User>();
         }
+
         [Key]
-        [Column("wallet_id")]
-        public Guid WalletId { get; set; }
-        [Column("numberwallet")]
-        public double? Numberwallet { get; set; }
-        [Column("user_id")]
+        [Column("id")]
+        public Guid Id { get; set; }
+        [Column("numberWallet")]
+        public double? NumberWallet { get; set; }
+        [Column("userId")]
         public Guid? UserId { get; set; }
-        [Column("created_at", TypeName = "timestamp without time zone")]
+        [Column("createdAt", TypeName = "timestamp without time zone")]
         public DateTime? CreatedAt { get; set; }
-        [Column("updated_at", TypeName = "timestamp without time zone")]
+        [Column("updatedAt", TypeName = "timestamp without time zone")]
         public DateTime? UpdatedAt { get; set; }
-        [ForeignKey("UserId")]
         [InverseProperty("Wallet")]
-        public virtual User User { get; set; }
-        
-        [InverseProperty("Wallet")]
-        public virtual ICollection<Transaction> Transactions { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }

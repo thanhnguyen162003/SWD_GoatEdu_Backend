@@ -4,37 +4,36 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Models
+namespace Infrastructure
 {
-    [Table("answers")]
+    [Table("Answer")]
     public partial class Answer : BaseEntity
     {
         [Key]
-        [Column("answer_id")]
-        public Guid AnswerId { get; set; }
-        [Column("answer_name", TypeName = "character varying")]
+        [Column("id")]
+        public Guid Id { get; set; }
+        [Column("answerName", TypeName = "character varying")]
         public string? AnswerName { get; set; }
-        [Column("answer_body", TypeName = "character varying")]
+        [Column("answerBody", TypeName = "character varying")]
         public string? AnswerBody { get; set; }
-        [Column("user_id")]
+        [Column("userId")]
         public Guid? UserId { get; set; }
-        [Column("question_id")]
+        [Column("questionId")]
         public Guid? QuestionId { get; set; }
-        [Column("answer_image", TypeName = "character varying")]
+        [Column("answerImage", TypeName = "character varying")]
         public string? AnswerImage { get; set; }
-        [Column("answer_vote")]
+        [Column("answerVote")]
         public int? AnswerVote { get; set; }
         [Column("tag", TypeName = "character varying")]
         public string? Tag { get; set; }
-        [Column("created_at", TypeName = "timestamp without time zone")]
+        [Column("createdAt", TypeName = "timestamp without time zone")]
         public DateTime? CreatedAt { get; set; }
-        [Column("created_by", TypeName = "character varying")]
+        [Column("createdBy", TypeName = "character varying")]
         public string? CreatedBy { get; set; }
-        [Column("updated_by", TypeName = "character varying")]
+        [Column("updatedBy", TypeName = "character varying")]
         public string? UpdatedBy { get; set; }
-        [Column("updated_at", TypeName = "timestamp without time zone")]
+        [Column("updatedAt", TypeName = "timestamp without time zone")]
         public DateTime? UpdatedAt { get; set; }
-        
         [ForeignKey("QuestionId")]
         [InverseProperty("Answers")]
         public virtual Discussion? Question { get; set; }

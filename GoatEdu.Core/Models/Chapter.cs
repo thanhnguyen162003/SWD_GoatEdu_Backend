@@ -4,31 +4,31 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Models
+namespace Infrastructure
 {
-    [Table("chapters")]
+    [Table("Chapter")]
     public partial class Chapter : BaseEntity
     {
         public Chapter()
         {
             Lessons = new HashSet<Lesson>();
+            Quizzes = new HashSet<Quiz>();
         }
 
         [Key]
-        [Column("chapter_id")]
-        public Guid ChapterId { get; set; }
-        [Column("chapter_name", TypeName = "character varying")]
+        [Column("id")]
+        public Guid Id { get; set; }
+        [Column("chapterName", TypeName = "character varying")]
         public string? ChapterName { get; set; }
-        [Column("chapter_level")]
+        [Column("chapterLevel")]
         public int? ChapterLevel { get; set; }
-        [Column("subject_id")]
+        [Column("subjectId")]
         public Guid? SubjectId { get; set; }
-        
-        [Column("created_at", TypeName = "timestamp without time zone")]
+        [Column("createdAt", TypeName = "timestamp without time zone")]
         public DateTime? CreatedAt { get; set; }
-        [Column("created_by", TypeName = "character varying")]
+        [Column("createdBy", TypeName = "character varying")]
         public string? CreatedBy { get; set; }
-        [Column("updated_at", TypeName = "timestamp without time zone")]
+        [Column("updatedAt", TypeName = "timestamp without time zone")]
         public DateTime? UpdatedAt { get; set; }
 
         [ForeignKey("SubjectId")]
@@ -36,5 +36,7 @@ namespace Infrastructure.Models
         public virtual Subject? Subject { get; set; }
         [InverseProperty("Chapter")]
         public virtual ICollection<Lesson> Lessons { get; set; }
+        [InverseProperty("Chapter")]
+        public virtual ICollection<Quiz> Quizzes { get; set; }
     }
 }

@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Models
+namespace Infrastructure
 {
-    [Table("lessons")]
+    [Table("Lesson")]
     public partial class Lesson : BaseEntity
     {
         public Lesson()
@@ -16,24 +16,27 @@ namespace Infrastructure.Models
         }
 
         [Key]
-        [Column("lesson_id")]
-        public Guid LessonId { get; set; }
-        [Column("lesson_name", TypeName = "character varying")]
+        [Column("id")]
+        public Guid Id { get; set; }
+        [Column("lessonName", TypeName = "character varying")]
         public string? LessonName { get; set; }
-        [Column("lesson_body", TypeName = "character varying")]
+        [Column("lessonBody", TypeName = "character varying")]
         public string? LessonBody { get; set; }
-        [Column("lesson_material", TypeName = "character varying")]
+        [Column("lessonMaterial", TypeName = "character varying")]
         public string? LessonMaterial { get; set; }
-        [Column("chapter_id")]
+        [Column("chapterId")]
         public Guid? ChapterId { get; set; }
-        [Column("created_at", TypeName = "timestamp without time zone")]
+        [Column("createdAt", TypeName = "timestamp without time zone")]
         public DateTime? CreatedAt { get; set; }
-        [Column("created_by", TypeName = "character varying")]
+        [Column("createdBy", TypeName = "character varying")]
         public string? CreatedBy { get; set; }
-        [Column("updated_by", TypeName = "character varying")]
+        [Column("updatedBy", TypeName = "character varying")]
         public string? UpdatedBy { get; set; }
-        [Column("updated_at", TypeName = "timestamp without time zone")]
+        [Column("updatedAt", TypeName = "timestamp without time zone")]
         public DateTime? UpdatedAt { get; set; }
+        [Column("displayOrder")]
+        public int? DisplayOrder { get; set; }
+
         [ForeignKey("ChapterId")]
         [InverseProperty("Lessons")]
         public virtual Chapter? Chapter { get; set; }

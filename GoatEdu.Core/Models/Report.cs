@@ -4,23 +4,23 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Models
+namespace Infrastructure
 {
-    [Table("reports")]
+    [Table("Report")]
     public partial class Report : BaseEntity
     {
         [Key]
-        [Column("report_id")]
-        public Guid ReportId { get; set; }
-        [Column("report_title", TypeName = "character varying")]
+        [Column("id")]
+        public Guid Id { get; set; }
+        [Column("reportTitle", TypeName = "character varying")]
         public string? ReportTitle { get; set; }
-        [Column("report_content", TypeName = "character varying")]
+        [Column("reportContent", TypeName = "character varying")]
         public string? ReportContent { get; set; }
-        [Column("user_id")]
+        [Column("userId")]
         public Guid? UserId { get; set; }
-        [Column("created_at", TypeName = "timestamp without time zone")]
+        [Column("createdAt", TypeName = "timestamp without time zone")]
         public DateTime? CreatedAt { get; set; }
-        [Column("created_by", TypeName = "character varying")]
+        [Column("createdBy", TypeName = "character varying")]
         public string? CreatedBy { get; set; }
         [Column("status", TypeName = "character varying")]
         public string? Status { get; set; }
