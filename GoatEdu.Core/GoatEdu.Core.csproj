@@ -8,8 +8,6 @@
     
 
     <ItemGroup>
-      <Folder Include="CustomEntities\" />
-      <Folder Include="Exceptions\" />
       <Folder Include="Mappings\" />
       <Folder Include="QueriesFilter\" />
     </ItemGroup>

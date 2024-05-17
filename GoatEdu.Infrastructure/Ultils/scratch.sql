@@ -1,7 +1,7 @@
 CREATE
 EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE TABLE "users"
+CREATE TABLE "Users"
 (
     "user_id"          UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "username"         VARCHAR,
@@ -17,7 +17,7 @@ CREATE TABLE "users"
     "isDeleted"        BOOLEAN
 );
 
-CREATE TABLE "wallets"
+CREATE TABLE "Wallets"
 (
     "wallet_id"    UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "numberwallet" float,
@@ -27,7 +27,7 @@ CREATE TABLE "wallets"
     "isDeleted"    BOOLEAN
 );
 
-CREATE TABLE "achievements"
+CREATE TABLE "Achievements"
 (
     "achievement_id"      UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "achievement_name"    VARCHAR,
@@ -37,20 +37,7 @@ CREATE TABLE "achievements"
     "isDeleted"           BOOLEAN
 );
 
-CREATE TABLE "moderators"
-(
-    "moderator_id"       UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "moderator_name"     VARCHAR,
-    "password"           VARCHAR,
-    "email"              VARCHAR,
-    "phone_number"       VARCHAR,
-    "is_password_change" BOOLEAN,
-    "created_by"         VARCHAR,
-    "created_at"         TIMESTAMP,
-    "isDeleted"          BOOLEAN
-);
-
-CREATE TABLE "roles"
+CREATE TABLE "Roles"
 (
     "role_id"    UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "role_name"  VARCHAR,
@@ -59,7 +46,7 @@ CREATE TABLE "roles"
     "updated_at" TIMESTAMP
 );
 
-CREATE TABLE "subscriptions"
+CREATE TABLE "Subscriptions"
 (
     "subscription_id"   UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "subscription_name" VARCHAR,
@@ -70,7 +57,7 @@ CREATE TABLE "subscriptions"
     "isDeleted"         BOOLEAN
 );
 
-CREATE TABLE "transactions"
+CREATE TABLE "Transactions"
 (
     "transaction_id"   UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "transaction_name" VARCHAR,
@@ -84,7 +71,7 @@ CREATE TABLE "transactions"
     "isDeleted"        BOOLEAN
 );
 
-CREATE TABLE "subjects"
+CREATE TABLE "Subjects"
 (
     "subject_id"   UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "subject_name" VARCHAR,
@@ -97,7 +84,7 @@ CREATE TABLE "subjects"
     "updated_at"   TIMESTAMP
 );
 
-CREATE TABLE "chapters"
+CREATE TABLE "Chapters"
 (
     "chapter_id"    UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "chapter_name"  VARCHAR,
@@ -109,7 +96,7 @@ CREATE TABLE "chapters"
     "updated_at"    TIMESTAMP
 );
 
-CREATE TABLE "lessons"
+CREATE TABLE "Lessons"
 (
     "lesson_id"       UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "lesson_name"     VARCHAR,
@@ -123,7 +110,7 @@ CREATE TABLE "lessons"
     "isDeleted"       BOOLEAN
 );
 
-CREATE TABLE "notes"
+CREATE TABLE "Notes"
 (
     "note_id"    UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "note_name"  VARCHAR,
@@ -136,7 +123,7 @@ CREATE TABLE "notes"
     "isDeleted"  BOOLEAN
 );
 
-CREATE TABLE "reports"
+CREATE TABLE "Reports"
 (
     "report_id"      UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "report_title"   VARCHAR,
@@ -148,7 +135,7 @@ CREATE TABLE "reports"
     "isDeleted"      BOOLEAN
 );
 
-CREATE TABLE "theories"
+CREATE TABLE "Theories"
 (
     "theory_id"      UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "theory_name"    VARCHAR,
@@ -161,7 +148,7 @@ CREATE TABLE "theories"
     "isDeleted"      BOOLEAN
 );
 
-CREATE TABLE "quizzes"
+CREATE TABLE "Quizzes"
 (
     "quiz_id"        UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "quiz"           VARCHAR,
@@ -175,7 +162,7 @@ CREATE TABLE "quizzes"
     "isDeleted"      BOOLEAN
 );
 
-CREATE TABLE "discussions"
+CREATE TABLE "Discussions"
 (
     "discussion_id"    UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "discussion_name"  VARCHAR,
@@ -194,7 +181,7 @@ CREATE TABLE "discussions"
     "isDeleted"        BOOLEAN
 );
 
-CREATE TABLE "answers"
+CREATE TABLE "Answers"
 (
     "answer_id"    UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "answer_name"  VARCHAR,
@@ -211,7 +198,7 @@ CREATE TABLE "answers"
     "isDeleted"    BOOLEAN
 );
 
-CREATE TABLE "flashcards"
+CREATE TABLE "Flashcards"
 (
     "flashcard_id"          UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "flashcard_name"        VARCHAR,
@@ -228,7 +215,7 @@ CREATE TABLE "flashcards"
     "isDeleted"             BOOLEAN
 );
 
-CREATE TABLE "flashcard_contents"
+CREATE TABLE "Flashcard_contents"
 (
     "flashcard_content_id"       UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "flashcard_content_question" VARCHAR,
@@ -243,7 +230,7 @@ CREATE TABLE "flashcard_contents"
     "isDeleted"                  BOOLEAN
 );
 
-CREATE TABLE "calculations"
+CREATE TABLE "Calculations"
 (
     "subject_id"    UUID,
     "lesson_count"  INT,
@@ -254,7 +241,7 @@ CREATE TABLE "calculations"
     "updated_at"    TIMESTAMP
 );
 
-CREATE TABLE "notifications"
+CREATE TABLE "Notifications"
 (
     "notification_id"      UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "notification_name"    VARCHAR,
@@ -263,7 +250,7 @@ CREATE TABLE "notifications"
     "read_at"              TIMESTAMP
 );
 
-CREATE TABLE "user_subject"
+CREATE TABLE "Enrollments"
 (
     "user_id"    UUID,
     "subject_id" UUID,
@@ -273,13 +260,6 @@ CREATE TABLE "user_subject"
     PRIMARY KEY ("user_id", "subject_id")
 );
 
-CREATE TABLE "admins"
-(
-    "admin_id"  UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "username"  VARCHAR,
-    "password"  VARCHAR,
-    "isDeleted" BOOLEAN
-);
 
 CREATE TABLE "theory_flashcard_content"
 (
@@ -294,69 +274,69 @@ CREATE TABLE "theory_flashcard_content"
 );
 
 -- Add foreign key constraints
-ALTER TABLE "users"
-    ADD FOREIGN KEY ("role_id") REFERENCES "roles" ("role_id");
+ALTER TABLE "Users"
+    ADD FOREIGN KEY ("role_id") REFERENCES "Roles" ("role_id");
 
 ALTER TABLE "theory_flashcard_content"
-    ADD FOREIGN KEY ("theory_id") REFERENCES "theories" ("theory_id");
+    ADD FOREIGN KEY ("theory_id") REFERENCES "Theories" ("theory_id");
 
-ALTER TABLE "notifications"
-    ADD FOREIGN KEY ("user_id") REFERENCES "users" ("user_id");
+ALTER TABLE "Notifications"
+    ADD FOREIGN KEY ("user_id") REFERENCES "Users" ("user_id");
 
-ALTER TABLE "answers"
-    ADD FOREIGN KEY ("user_id") REFERENCES "users" ("user_id");
+ALTER TABLE "Answers"
+    ADD FOREIGN KEY ("user_id") REFERENCES "Users" ("user_id");
 
 --need consider
-ALTER TABLE "wallets"
-    ADD FOREIGN KEY ("user_id") REFERENCES "users" ("user_id");
+ALTER TABLE "Wallets"
+    ADD FOREIGN KEY ("user_id") REFERENCES "Users" ("user_id");
 
-ALTER TABLE "user_subject"
-    ADD FOREIGN KEY ("subject_id") REFERENCES "subjects" ("subject_id");
+ALTER TABLE "Enrollments"
+    ADD FOREIGN KEY ("subject_id") REFERENCES "Subjects" ("subject_id");
 
-ALTER TABLE "user_subject"
-    ADD FOREIGN KEY ("user_id") REFERENCES "users" ("user_id");
+ALTER TABLE "Enrollments"
+    ADD FOREIGN KEY ("user_id") REFERENCES "Users" ("user_id");
 
-ALTER TABLE "achievements"
-    ADD FOREIGN KEY ("user_id") REFERENCES "users" ("user_id");
+ALTER TABLE "Achievements"
+    ADD FOREIGN KEY ("user_id") REFERENCES "Users" ("user_id");
 
-ALTER TABLE "reports"
-    ADD FOREIGN KEY ("user_id") REFERENCES "users" ("user_id");
+ALTER TABLE "Reports"
+    ADD FOREIGN KEY ("user_id") REFERENCES "Users" ("user_id");
 
-ALTER TABLE "wallets"
-    ADD FOREIGN KEY ("transaction_id") REFERENCES "transactions" ("transaction_id");
+ALTER TABLE "Wallets"
+    ADD FOREIGN KEY ("transaction_id") REFERENCES "Transactions" ("transaction_id");
 
-ALTER TABLE "flashcard_contents"
-    ADD FOREIGN KEY ("flashcard_id") REFERENCES "flashcards" ("flashcard_id");
+ALTER TABLE "Flashcard_contents"
+    ADD FOREIGN KEY ("flashcard_id") REFERENCES "Flashcards" ("flashcard_id");
 
-ALTER TABLE "flashcards"
-    ADD FOREIGN KEY ("user_id") REFERENCES "users" ("user_id");
+ALTER TABLE "Flashcards"
+    ADD FOREIGN KEY ("user_id") REFERENCES "Users" ("user_id");
 
-ALTER TABLE "transactions"
-    ADD FOREIGN KEY ("subscription_id") REFERENCES "subscriptions" ("subscription_id");
+ALTER TABLE "Transactions"
+    ADD FOREIGN KEY ("subscription_id") REFERENCES "Subscriptions" ("subscription_id");
 
-ALTER TABLE "discussions"
-    ADD FOREIGN KEY ("user_id") REFERENCES "users" ("user_id");
+ALTER TABLE "Discussions"
+    ADD FOREIGN KEY ("user_id") REFERENCES "Users" ("user_id");
 
-ALTER TABLE "discussions"
-    ADD FOREIGN KEY ("subject_id") REFERENCES "subjects" ("subject_id");
+ALTER TABLE "Discussions"
+    ADD FOREIGN KEY ("subject_id") REFERENCES "Subjects" ("subject_id");
 
-ALTER TABLE "answers"
-    ADD FOREIGN KEY ("question_id") REFERENCES "discussions" ("discussion_id");
+ALTER TABLE "Answers"
+    ADD FOREIGN KEY ("question_id") REFERENCES "Discussions" ("discussion_id");
 
-ALTER TABLE "notes"
-    ADD FOREIGN KEY ("user_id") REFERENCES "users" ("user_id");
+ALTER TABLE "Notes"
+    ADD FOREIGN KEY ("user_id") REFERENCES "Users" ("user_id");
 
-ALTER TABLE "flashcards"
-    ADD FOREIGN KEY ("subject_id") REFERENCES "subjects" ("subject_id");
+ALTER TABLE "Flashcards"
+    ADD FOREIGN KEY ("subject_id") REFERENCES "Subjects" ("subject_id");
 
-ALTER TABLE "lessons"
-    ADD FOREIGN KEY ("chapter_id") REFERENCES "chapters" ("chapter_id");
+ALTER TABLE "Lessons"
+    ADD FOREIGN KEY ("chapter_id") REFERENCES "Chapters" ("chapter_id");
 
-ALTER TABLE "quizzes"
-    ADD FOREIGN KEY ("lesson_id") REFERENCES "lessons" ("lesson_id");
+ALTER TABLE "Quizzes"
+    ADD FOREIGN KEY ("lesson_id") REFERENCES "Lessons" ("lesson_id");
 
-ALTER TABLE "theories"
-    ADD FOREIGN KEY ("lesson_id") REFERENCES "lessons" ("lesson_id");
+ALTER TABLE "Theories"
+    ADD FOREIGN KEY ("lesson_id") REFERENCES "Lessons" ("lesson_id");
 
-ALTER TABLE "chapters"
-    ADD FOREIGN KEY ("subject_id") REFERENCES "subjects" ("subject_id");
+ALTER TABLE "Chapters"
+    ADD FOREIGN KEY ("subject_id") REFERENCES "Subjects" ("subject_id");

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GoatEdu.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/auth")]
 [ApiController]
 public class AuthenticateController : ControllerBase
 {
@@ -38,5 +38,11 @@ public class AuthenticateController : ControllerBase
     public async Task<ResponseDto> Register([FromBody] RegisterDto model)
     {
         return await _userService.Register(model);
+    }
+    [HttpPost]
+    [Route("google")]
+    public async Task<ResponseDto> LoginGoogle([FromBody] GoogleDto model)
+    {
+        return null;
     }
 }

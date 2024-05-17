@@ -42,6 +42,8 @@ namespace Infrastructure.Models
         public DateTime? CreatedAt { get; set; }
         [Column("updated_at", TypeName = "timestamp without time zone")]
         public DateTime? UpdatedAt { get; set; }
+        [Column("provider", TypeName = "Third party authentication")]
+        public DateTime? Provider { get; set; }
         [ForeignKey("RoleId")]
         [InverseProperty("Users")]
         public virtual Role? Role { get; set; }

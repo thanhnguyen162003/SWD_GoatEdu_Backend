@@ -16,6 +16,9 @@ namespace Infrastructure.Models
         public string? TransactionName { get; set; }
         [Column("note", TypeName = "character varying")]
         public string? Note { get; set; }
+        //add price
+        [Column("price", TypeName = "price")]
+        public string? Price { get; set; }
         [Column("start_date", TypeName = "timestamp without time zone")]
         public DateTime? StartDate { get; set; }
         [Column("end_date", TypeName = "timestamp without time zone")]

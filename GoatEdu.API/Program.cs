@@ -30,6 +30,11 @@ builder.Services.AddScoped<JWTGenerator, JWTConfig>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 
 builder.Services.AddControllers();
+// builder.Services.AddAuthentication().AddGoogle(googleOptions =>
+// {
+//     googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
+//     googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+// });
 
 builder.Services.AddAuthentication(opt =>
 {
@@ -69,7 +74,7 @@ builder.Services.AddAuthentication(opt =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
 {
-    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "GoatEdu API", Version = "v1" });
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
