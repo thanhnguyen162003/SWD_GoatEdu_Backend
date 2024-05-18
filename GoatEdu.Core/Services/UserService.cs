@@ -99,8 +99,14 @@ public class UserService : IUserService
             Username = login.Username,
             Password = login.Password
         };
+       
         var token = _tokenGenerator.GenerateToken(loginDtoRequest);
-        return new ResponseDto(HttpStatusCode.OK, "Login successfully!", token);
+        var loginResponse = new LoginResponseDto
+        {
+            User = user,
+            Token = token
+        };
+        return new ResponseDto(HttpStatusCode.OK, "Login successfully!", loginResponse);
     }
 
     public async Task<ResponseDto> Register(RegisterDto registerUser)
