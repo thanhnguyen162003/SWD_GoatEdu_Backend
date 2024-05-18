@@ -17,7 +17,13 @@ public class UserRepository : BaseRepository<User>, IUserRepository
     {
         return await _entities.Where(x => x.Id == userId && x.IsDeleted == false).FirstOrDefaultAsync();
     }
-    
+
+    public async Task<User> GetUserByGoogle(string email)
+    {
+        return await _entities.Where(
+            x => x.Email == email && x.IsDeleted == false).FirstOrDefaultAsync();
+    }
+
     public async Task<User> GetUserByUsername(string username)
     {
         return await _entities.Where(

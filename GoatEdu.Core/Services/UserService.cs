@@ -1,6 +1,7 @@
 using System.Data;
 using System.Net;
 using GoatEdu.Core.DTOs;
+using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces.Security;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using Infrastructure;
@@ -22,6 +23,57 @@ public class UserService : IUserService
     {
         return await _userRepository.GetUserByUsername(username);
     }
+    
+    public async Task<ResponseDto> LoginByGoogle(GoogleDto dto)
+    {
+        var user = await _userRepository.GetUserByGoogle(dto.Email);
+        if (user == null)
+        {
+            return new ResponseDto(HttpStatusCode.NotFound, "Email not existed!");
+        }
+        if (user.IsDeleted == true)
+        {
+            return new ResponseDto(HttpStatusCode.Forbidden, "Your account is suspense!");
+        }
+
+        LoginDtoRequest loginDtoRequest = new LoginDtoRequest()
+        {
+            Email = dto.Email,
+            Username = dto.Name,
+            Picture = dto.Picture
+        };
+        var token = _tokenGenerator.GenerateToken(loginDtoRequest);
+        return new ResponseDto(HttpStatusCode.OK, "Login successfully!", token);
+    }
+
+    public async Task<ResponseDto> RegisterByGoogle(GoogleDto dto)
+    {
+        var isUserExits = await _userRepository.GetUserByGoogle(dto.Email);
+        if (isUserExits != null)
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "Account has been linked!, please login.");
+        }
+        User user = new User()
+        {
+            Username = dto.Name,
+            RoleId = dto.RoleId,
+            PhoneNumber = null,
+            Email = dto.Email,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now,
+            IsDeleted = false,
+            EmailVerify = true,
+            Provider = UserEnum.GOOGLE
+        };
+        var result = await _userRepository.AddUser(user);
+        if (result == null)
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "Somethings has error!");
+        }
+
+        return new ResponseDto(HttpStatusCode.OK, "Register Successful, please login again!");
+    }
+    
 
     public async Task<ResponseDto> GetLoginByCredentials(LoginDtoRequest login)
     {
@@ -65,7 +117,9 @@ public class UserService : IUserService
             Email = registerUser.Email,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now,
-            IsDeleted = false
+            IsDeleted = false,
+            EmailVerify = false,
+            Provider = UserEnum.CREDENTIAL
         };
         var result = await _userRepository.AddUser(user);
         //send confirm email here!!!

@@ -40,9 +40,15 @@ public class AuthenticateController : ControllerBase
         return await _userService.Register(model);
     }
     [HttpPost]
-    [Route("google")]
+    [Route("login/google")]
     public async Task<ResponseDto> LoginGoogle([FromBody] GoogleDto model)
     {
-        return null;
+        return await _userService.LoginByGoogle(model);
+    }
+    [HttpPost]
+    [Route("register/google")]
+    public async Task<ResponseDto> RegisterGoogle([FromBody] GoogleDto model)
+    {
+        return await _userService.RegisterByGoogle(model);
     }
 }
