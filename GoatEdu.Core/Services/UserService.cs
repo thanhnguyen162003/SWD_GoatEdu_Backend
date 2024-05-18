@@ -2,6 +2,7 @@ using System.Data;
 using System.Net;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.Enumerations;
+using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.Security;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using Infrastructure;
@@ -10,23 +11,23 @@ namespace GoatEdu.Core.Services;
 
 public class UserService : IUserService
 {
-    private readonly IUserRepository _userRepository;
     private readonly JWTGenerator _tokenGenerator;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UserService(IUserRepository userRepository, JWTGenerator tokenGenerator)
+    public UserService(IUnitOfWork unitOfWork, JWTGenerator tokenGenerator)
     {
-        _userRepository = userRepository;
+        _unitOfWork = unitOfWork;
         _tokenGenerator = tokenGenerator;
     }
 
     public async Task<User> GetUserByUsername(string username)
     {
-        return await _userRepository.GetUserByUsername(username);
+        return await _unitOfWork.UserRepository.GetUserByUsername(username);
     }
     
     public async Task<ResponseDto> LoginByGoogle(LoginGoogleDto dto)
     {
-        var user = await _userRepository.GetUserByGoogle(dto.Email);
+        var user = await _unitOfWork.UserRepository.GetUserByGoogle(dto.Email);
         if (user == null)
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Email not existed!");
@@ -47,7 +48,7 @@ public class UserService : IUserService
 
     public async Task<ResponseDto> RegisterByGoogle(GoogleRegisterDto dto)
     {
-        var isUserExits = await _userRepository.GetUserByGoogle(dto.Email);
+        var isUserExits = await _unitOfWork.UserRepository.GetUserByGoogle(dto.Email);
         if (isUserExits != null)
         {
             return new ResponseDto(HttpStatusCode.BadRequest, "Account has been linked!, please login.");
@@ -64,7 +65,7 @@ public class UserService : IUserService
             EmailVerify = true,
             Provider = UserEnum.GOOGLE
         };
-        var result = await _userRepository.AddUser(user);
+        var result = await _unitOfWork.UserRepository.AddUser(user);
         if (result == null)
         {
             return new ResponseDto(HttpStatusCode.BadRequest, "Somethings has error!");
@@ -76,7 +77,7 @@ public class UserService : IUserService
 
     public async Task<ResponseDto> GetLoginByCredentials(LoginCredentialDto login)
     {
-        var user = await _userRepository.GetUserByUsernameNotGoogle(login.Username);
+        var user = await _unitOfWork.UserRepository.GetUserByUsernameNotGoogle(login.Username);
         // var emailUser = await _userRepository.GetUserByEmail(login.Username);
         if (user == null)
         {
@@ -105,7 +106,7 @@ public class UserService : IUserService
     public async Task<ResponseDto> Register(RegisterDto registerUser)
     {
         //check email exist???
-        var isUserExits = await _userRepository.GetUserByUsername(registerUser.Username);
+        var isUserExits = await _unitOfWork.UserRepository.GetUserByUsername(registerUser.Username);
         if (isUserExits != null)
         {
             return new ResponseDto(HttpStatusCode.BadRequest, "Account has been exits!");
@@ -125,7 +126,7 @@ public class UserService : IUserService
             EmailVerify = false,
             Provider = UserEnum.CREDENTIAL
         };
-        var result = await _userRepository.AddUser(user);
+        var result = await _unitOfWork.UserRepository.AddUser(user);
         //send confirm email here!!!
         
         if (result == null)

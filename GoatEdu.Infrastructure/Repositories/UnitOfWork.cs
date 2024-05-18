@@ -1,4 +1,5 @@
 using GoatEdu.Core.Interfaces;
+using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using Infrastructure.Data;
 namespace Infrastructure.Repositories;
@@ -9,6 +10,7 @@ public class UnitOfWork : IUnitOfWork
     
     //add interface of repo
     private readonly IUserRepository _userRepository;
+    private readonly IRoleRepository _roleRepository;
 
     public UnitOfWork(GoatEduContext context)
     {
@@ -17,6 +19,8 @@ public class UnitOfWork : IUnitOfWork
     
     //add interface of repo
     public IUserRepository UserRepository => _userRepository ?? new UserRepository(_context);
+    public IRoleRepository RoleRepository => _roleRepository ?? new RoleRepository(_context);
+
     public void SaveChanges()
     {
         _context.SaveChanges();
