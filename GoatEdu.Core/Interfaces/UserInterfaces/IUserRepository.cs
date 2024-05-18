@@ -11,4 +11,5 @@ public interface IUserRepository : IRepository<User>
     Task<User> AddUser(User user);
     Task<User> GetUserByUserId(Guid userId);
     Task<User> GetUserByGoogle(string email);
+    Task<User> GetUserByUsernameNotGoogle(string username);
 }

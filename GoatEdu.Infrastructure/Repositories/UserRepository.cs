@@ -1,3 +1,4 @@
+using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,13 @@ public class UserRepository : BaseRepository<User>, IUserRepository
     {
         return await _entities.Where(
             x => x.Username == username && x.IsDeleted == false || x.Email == username && x.IsDeleted == false
+            ).FirstOrDefaultAsync();
+    }
+    public async Task<User> GetUserByUsernameNotGoogle(string username)
+    {
+        return await _entities.Where(
+            x => x.Username == username && x.IsDeleted == false || x.Email == username && x.IsDeleted == false
+        && x.Provider != UserEnum.GOOGLE
             ).FirstOrDefaultAsync();
     }
     

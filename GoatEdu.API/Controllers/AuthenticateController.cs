@@ -18,7 +18,7 @@ public class AuthenticateController : ControllerBase
 
     [HttpPost]
     [Route("login")]
-    public async Task<ResponseDto> Login([FromBody] LoginDtoRequest model)
+    public async Task<ResponseDto> Login([FromBody] LoginCredentialDto model)
     {
         return await _userService.GetLoginByCredentials(model);
     }
@@ -41,13 +41,13 @@ public class AuthenticateController : ControllerBase
     }
     [HttpPost]
     [Route("login/google")]
-    public async Task<ResponseDto> LoginGoogle([FromBody] GoogleDto model)
+    public async Task<ResponseDto> LoginGoogle([FromBody] LoginGoogleDto model)
     {
         return await _userService.LoginByGoogle(model);
     }
     [HttpPost]
     [Route("register/google")]
-    public async Task<ResponseDto> RegisterGoogle([FromBody] GoogleDto model)
+    public async Task<ResponseDto> RegisterGoogle([FromBody] GoogleRegisterDto model)
     {
         return await _userService.RegisterByGoogle(model);
     }

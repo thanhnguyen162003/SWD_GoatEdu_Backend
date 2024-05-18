@@ -18,5 +18,5 @@ public class RegisterDto
     // public string? PhoneNumber { get; set; }
     
     [Required(ErrorMessage = "Role is required")]
-    public Guid? RoleId { get; set; }
+    public Guid RoleId { get; set; }
 }

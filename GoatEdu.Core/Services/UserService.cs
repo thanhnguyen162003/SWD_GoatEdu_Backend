@@ -24,7 +24,7 @@ public class UserService : IUserService
         return await _userRepository.GetUserByUsername(username);
     }
     
-    public async Task<ResponseDto> LoginByGoogle(GoogleDto dto)
+    public async Task<ResponseDto> LoginByGoogle(LoginGoogleDto dto)
     {
         var user = await _userRepository.GetUserByGoogle(dto.Email);
         if (user == null)
@@ -39,14 +39,13 @@ public class UserService : IUserService
         LoginDtoRequest loginDtoRequest = new LoginDtoRequest()
         {
             Email = dto.Email,
-            Username = dto.Name,
-            Picture = dto.Picture
+            Username = user.Username
         };
         var token = _tokenGenerator.GenerateToken(loginDtoRequest);
         return new ResponseDto(HttpStatusCode.OK, "Login successfully!", token);
     }
 
-    public async Task<ResponseDto> RegisterByGoogle(GoogleDto dto)
+    public async Task<ResponseDto> RegisterByGoogle(GoogleRegisterDto dto)
     {
         var isUserExits = await _userRepository.GetUserByGoogle(dto.Email);
         if (isUserExits != null)
@@ -75,26 +74,31 @@ public class UserService : IUserService
     }
     
 
-    public async Task<ResponseDto> GetLoginByCredentials(LoginDtoRequest login)
+    public async Task<ResponseDto> GetLoginByCredentials(LoginCredentialDto login)
     {
-        var user = await _userRepository.GetUserByUsername(login.Username);
+        var user = await _userRepository.GetUserByUsernameNotGoogle(login.Username);
         // var emailUser = await _userRepository.GetUserByEmail(login.Username);
         if (user == null)
         {
-            return new ResponseDto(HttpStatusCode.NotFound, "UserName or Email not existed!");
+            return new ResponseDto(HttpStatusCode.NotFound, "UserName or Email not existed or you have register with Google");
         }
 
         if (!BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
         {
             return new ResponseDto(HttpStatusCode.BadRequest, "Wrong password!");
         }
-
+        // need add verify email to continute
         if (user.IsDeleted == true)
         {
             return new ResponseDto(HttpStatusCode.Forbidden, "Your account is suspense!");
         }
 
-        var token = _tokenGenerator.GenerateToken(login);
+        LoginDtoRequest loginDtoRequest = new LoginDtoRequest()
+        {
+            Username = login.Username,
+            Password = login.Password
+        };
+        var token = _tokenGenerator.GenerateToken(loginDtoRequest);
         return new ResponseDto(HttpStatusCode.OK, "Login successfully!", token);
     }
 
@@ -104,7 +108,7 @@ public class UserService : IUserService
         var isUserExits = await _userRepository.GetUserByUsername(registerUser.Username);
         if (isUserExits != null)
         {
-            return new ResponseDto(HttpStatusCode.BadRequest, "Username has been taken!");
+            return new ResponseDto(HttpStatusCode.BadRequest, "Account has been exits!");
         }
 
         string hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerUser.Password);
