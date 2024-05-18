@@ -6,8 +6,8 @@
 [![Boilerplate.Templates NuGet Package](https://img.shields.io/nuget/v/Net6WebTemplate.svg)](https://www.nuget.org/packages/Net6WebTemplate)
 [![Boilerplate.Templates NuGet Package Downloads](https://img.shields.io/nuget/dt/Net6WebTemplate)](https://www.nuget.org/packages/Net6WebTemplate)
 
-This is a multi-project solution dotnet template for developing an enterprise-level Web API with.NET 6 ASP.NET Core, following Clean Architecture principles and API best practices.
-The .NET 6 Web Api Template consist of scafolding for API versioning, CQRS, email, localization, logging, IP rate limiting, JWT, Open API, validation, unit and integration testing.
+This is a solution dotnet goatedu for developing an enterprise-level Web API with.NET 6 ASP.NET Core, following Clean Architecture principles and API best practices.
+The .NET 6 Web Api consist of scafolding for API versioning, Repository Pattern, email, Unit Of work, logging, IP rate limiting, JWT, Open API, validation, postgresql and more ...
 
 ## Table of Contents
 * [Prerequisites](#Prerequisites)
