@@ -365,3 +365,15 @@ ALTER TABLE "Theory"
 
 ALTER TABLE "Chapter"
     ADD FOREIGN KEY ("subjectId") REFERENCES "Subject" ("id");
+
+
+--data
+INSERT INTO "Role" ("id", "roleName", "isDeleted", "createdAt", "updatedAt")
+VALUES
+    (uuid_generate_v4(), 'Student', false, NOW(), NOW()),
+    (uuid_generate_v4(), 'Teacher', false, NOW(), NOW()),
+    (uuid_generate_v4(), 'Moderator', false, NOW(), NOW()),
+    (uuid_generate_v4(), 'Admin', false, NOW(), NOW());
+
+
+
