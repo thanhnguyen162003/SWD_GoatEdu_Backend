@@ -26,6 +26,10 @@ namespace Infrastructure
         public Guid Id { get; set; }
         [Column("username", TypeName = "character varying")]
         public string? Username { get; set; }
+        [Column("fullname", TypeName = "character varying")]
+        public string? Fullname { get; set; }
+        [Column("image", TypeName = "character varying")]
+        public string? Image { get; set; }
         [Column("password", TypeName = "character varying")]
         public string? Password { get; set; }
         [Column("email", TypeName = "character varying")]
@@ -52,7 +56,7 @@ namespace Infrastructure
         [InverseProperty("Users")]
         public virtual Role? Role { get; set; }
         [ForeignKey("WalletId")]
-        [InverseProperty("Users")]
+        [InverseProperty("User")]
         public virtual Wallet? Wallet { get; set; }
         [InverseProperty("User")]
         public virtual ICollection<Achievement> Achievements { get; set; }

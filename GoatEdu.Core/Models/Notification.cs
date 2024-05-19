@@ -20,6 +20,8 @@ namespace Infrastructure
         public Guid? UserId { get; set; }
         [Column("readAt", TypeName = "timestamp without time zone")]
         public DateTime? ReadAt { get; set; }
+        [Column("createdAt", TypeName = "timestamp without time zone")]
+        public DateTime? CreatedAt { get; set; }
 
         [ForeignKey("UserId")]
         [InverseProperty("Notifications")]

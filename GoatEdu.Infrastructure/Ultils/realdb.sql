@@ -3,7 +3,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE "User"
 (
     "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "username" VARCHAR NOT NULL,
+    "username" VARCHAR,
     "password" VARCHAR,
     "email" VARCHAR,
     "phoneNumber" VARCHAR,
@@ -11,6 +11,8 @@ CREATE TABLE "User"
     "subscriptionEnd" TIMESTAMP,
     "provider" VARCHAR,
     "emailVerify" BOOLEAN,
+    "image" VARCHAR,
+    "fullname" VARCHAR,
     "roleId" UUID,
     "walletId" UUID,
     "createdAt" TIMESTAMP,
@@ -22,7 +24,7 @@ CREATE TABLE "Wallet"
 (
     "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "numberWallet" FLOAT,
-    "userId" UUID,
+    --"userId" UUID,
     "createdAt" TIMESTAMP,
     "updatedAt" TIMESTAMP,
     "isDeleted" BOOLEAN
@@ -263,7 +265,8 @@ CREATE TABLE "Notification"
     "notificationName" VARCHAR,
     "notificationMessage" VARCHAR,
     "userId" UUID,
-    "readAt" TIMESTAMP
+    "readAt" TIMESTAMP,
+    "createdAt" TIMESTAMP
 );
 
 CREATE TABLE "Enrollment"

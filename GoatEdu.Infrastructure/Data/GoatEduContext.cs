@@ -273,20 +273,27 @@ namespace Infrastructure.Data
             {
                 entity.Property(e => e.Id).HasDefaultValueSql("uuid_generate_v4()");
 
+                entity.HasOne(d => d.Wallet)
+                    .WithOne(p => p.User)
+                    .HasForeignKey<User>(d => d.WalletId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("User_walletId_fkey");
+
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.RoleId)
                     .HasConstraintName("User_roleId_fkey");
-
-                entity.HasOne(d => d.Wallet)
-                    .WithMany(p => p.Users)
-                    .HasForeignKey(d => d.WalletId)
-                    .HasConstraintName("User_walletId_fkey");
             });
 
             modelBuilder.Entity<Wallet>(entity =>
             {
                 entity.Property(e => e.Id).HasDefaultValueSql("uuid_generate_v4()");
+
+                entity.HasOne(d => d.User)
+                    .WithOne(p => p.Wallet)
+                    .HasForeignKey<Wallet>(d => d.Id)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("Wallet_userId_fkey");
             });
 
             OnModelCreatingPartial(modelBuilder);
