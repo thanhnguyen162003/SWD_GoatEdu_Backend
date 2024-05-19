@@ -14,6 +14,9 @@ public class RegisterDto
     [Required(ErrorMessage = "Password is required")]
     public string? Password { get; set; }
     
+    [Required(ErrorMessage = "Fullname is required")]
+    public string? FullName { get; set; }
+    
     // [Required(ErrorMessage = "Phone Number is required")]
     // public string? PhoneNumber { get; set; }
     

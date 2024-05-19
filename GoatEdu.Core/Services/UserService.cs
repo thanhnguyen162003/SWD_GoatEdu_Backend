@@ -1,5 +1,6 @@
 using System.Data;
 using System.Net;
+using AutoMapper;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces;
@@ -13,11 +14,13 @@ public class UserService : IUserService
 {
     private readonly JWTGenerator _tokenGenerator;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public UserService(IUnitOfWork unitOfWork, JWTGenerator tokenGenerator)
+    public UserService(IUnitOfWork unitOfWork, JWTGenerator tokenGenerator, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _tokenGenerator = tokenGenerator;
+        _mapper = mapper;
     }
 
     public async Task<User> GetUserByUsername(string username)
@@ -101,11 +104,8 @@ public class UserService : IUserService
         };
        
         var token = _tokenGenerator.GenerateToken(loginDtoRequest);
-        var loginResponse = new LoginResponseDto
-        {
-            User = user,
-            Token = token
-        };
+        var loginResponse = _mapper.Map<LoginResponseDto>(user);
+        loginResponse.Token = token;
         return new ResponseDto(HttpStatusCode.OK, "Login successfully!", loginResponse);
     }
 
@@ -124,6 +124,7 @@ public class UserService : IUserService
             Username = registerUser.Username,
             Password = hashedPassword,
             RoleId = registerUser.RoleId,
+            Fullname = registerUser.FullName,
             PhoneNumber = null,
             Email = registerUser.Email,
             CreatedAt = DateTime.Now,
