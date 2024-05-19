@@ -9,5 +9,6 @@ public class MapperConfigProfile : Profile
     public MapperConfigProfile()
     {
         CreateMap<Notification, NotificationResponseDto>().ReverseMap();
+        CreateMap<Notification, NotificationRequestDto>().ReverseMap();
     }
 }

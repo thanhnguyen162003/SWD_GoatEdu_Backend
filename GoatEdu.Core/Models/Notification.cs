@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure
 {
     [Table("Notification")]
-    public partial class Notification 
+    public partial class Notification
     {
         [Key]
         [Column("id")]

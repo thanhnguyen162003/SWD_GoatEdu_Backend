@@ -14,15 +14,20 @@ public class BaseRepository<T> : IRepository<T> where T : BaseEntity
         _entities = context.Set<T>();
     }
 
-    public T GetById(Guid? id)
+    public async Task<T?> GetByIdAsync(Guid? id)
     {
-        return _entities.Find(id);
+        return await _entities.FindAsync(id);
     }
 
-    public void Add(T entity)
+    public async Task AddAsync(T entity)
     {
         entity.IsDeleted = false;
-        _entities.AddAsync(entity);
+        await _entities.AddAsync(entity);
+    }
+
+    public async Task AddRangeAsync(List<T> entities)
+    {
+        await _entities.AddRangeAsync(entities);
     }
     
     public IEnumerable<T> GetAll()
@@ -32,5 +37,10 @@ public class BaseRepository<T> : IRepository<T> where T : BaseEntity
     public void Update(T entity)
     {
         _entities.Update(entity);
+    }
+
+    public void UpdateRange(List<T> entities)
+    {
+        _entities.UpdateRange(entities);
     }
 }

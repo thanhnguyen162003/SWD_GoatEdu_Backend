@@ -1,4 +1,5 @@
 using System.Text;
+using GoatEdu.API;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
@@ -20,18 +21,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<GoatEduContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddCors();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-builder.Services.AddScoped<IRoleService, RoleService>();
-
-
-
-builder.Services.AddScoped<JWTGenerator, JWTConfig>();
-
-builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
-
+builder.Services.AddWebAPIService();
 builder.Services.AddControllers();
 // builder.Services.AddAuthentication().AddGoogle(googleOptions =>
 // {

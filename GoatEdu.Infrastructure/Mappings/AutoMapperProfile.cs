@@ -7,9 +7,8 @@ public class AutoMapperProfile : Profile
 {
     public AutoMapperProfile()
     {
-        CreateMap<Role, RoleResponseDto>();
-        CreateMap<RoleResponseDto, Role>();
-
+        CreateMap<Role, RoleResponseDto>().ReverseMap();
+    
       
     }
 }

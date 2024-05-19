@@ -25,6 +25,7 @@ public static class DI
         // Services
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IRoleService, RoleService>();
+        services.AddScoped<INotificationService, NotificationService>();
         
         
         // Others

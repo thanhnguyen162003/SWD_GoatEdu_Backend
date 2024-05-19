@@ -10,7 +10,6 @@
     <ItemGroup>
       <Folder Include="DTOs\SubjectDto\" />
       <Folder Include="DTOs\UserDto\" />
-      <Folder Include="QueriesFilter\" />
     </ItemGroup>
 
     <ItemGroup>
