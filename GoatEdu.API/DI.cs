@@ -1,7 +1,7 @@
 using GoatEdu.Core.Interfaces;
-using GoatEdu.Core.Interfaces.ChapterInterfaces;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
 using GoatEdu.Core.Interfaces.LessonInterfaces;
+using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.Security;
@@ -19,7 +19,7 @@ namespace GoatEdu.API;
 
 public static class DI
 {
-    public static IServiceCollection AddWebAPIService(this IServiceCollection services)
+    public static IServiceCollection AddWebApiService(this IServiceCollection services)
     {
         // Repositories
         services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
@@ -30,6 +30,7 @@ public static class DI
         services.AddScoped<ILessonRepository, LessonRepository>();
         services.AddScoped<IChapterRepository, ChapterRepository>();
 
+        services.AddScoped<INoteRepository, NoteRepository>();
         
         
         // Services
@@ -37,6 +38,7 @@ public static class DI
         services.AddScoped<IMailService, MailService>();
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<INoteService, NoteService>();        
         services.AddScoped<ISubjectService, SubjectService>();
         services.AddScoped<ILessonService, LessonService>();
         services.AddScoped<IChapterService, ChapterService>();
@@ -49,6 +51,8 @@ public static class DI
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<JWTGenerator, JWTConfig>();
         services.AddScoped<ICurrentTime, CurrentTime>();
+        services.AddScoped<IClaimsService, ClaimsService>();
+        services.AddHttpContextAccessor();
         return services;
     }
 }

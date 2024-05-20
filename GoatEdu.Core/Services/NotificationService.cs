@@ -45,15 +45,13 @@ public class NotificationService : INotificationService
         queryFilter.PageNumber = queryFilter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.PageNumber;
         queryFilter.PageSize = queryFilter.PageSize == 0 ? _paginationOptions.DefaultPageSize : queryFilter.PageSize;
         var listNoti = await _unitOfWork.NotificationRepository.GetNotificationByUserId(queryFilter.UserId);
-        if (listNoti.Any())
-        {
-            var mapperList = _mapper.Map<List<NotificationResponseDto>>(listNoti);
-            return PagedList<NotificationResponseDto>.Create(mapperList, queryFilter.PageNumber, queryFilter.PageSize);
-        }
-        return new PagedList<NotificationResponseDto>(new List<NotificationResponseDto>(), 0, 0,0);
+        if (!listNoti.Any())
+            return new PagedList<NotificationResponseDto>(new List<NotificationResponseDto>(), 0, 0, 0);
+        var mapperList = _mapper.Map<List<NotificationResponseDto>>(listNoti);
+        return PagedList<NotificationResponseDto>.Create(mapperList, queryFilter.PageNumber, queryFilter.PageSize);
     }
 
-    public async Task<ResponseDto> InsertNotification(List<NotificationRequestDto> notification)
+    public async Task<ResponseDto> InsertNotifications(List<NotificationRequestDto> notification)
     {
         var noti = _mapper.Map<List<Notification>>(notification);
         await _unitOfWork.NotificationRepository.AddRangeAsync(noti);
@@ -65,7 +63,7 @@ public class NotificationService : INotificationService
         return new ResponseDto(HttpStatusCode.OK, "Add Failed !");
     }
 
-    public async Task<ResponseDto> DeleteNotification(List<Guid> ids)
+    public async Task<ResponseDto> DeleteNotifications(List<Guid> ids)
     {
         var notiFound = await _unitOfWork.NotificationRepository.GetNotificationByIds(ids);
         _unitOfWork.NotificationRepository.DeleteAsync(notiFound);

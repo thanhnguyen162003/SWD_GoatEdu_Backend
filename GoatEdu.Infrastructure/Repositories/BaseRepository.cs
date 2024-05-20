@@ -30,9 +30,9 @@ public class BaseRepository<T> : IRepository<T> where T : class
         await _entities.AddRangeAsync(entities);
     }
     
-    public IEnumerable<T> GetAll()
+    public IQueryable<T> GetAll()
     {
-        return _entities.AsEnumerable().ToList();
+        return _entities.AsQueryable();
     }
     public void Update(T entity)
     {
