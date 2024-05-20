@@ -86,9 +86,14 @@ public class UserService : IUserService
     {
         var user = await _unitOfWork.UserRepository.GetUserByUsernameNotGoogle(login.Username);
         // var emailUser = await _userRepository.GetUserByEmail(login.Username);
+        
         if (user == null)
         {
             return new ResponseDto(HttpStatusCode.NotFound, "UserName or Email not existed or you have register with Google");
+        }
+        if (user.EmailVerify == false)
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "Please CONFIRM YOUR FAKING EMAIL !!!");
         }
 
         if (!BCrypt.Net.BCrypt.Verify(login.Password, user.Password))

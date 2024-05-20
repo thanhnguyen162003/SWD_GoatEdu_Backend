@@ -39,11 +39,12 @@ public class UserRepository : BaseRepository<User>, IUserRepository
     }
     public async Task<User> GetUserByUsernameNotGoogle(string username)
     {
-        return await _entities.Where(
-            x => x.Username == username && x.IsDeleted == false || x.Email == username && x.IsDeleted == false
-        && x.Provider != UserEnum.GOOGLE
-            ).FirstOrDefaultAsync();
+        return await _entities
+            .Where(x => (x.Username == username || x.Email == username) && x.IsDeleted == false && x.Provider != UserEnum.GOOGLE)
+            .Include(x => x.Role)
+            .FirstOrDefaultAsync();
     }
+
     
     public async Task<User> AddUser(User user)
     {

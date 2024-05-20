@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure
@@ -24,6 +25,7 @@ namespace Infrastructure
         [Column("updatedAt", TypeName = "timestamp without time zone")]
         public DateTime? UpdatedAt { get; set; }
 
+        [JsonIgnore]
         [InverseProperty("Role")]
         public virtual ICollection<User> Users { get; set; }
     }
