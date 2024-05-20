@@ -116,7 +116,7 @@ public class UserService : IUserService
     public async Task<ResponseDto> Register(RegisterDto registerUser)
     {
         //check email exist???
-        var isUserExits = await _unitOfWork.UserRepository.GetUserByUsername(registerUser.Username);
+        var isUserExits = await _unitOfWork.UserRepository.GetUserByUsernameWithEmailCheckRegister(registerUser.Username, registerUser.Email);
         if (isUserExits != null)
         {
             return new ResponseDto(HttpStatusCode.BadRequest, "Account has been exits!");
@@ -144,7 +144,8 @@ public class UserService : IUserService
             Username = hashedUsername,
             Email = registerUser.Email,
             Fullname = registerUser.FullName,
-            Password = hashedPassword
+            Password = hashedPassword,
+            Id = user.Id
         };
         //send confirm email here!!!
         await _mailService.SendUsingTemplateFromFile("Responses/VerifyToken.cshtml","Dit me confirm cho tao", userMail);

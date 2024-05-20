@@ -1,4 +1,6 @@
 using GoatEdu.Core.DTOs;
+using GoatEdu.Core.DTOs.MailDto;
+using GoatEdu.Core.Interfaces.MailInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +12,12 @@ namespace GoatEdu.API.Controllers;
 public class AuthenticateController : ControllerBase
 {
     private readonly IUserService _userService;
+    private readonly IMailService _mailService;
     public AuthenticateController(
-        IUserService userService)
+        IUserService userService, IMailService mailService)
     {
         _userService = userService;
+        _mailService = mailService;
     }
 
     [HttpPost]
@@ -50,5 +54,11 @@ public class AuthenticateController : ControllerBase
     public async Task<ResponseDto> RegisterGoogle([FromBody] GoogleRegisterDto model)
     {
         return await _userService.RegisterByGoogle(model);
+    }
+    [HttpPost]
+    [Route("mail")]
+    public async Task<ResponseDto> RegisterGoogle([FromQuery] ConfirmMailDto dto)
+    {
+        return await _mailService.ConfirmEmailComplete(dto);
     }
 }

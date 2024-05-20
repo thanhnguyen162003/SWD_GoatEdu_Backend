@@ -31,6 +31,12 @@ public class UserRepository : BaseRepository<User>, IUserRepository
             x => x.Username == username && x.IsDeleted == false || x.Email == username && x.IsDeleted == false
             ).FirstOrDefaultAsync();
     }
+    public async Task<User> GetUserByUsernameWithEmailCheckRegister(string username, string email)
+    {
+        return await _entities.Where(
+            x => x.Username == username && x.IsDeleted == false || x.Email == email && x.IsDeleted == false
+        ).FirstOrDefaultAsync();
+    }
     public async Task<User> GetUserByUsernameNotGoogle(string username)
     {
         return await _entities.Where(

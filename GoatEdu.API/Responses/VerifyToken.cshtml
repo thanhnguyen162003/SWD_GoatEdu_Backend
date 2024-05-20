@@ -136,7 +136,7 @@
                         <td bgcolor="#ffffff" align="left"
                             style="padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
                             <p style="margin: 0; margin-bottom: 1rem">
-                                Hi <strong>@Model.Username</strong>!
+                                Hi <strong>@Model.Id</strong>!
                             </p>
                             <p style="margin: 0;">
                                 We're excited to have you get started. First, you need to confirm your
@@ -159,9 +159,10 @@
                                                     </a>
                                                     <script>
                                                         var userId = @Model.Username
+                                                        var id = @Model.Id
                                                                 var token = @Model.Password
 
-                                                                var url = `https://localhost:7260/api/mail?confirm-email=${token}&userId=${userId}`
+                                                                var url = `https://localhost:7260/api/auth/mail?token=${token}&userId=${userId}&id=${Id}`
 
                                                         document.getElementById('verify-link').href = url
                                                         console.log("Start...");
