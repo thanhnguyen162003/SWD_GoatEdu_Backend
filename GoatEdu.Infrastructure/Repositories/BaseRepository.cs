@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class BaseRepository<T> : IRepository<T> where T : BaseEntity
+public class BaseRepository<T> : IRepository<T> where T : class
 {
     private readonly GoatEduContext _context;
     protected readonly DbSet<T> _entities;
@@ -21,7 +21,7 @@ public class BaseRepository<T> : IRepository<T> where T : BaseEntity
 
     public async Task AddAsync(T entity)
     {
-        entity.IsDeleted = false;
+        // entity.IsDeleted = false;
         await _entities.AddAsync(entity);
     }
 
@@ -32,7 +32,7 @@ public class BaseRepository<T> : IRepository<T> where T : BaseEntity
     
     public IEnumerable<T> GetAll()
     {
-        return _entities.Where(x => x.IsDeleted == false).AsEnumerable().ToList();
+        return _entities.AsEnumerable().ToList();
     }
     public void Update(T entity)
     {

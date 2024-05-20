@@ -2,7 +2,7 @@ using Infrastructure;
 
 namespace GoatEdu.Core.Interfaces.GenericInterfaces;
 
-public interface IRepository<T> where T : BaseEntity
+public interface IRepository<T> where T : class
 {
     IEnumerable<T> GetAll();
     Task<T?> GetByIdAsync(Guid? id);
