@@ -1,4 +1,6 @@
 using GoatEdu.Core.Interfaces;
+using GoatEdu.Core.Interfaces.ChapterInterfaces;
+using GoatEdu.Core.Interfaces.ClaimInterfaces;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
 using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
