@@ -1,12 +1,14 @@
 using System.Data;
 using System.Net;
 using AutoMapper;
+using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.Security;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using Infrastructure;
+using MailKit;
 
 namespace GoatEdu.Core.Services;
 
@@ -15,12 +17,14 @@ public class UserService : IUserService
     private readonly JWTGenerator _tokenGenerator;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly Interfaces.MailInterfaces.IMailService _mailService;
 
-    public UserService(IUnitOfWork unitOfWork, JWTGenerator tokenGenerator, IMapper mapper)
+    public UserService(IUnitOfWork unitOfWork, JWTGenerator tokenGenerator, IMapper mapper, Interfaces.MailInterfaces.IMailService mailService)
     {
         _unitOfWork = unitOfWork;
         _tokenGenerator = tokenGenerator;
         _mapper = mapper;
+        _mailService = mailService;
     }
 
     public async Task<User> GetUserByUsername(string username)
@@ -119,6 +123,7 @@ public class UserService : IUserService
         }
 
         string hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerUser.Password);
+        string hashedUsername = BCrypt.Net.BCrypt.HashPassword(registerUser.Username);
         User user = new User()
         {
             Username = registerUser.Username,
@@ -134,8 +139,15 @@ public class UserService : IUserService
             Provider = UserEnum.CREDENTIAL
         };
         var result = await _unitOfWork.UserRepository.AddUser(user);
+        UserMail userMail = new UserMail()
+        {
+            Username = hashedUsername,
+            Email = registerUser.Email,
+            Fullname = registerUser.FullName,
+            Password = hashedPassword
+        };
         //send confirm email here!!!
-        
+        await _mailService.SendUsingTemplateFromFile("Responses/VerifyToken.cshtml","Dit me confirm cho tao", userMail);
         if (result == null)
         {
             return new ResponseDto(HttpStatusCode.BadRequest, "Somethings has error!");

@@ -1,5 +1,6 @@
 using System.Text;
 using GoatEdu.API;
+using GoatEdu.Core.DTOs.MailDto;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
@@ -63,6 +64,13 @@ builder.Services.AddAuthentication(opt =>
         }
     };
 });
+// fluent mail config
+var mailSetting = configuration.GetSection("GmailSetting").Get<MailSetting>();
+
+builder.Services.AddFluentEmail(mailSetting.Mail)
+    .AddSmtpSender(mailSetting.SmtpServer, mailSetting.Port,
+        mailSetting.DisplayName, mailSetting.Password)
+    .AddRazorRenderer();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>

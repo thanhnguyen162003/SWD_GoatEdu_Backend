@@ -8,6 +8,9 @@ using GoatEdu.Core.Mappings;
 using GoatEdu.Core.Services;
 using Infrastructure.Mappings;
 using Infrastructure.Repositories;
+using MailKit;
+using IMailService = GoatEdu.Core.Interfaces.MailInterfaces.IMailService;
+using MailService = GoatEdu.Core.Services.MailService;
 
 namespace GoatEdu.API;
 
@@ -24,6 +27,7 @@ public static class DI
         
         // Services
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IMailService, MailService>();
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<INotificationService, NotificationService>();
         
