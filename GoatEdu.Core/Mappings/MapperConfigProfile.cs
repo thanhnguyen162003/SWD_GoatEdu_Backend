@@ -2,6 +2,7 @@ using AutoMapper;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.NoteDto;
 using GoatEdu.Core.DTOs.NotificationDto;
+using GoatEdu.Core.DTOs.SubjectDto;
 using Infrastructure;
 
 namespace GoatEdu.Core.Mappings;
@@ -12,6 +13,8 @@ public class MapperConfigProfile : Profile
     {
         CreateMap<Notification, NotificationResponseDto>().ReverseMap();
         CreateMap<Notification, NotificationRequestDto>().ReverseMap();
+        CreateMap<Subject, SubjectResponseDto>().ReverseMap();
+        CreateMap<SubjectResponseDto, Subject>().ReverseMap();
         CreateMap<Note, NoteResponseDto>().ReverseMap();
         CreateMap<Note, NoteRequestDto>().ReverseMap();
         CreateMap<Note, NoteDetailResponseDto>().ReverseMap();
