@@ -5,12 +5,6 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-    
-
-    <ItemGroup>
-      <Folder Include="DTOs\SubjectDto\" />
-      <Folder Include="DTOs\UserDto\" />
-    </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="13.0.1" />

@@ -47,7 +47,7 @@ public class UserService : IUserService
         LoginDtoRequest loginDtoRequest = new LoginDtoRequest()
         {
             Email = dto.Email,
-            Username = user.Username
+            Username = user.Fullname
         };
         var token = _tokenGenerator.GenerateToken(loginDtoRequest);
         return new ResponseDto(HttpStatusCode.OK, "Login successfully!", token);
@@ -62,7 +62,7 @@ public class UserService : IUserService
         }
         User user = new User()
         {
-            Username = dto.Name,
+            Fullname = dto.Name,
             RoleId = dto.RoleId,
             PhoneNumber = null,
             Email = dto.Email,

@@ -1,0 +1,6 @@
+namespace GoatEdu.Core.Interfaces.LessonInterfaces;
+
+public interface ILessonService
+{
+    
+}

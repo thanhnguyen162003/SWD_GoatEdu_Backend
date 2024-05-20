@@ -1,8 +1,11 @@
 using GoatEdu.Core.Interfaces;
+using GoatEdu.Core.Interfaces.ChapterInterfaces;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
+using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.Security;
+using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using GoatEdu.Core.Mappings;
 using GoatEdu.Core.Services;
@@ -23,6 +26,10 @@ public static class DI
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
+        services.AddScoped<ISubjectRepository, SubjectRepository>();
+        services.AddScoped<ILessonRepository, LessonRepository>();
+        services.AddScoped<IChapterRepository, ChapterRepository>();
+
         
         
         // Services
@@ -30,6 +37,10 @@ public static class DI
         services.AddScoped<IMailService, MailService>();
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<ISubjectService, SubjectService>();
+        services.AddScoped<ILessonService, LessonService>();
+        services.AddScoped<IChapterService, ChapterService>();
+
         
         
         // Others
