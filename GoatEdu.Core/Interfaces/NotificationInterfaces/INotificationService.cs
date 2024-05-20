@@ -10,6 +10,6 @@ public interface INotificationService
 {
     Task<ResponseDto> GetNotificationById(Guid id);
     Task<PagedList<NotificationResponseDto>> GetNotificationByUserId(NotificationQueryFilter queryFilter);
-    Task<ResponseDto> InsertNotification(List<NotificationRequestDto> notification);
-    Task<ResponseDto> DeleteNotification(List<Guid> ids);
+    Task<ResponseDto> InsertNotifications(List<NotificationRequestDto> notification);
+    Task<ResponseDto> DeleteNotifications(List<Guid> ids);
 }

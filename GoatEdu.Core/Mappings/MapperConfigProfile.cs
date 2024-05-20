@@ -1,5 +1,6 @@
 using AutoMapper;
 using GoatEdu.Core.DTOs;
+using GoatEdu.Core.DTOs.NoteDto;
 using GoatEdu.Core.DTOs.NotificationDto;
 using Infrastructure;
 
@@ -11,7 +12,9 @@ public class MapperConfigProfile : Profile
     {
         CreateMap<Notification, NotificationResponseDto>().ReverseMap();
         CreateMap<Notification, NotificationRequestDto>().ReverseMap();
-        
+        CreateMap<Note, NoteResponseDto>().ReverseMap();
+        CreateMap<Note, NoteRequestDto>().ReverseMap();
+        CreateMap<Note, NoteDetailResponseDto>().ReverseMap();
         
         CreateMap<User, LoginResponseDto>()
             .ForMember(dest => dest.userId, opt => opt.MapFrom(src => src.Id))

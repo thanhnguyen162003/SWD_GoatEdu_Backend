@@ -1,4 +1,5 @@
 using GoatEdu.Core.Interfaces;
+using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
@@ -13,6 +14,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly IUserRepository _userRepository;
     private readonly IRoleRepository _roleRepository;
     private readonly INotificationRepository _notificationRepository;
+    private readonly INoteRepository _noteRepository;
 
     public UnitOfWork(GoatEduContext context)
     {
@@ -23,6 +25,7 @@ public class UnitOfWork : IUnitOfWork
     public IUserRepository UserRepository => _userRepository ?? new UserRepository(_context);
     public IRoleRepository RoleRepository => _roleRepository ?? new RoleRepository(_context);
     public INotificationRepository NotificationRepository => _notificationRepository ?? new NotificationRepository(_context);
+    public INoteRepository NoteRepository => _noteRepository ?? new NoteRepository(_context);
 
     public void SaveChanges()
     {

@@ -22,7 +22,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<GoatEduContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddCors();
-builder.Services.AddWebAPIService();
+builder.Services.AddWebApiService();
 builder.Services.AddControllers();
 // builder.Services.AddAuthentication().AddGoogle(googleOptions =>
 // {
