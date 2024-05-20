@@ -1,14 +1,10 @@
 using System.Text;
 using GoatEdu.API;
 using GoatEdu.Core.DTOs.MailDto;
-using GoatEdu.Core.Interfaces;
-using GoatEdu.Core.Interfaces.GenericInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
-using GoatEdu.Core.Interfaces.Security;
-using GoatEdu.Core.Interfaces.UserInterfaces;
-using GoatEdu.Core.Services;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
+using Infrastructure.Repositories.CacheRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -16,6 +12,18 @@ using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Dependency Injection for Cache Repository
+// builder.Services.AddScoped<RoleRepository>();
+// builder.Services.AddScoped<IRoleRepository, CachedRoleRepository>();
+// builder.Services.AddStackExchangeRedisCache(redisOptions =>
+// {
+//     string connection = builder.Configuration.GetConnectionString("Redis");
+//     redisOptions.Configuration = connection;
+// } );
+
+
+//Other Config
 ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -29,7 +37,7 @@ builder.Services.AddControllers();
 //     googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
 //     googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
 // });
-
+//JWT Config
 builder.Services.AddAuthentication(opt =>
 {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -73,6 +81,7 @@ builder.Services.AddFluentEmail(mailSetting.Mail)
     .AddRazorRenderer();
 
 builder.Services.AddEndpointsApiExplorer();
+//SwaggerConfig
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "GoatEdu API", Version = "v1" });
@@ -109,6 +118,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+//Cors config
 app.UseCors(builder =>
 {
     builder.AllowAnyOrigin()
