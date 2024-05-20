@@ -55,9 +55,9 @@ public class AuthenticateController : ControllerBase
     {
         return await _userService.RegisterByGoogle(model);
     }
-    [HttpPost]
+    [HttpGet]
     [Route("mail")]
-    public async Task<ResponseDto> RegisterGoogle([FromQuery] ConfirmMailDto dto)
+    public async Task<ResponseDto> ConfirmMail([FromQuery] ConfirmMailDto dto)
     {
         return await _mailService.ConfirmEmailComplete(dto);
     }

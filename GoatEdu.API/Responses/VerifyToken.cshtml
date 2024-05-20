@@ -152,21 +152,20 @@
                                         <table border="0" cellspacing="0" cellpadding="0">
                                             <tr>
                                                 <td align="center" style="border-radius: 3px;" bgcolor="#FFA73B">
-                                                    <a id="verify-link" href="#!" target="_blank"
+                                                    <a id="verify-link" href="https://localhost:7260/api/auth/mail?token=@Model.Password&userId=@Model.Username&id=@Model.Id" target="_blank"
                                                        style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">
-                                                        Confirm
-                                                        Account
+                                                        Confirm Account
                                                     </a>
-                                                    <script>
-                                                        var userId = @Model.Username
-                                                        var id = @Model.Id
-                                                                var token = @Model.Password
-
-                                                                var url = `https://localhost:7260/api/auth/mail?token=${token}&userId=${userId}&id=${Id}`
-
-                                                        document.getElementById('verify-link').href = url
-                                                        console.log("Start...");
-                                                    </script>
+                                                    @* <script> *@
+                                                    @*     var userId = @Model.Username *@
+                                                    @*     var id = @Model.Id *@
+                                                    @*             var token = @Model.Password *@
+                                                    @* *@
+                                                    @*             var url = `https://localhost:7260/api/auth/mail?token=${token}&userId=${userId}&id=${id}` *@
+                                                    @* *@
+                                                    @*     document.getElementById('verify-link').href = url *@
+                                                    @*     console.log("Start..."); *@
+                                                    @* </script> *@
                                                 </td>
                                             </tr>
                                         </table>

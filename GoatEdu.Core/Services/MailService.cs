@@ -43,7 +43,7 @@ public class MailService : IMailService
         var hashedUsername = BCrypt.Net.BCrypt.HashPassword(user.Username);
 
         // Compare the hashed username with the hashed parameter
-        bool isUsernameMatch = BCrypt.Net.BCrypt.Verify(user.Username, hashedUsername);
+        bool isUsernameMatch = BCrypt.Net.BCrypt.Verify(dto.userId, hashedUsername);
 
         // Compare the hashed password in dto with the hashed password in the database
         bool isPasswordMatch = user.Password.Equals(dto.token);
