@@ -21,8 +21,7 @@ public class RoleRepository : BaseRepository<Role>, IRoleRepository
             .Select(x => new RoleResponseDto()
             {
                 Id = x.Id,
-                RoleName = x.RoleName,
-                CreatedAt = x.CreatedAt
+                RoleName = x.RoleName
             })
             .ToListAsync();
     }
@@ -33,8 +32,7 @@ public class RoleRepository : BaseRepository<Role>, IRoleRepository
             x => x.Id == id && x.IsDeleted == false).Select(x => new RoleResponseDto()
         {
             Id = x.Id,
-            RoleName = x.RoleName,
-            CreatedAt = x.CreatedAt
+            RoleName = x.RoleName
         }).FirstOrDefaultAsync();
     }
 
@@ -44,8 +42,7 @@ public class RoleRepository : BaseRepository<Role>, IRoleRepository
             x => x.RoleName == roleName && x.IsDeleted == false).Select(x => new RoleResponseDto()
         {
             Id = x.Id,
-            RoleName = x.RoleName,
-            CreatedAt = x.CreatedAt
+            RoleName = x.RoleName
         }).FirstOrDefaultAsync();
     }
 }

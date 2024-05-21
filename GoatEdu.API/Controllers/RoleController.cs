@@ -20,7 +20,7 @@ public class RoleController : ControllerBase
     {
         return await _roleService.GetAllRole();
     }
-    [HttpGet("/id/{id}")]
+    [HttpGet("id/{id}")]
     public async Task<RoleResponseDto> GetRoleById([FromRoute] Guid id)
     {
         return await _roleService.GetRoleByRoleId(id);

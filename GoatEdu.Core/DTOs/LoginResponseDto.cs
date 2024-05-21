@@ -1,3 +1,4 @@
+using GoatEdu.Core.DTOs.RoleDto;
 using Infrastructure;
 
 namespace GoatEdu.Core.DTOs;
@@ -16,7 +17,7 @@ public class LoginResponseDto
     
     public bool emailVerify { get; set; }
     
-    public Role Role { get; set; }
+    public RoleResponseDto Role { get; set; }
 
     public string Token { get; set; }
 }

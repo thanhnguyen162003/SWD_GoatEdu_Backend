@@ -16,6 +16,7 @@ public class OpenAIController : ControllerBase
         var openai = new OpenAIAPI("OpenAI:APIKey");
         CompletionRequest completionRequest = new CompletionRequest();
         completionRequest.Prompt = query;
+        //no money just use davinciText model pls
         completionRequest.Model = OpenAI_API.Models.Model.DavinciText;
         completionRequest.MaxTokens = 1024;
 

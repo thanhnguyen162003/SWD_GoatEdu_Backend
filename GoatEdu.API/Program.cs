@@ -1,10 +1,7 @@
 using System.Text;
 using GoatEdu.API;
 using GoatEdu.Core.DTOs.MailDto;
-using GoatEdu.Core.Interfaces.RoleInterfaces;
 using Infrastructure.Data;
-using Infrastructure.Repositories;
-using Infrastructure.Repositories.CacheRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

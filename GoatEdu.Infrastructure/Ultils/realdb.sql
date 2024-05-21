@@ -76,7 +76,7 @@ CREATE TABLE "Transaction"
 CREATE TABLE "Subject"
 (
     "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "subjectName" VARCHAR,
+    "subjectName" VARCHAR,1
     "subjectCode" VARCHAR,
     "information" VARCHAR,
     "class" VARCHAR,

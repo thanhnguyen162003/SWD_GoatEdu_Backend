@@ -21,8 +21,10 @@ namespace Infrastructure
         [Column("roleName", TypeName = "character varying")]
         public string? RoleName { get; set; }
         [Column("createdAt", TypeName = "timestamp without time zone")]
+        [JsonIgnore]
         public DateTime? CreatedAt { get; set; }
         [Column("updatedAt", TypeName = "timestamp without time zone")]
+        [JsonIgnore]
         public DateTime? UpdatedAt { get; set; }
 
         [JsonIgnore]
