@@ -44,9 +44,13 @@ public class NotificationService : INotificationService
     {
         queryFilter.PageNumber = queryFilter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.PageNumber;
         queryFilter.PageSize = queryFilter.PageSize == 0 ? _paginationOptions.DefaultPageSize : queryFilter.PageSize;
+        
         var listNoti = await _unitOfWork.NotificationRepository.GetNotificationByUserId(queryFilter.UserId);
+
         if (!listNoti.Any())
+        {
             return new PagedList<NotificationResponseDto>(new List<NotificationResponseDto>(), 0, 0, 0);
+        }
         var mapperList = _mapper.Map<List<NotificationResponseDto>>(listNoti);
         return PagedList<NotificationResponseDto>.Create(mapperList, queryFilter.PageNumber, queryFilter.PageSize);
     }
@@ -56,6 +60,7 @@ public class NotificationService : INotificationService
         var noti = _mapper.Map<List<Notification>>(notification);
         await _unitOfWork.NotificationRepository.AddRangeAsync(noti);
         var result = await _unitOfWork.SaveChangesAsync();
+        
         if (result > 0)
         {
             return new ResponseDto(HttpStatusCode.OK, "Add Successfully !");
@@ -68,6 +73,7 @@ public class NotificationService : INotificationService
         var notiFound = await _unitOfWork.NotificationRepository.GetNotificationByIds(ids);
         _unitOfWork.NotificationRepository.DeleteAsync(notiFound);
         var result = await _unitOfWork.SaveChangesAsync();
+        
         if (result > 0)
         {
             return new ResponseDto(HttpStatusCode.OK, "Delete Successfully !");
