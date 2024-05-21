@@ -49,10 +49,13 @@ public class NoteService : INoteService
     {
         queryFilter.PageNumber = queryFilter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.PageNumber;
         queryFilter.PageSize = queryFilter.PageSize == 0 ? _paginationOptions.DefaultPageSize : queryFilter.PageSize;
-        var listNote = _unitOfWork.NoteRepository.GetAll();
-        listNote = ApplyFilterSortAndSearch(listNote, queryFilter);
-        var list = await listNote.ToListAsync();
-        if (!list.Any()) return new PagedList<NoteResponseDto>(new List<NoteResponseDto>(), 0, 0, 0);
+        
+        var listNote = await _unitOfWork.NoteRepository.GetNoteByFilters(queryFilter);
+        
+        if (!listNote.Any())
+        {
+            return new PagedList<NoteResponseDto>(new List<NoteResponseDto>(), 0, 0, 0);
+        }
         var mapperList = _mapper.Map<List<NoteResponseDto>>(listNote);
         return PagedList<NoteResponseDto>.Create(mapperList, queryFilter.PageNumber, queryFilter.PageSize);
     }
@@ -83,31 +86,5 @@ public class NoteService : INoteService
         return new ResponseDto(HttpStatusCode.OK, "Delete Failed !");
     }
 
-    private IQueryable<Note> ApplyFilterSortAndSearch(IQueryable<Note> notes, NoteQueryFilter queryFilter)
-    {
-        notes = notes.Where(x => x.IsDeleted == false);
-        
-        if (!string.IsNullOrEmpty(queryFilter.Search))
-        {
-            notes = notes.Where(x => x.NoteName.Contains(queryFilter.Search));
-        }
-        
-        notes = ApplySorting(notes, queryFilter);
-        
-        return notes;
-    }
-    
-    private IQueryable<Note> ApplySorting(IQueryable<Note> notes, NoteQueryFilter queryFilter)
-    {
-        notes = queryFilter.Sort.ToLower() switch
-        {
-            "name" => queryFilter.SortDirection.ToLower() == "desc"
-                ? notes.OrderByDescending(x => x.NoteName)
-                : notes.OrderBy(x => x.NoteName),
-            _ => queryFilter.SortDirection.ToLower() == "desc"
-                ? notes.OrderByDescending(x => x.CreatedAt).ThenBy(x => x.NoteName)
-                : notes.OrderBy(x => x.CreatedAt).ThenBy(x => x.NoteName),
-        };
-        return notes;
-    }
+   
 }
