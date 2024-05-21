@@ -23,9 +23,9 @@ You will need the following tools:
 
 ## Instructions
 1. Install the latest [.NET Core 6 SDK](https://dotnet.microsoft.com/download). 
-2. Run `dotnet new --install Net6WebTemplate::1.0.0-beta.2` to install the project template
-3. Then navigate to the location you would like to create to project
-4. Run `dotnet new net6webapi -o "my-project"` to create a new project
+2. Run `git clone https://github.com/huscongao1692003/SWD_GoatEdu_Backend.git` to install the project
+3. Then navigate to the location you would like to create to open
+
 
 ### Docker Setup
 ASP.NET Core Web API uses HTTPS and relies on certificates for trust, identity and encryption. 
@@ -70,5 +70,5 @@ Icon made by [Flat Icons](https://www.flaticon.com/authors/flat-icons) from [www
 The [main](https://github.com/marlonajgayle/Net6WebApiTemplate/main) branch is running .NET 6.0
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/marlonajgayle/Net6WebApiTemplate/main/LICENSE.md) [main](https://github.com/marlonajgayle/Net6WebApiTemplate/main) branch is running .NET 6.0
+This project is licensed under the MIT License - see the [LICENSE.md]() [main]() branch is running .NET 6.0
 file for details.

@@ -21,6 +21,7 @@
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="OpenAI" Version="1.11.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
         <PackageReference Include="System.Security.Cryptography.Cng" Version="5.0.0" />
     </ItemGroup>
