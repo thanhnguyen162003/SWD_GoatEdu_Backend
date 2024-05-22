@@ -1,5 +1,6 @@
 using GoatEdu.Core.DTOs.NotificationDto;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
+using GoatEdu.Core.Models;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 

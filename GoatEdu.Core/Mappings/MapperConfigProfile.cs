@@ -3,6 +3,7 @@ using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.NoteDto;
 using GoatEdu.Core.DTOs.NotificationDto;
 using GoatEdu.Core.DTOs.SubjectDto;
+using GoatEdu.Core.Models;
 using Infrastructure;
 
 namespace GoatEdu.Core.Mappings;

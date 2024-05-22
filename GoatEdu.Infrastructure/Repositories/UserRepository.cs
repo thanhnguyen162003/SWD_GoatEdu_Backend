@@ -1,5 +1,6 @@
 using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces.UserInterfaces;
+using GoatEdu.Core.Models;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
