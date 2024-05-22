@@ -1,4 +1,5 @@
 using GoatEdu.Core.Interfaces.ChapterInterfaces;
+using GoatEdu.Core.Models;
 using Infrastructure.Data;
 
 namespace Infrastructure.Repositories;

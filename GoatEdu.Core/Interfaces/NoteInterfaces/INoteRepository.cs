@@ -1,4 +1,5 @@
 using GoatEdu.Core.Interfaces.GenericInterfaces;
+using GoatEdu.Core.Models;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure;
 

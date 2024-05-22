@@ -6,6 +6,7 @@ using GoatEdu.Core.DTOs.NotificationDto;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
+using GoatEdu.Core.Models;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure;
 using Microsoft.Extensions.Options;

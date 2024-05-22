@@ -1,5 +1,6 @@
 using GoatEdu.Core.DTOs.RoleDto;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
+using GoatEdu.Core.Models;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 

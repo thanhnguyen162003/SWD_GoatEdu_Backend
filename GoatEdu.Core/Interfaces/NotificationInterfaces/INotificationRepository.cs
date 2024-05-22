@@ -1,5 +1,6 @@
 using GoatEdu.Core.DTOs.NotificationDto;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
+using GoatEdu.Core.Models;
 using Infrastructure;
 
 namespace GoatEdu.Core.Interfaces.NotificationInterfaces;

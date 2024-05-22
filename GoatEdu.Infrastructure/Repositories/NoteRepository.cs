@@ -1,4 +1,5 @@
 using GoatEdu.Core.Interfaces.NoteInterfaces;
+using GoatEdu.Core.Models;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

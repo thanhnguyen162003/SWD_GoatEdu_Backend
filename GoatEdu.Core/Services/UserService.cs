@@ -7,6 +7,7 @@ using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.Security;
 using GoatEdu.Core.Interfaces.UserInterfaces;
+using GoatEdu.Core.Models;
 using Infrastructure;
 using MailKit;
 

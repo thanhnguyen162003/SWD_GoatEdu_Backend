@@ -6,6 +6,7 @@ using GoatEdu.Core.DTOs.MailDto;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.MailInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
+using GoatEdu.Core.Models;
 using Infrastructure;
 
 namespace GoatEdu.Core.Services;
