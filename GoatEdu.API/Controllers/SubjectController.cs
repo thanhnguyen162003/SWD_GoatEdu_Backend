@@ -21,4 +21,15 @@ public class SubjectController : ControllerBase
     {
         return await _subjectService.GetAllSubjects();
     }
+    
+    [HttpGet("id/{id}")]
+    public async Task<SubjectResponseDto> GetSubjectById(Guid id)
+    {
+        return await _subjectService.GetSubjectBySubjectId(id);
+    }
+    [HttpDelete("id/{id}")]
+    public async Task<ResponseDto> DeleteSubject(Guid id)
+    {
+        return await _subjectService.DeleteSubject(id);
+    }
 }

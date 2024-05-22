@@ -110,11 +110,11 @@ builder.Services.AddSwaggerGen(option =>
 var app = builder.Build();
 
 
-if (app.Environment.IsDevelopment())
-{
+// if (app.Environment.IsDevelopment())
+// {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+// }
 //Cors config
 app.UseCors(builder =>
 {

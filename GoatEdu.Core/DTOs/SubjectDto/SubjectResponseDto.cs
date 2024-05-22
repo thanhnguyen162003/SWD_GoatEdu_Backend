@@ -14,6 +14,6 @@ public class SubjectResponseDto
 
     public DateTime? CreatedAt { get; set; } 
 
-    public List<ChapterSubjectDto> Chapters { get; set; } 
+    public ICollection<ChapterSubjectDto>? Chapters { get; set; } 
 
 }

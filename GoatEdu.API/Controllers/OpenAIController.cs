@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenAI_API;
 using OpenAI_API.Completions;
@@ -5,6 +6,7 @@ using OpenAI_API.Completions;
 namespace GoatEdu.API.Controllers;
 
 [Route("api/[controller]")]
+[Authorize]
 [ApiController]
 public class OpenAIController : ControllerBase
 {

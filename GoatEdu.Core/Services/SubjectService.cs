@@ -22,19 +22,19 @@ public class SubjectService : ISubjectService
         return result;
     }
 
-    public Task<SubjectResponseDto> GetSubjectBySubjectId(Guid id)
+    public async Task<SubjectResponseDto> GetSubjectBySubjectId(Guid id)
     {
-        throw new NotImplementedException();
+        return await _unitOfWork.SubjectRepository.GetSubjectBySubjectId(id);
     }
 
-    public Task<ResponseDto> DeleteSubject(Guid id)
+    public async Task<ResponseDto> DeleteSubject(Guid id)
     {
-        throw new NotImplementedException();
+        return await _unitOfWork.SubjectRepository.DeleteSubject(id);
     }
 
-    public Task<ResponseDto> UpdateSubject(SubjectCreateDto dto)
+    public async Task<ResponseDto> UpdateSubject(SubjectCreateDto dto)
     {
-        throw new NotImplementedException();
+        return await _unitOfWork.SubjectRepository.UpdateSubject(dto);
     }
 
     public Task<ResponseDto> CreateSubject(SubjectCreateDto dto)
