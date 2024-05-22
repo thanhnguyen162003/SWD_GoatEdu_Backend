@@ -107,9 +107,11 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
         return new ResponseDto(HttpStatusCode.OK, "Subject successfully updated.");
     }
 
-    public Task<ResponseDto> CreateSubject(SubjectCreateDto dto)
+    public async Task<ResponseDto> CreateSubject(Subject subject)
     {
-        throw new NotImplementedException();
+        _context.Subjects.Add(subject);
+        await _context.SaveChangesAsync();
+        return new ResponseDto(HttpStatusCode.OK, "Create Success");
     }
 
     public Task<SubjectResponseDto> GetSubjectBySubjectName(string subjectName)
