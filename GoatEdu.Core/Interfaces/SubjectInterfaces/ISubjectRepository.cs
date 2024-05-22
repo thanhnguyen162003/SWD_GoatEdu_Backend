@@ -1,5 +1,6 @@
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.SubjectDto;
+using GoatEdu.Core.Models;
 using Infrastructure;
 
 namespace GoatEdu.Core.Interfaces.SubjectInterfaces;

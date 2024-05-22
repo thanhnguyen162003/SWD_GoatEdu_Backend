@@ -4,6 +4,7 @@ using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
+using GoatEdu.Core.Models;
 using Infrastructure;
 
 namespace GoatEdu.Core.Services;

@@ -1,3 +1,6 @@
+using FluentValidation;
+using GoatEdu.API.Controllers;
+using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.ChapterInterfaces;
 using GoatEdu.Core.Interfaces.ClaimInterfaces;
@@ -11,9 +14,9 @@ using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using GoatEdu.Core.Mappings;
 using GoatEdu.Core.Services;
+using GoatEdu.Core.Validator;
 using Infrastructure.Mappings;
 using Infrastructure.Repositories;
-using MailKit;
 using IMailService = GoatEdu.Core.Interfaces.MailInterfaces.IMailService;
 using MailService = GoatEdu.Core.Services.MailService;
 
@@ -55,6 +58,10 @@ public static class DI
         services.AddScoped<ICurrentTime, CurrentTime>();
         services.AddScoped<IClaimsService, ClaimsService>();
         services.AddHttpContextAccessor();
+        
+        // Add FluentValidation
+        services.AddScoped<IValidator<SubjectDto>, SubjectCreateDtoValidator>(); 
+        
         return services;
     }
 }
