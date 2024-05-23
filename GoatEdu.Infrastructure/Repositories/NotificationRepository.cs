@@ -20,9 +20,9 @@ public class NotificationRepository : INotificationRepository
         return await _context.Notifications.FindAsync(id);
     }
 
-    public async Task AddRangeAsync(List<Notification> entities)
+    public async Task AddAsync(Notification entitie)
     {
-        await _context.Notifications.AddRangeAsync(entities);
+        await _context.Notifications.AddAsync(entitie);
     }
 
     public async Task<List<Notification>> GetNotificationByUserId(Guid id)

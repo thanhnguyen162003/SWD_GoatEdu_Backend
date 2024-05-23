@@ -1,5 +1,7 @@
 using FluentValidation;
 using GoatEdu.API.Controllers;
+using GoatEdu.Core.DTOs.NoteDto;
+using GoatEdu.Core.DTOs.NotificationDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.ChapterInterfaces;
@@ -13,6 +15,7 @@ using GoatEdu.Core.Interfaces.Security;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using GoatEdu.Core.Mappings;
+using GoatEdu.Core.Models;
 using GoatEdu.Core.Services;
 using GoatEdu.Core.Validator;
 using Infrastructure.Mappings;
@@ -60,7 +63,9 @@ public static class DI
         services.AddHttpContextAccessor();
         
         // Add FluentValidation
-        services.AddScoped<IValidator<SubjectDto>, SubjectCreateDtoValidator>(); 
+        services.AddScoped<IValidator<SubjectDto>, SubjectCreateDtoValidator>();
+        services.AddScoped<IValidator<NotificationRequestDto>, NotificationRequestDtoValidator>();
+        services.AddScoped<IValidator<NoteRequestDto>, NoteRequestDtoValidator>();
         
         return services;
     }
