@@ -12,12 +12,13 @@ public class CachedRoleRepository : IRoleRepository
     private readonly IDistributedCache _distributedCache;
     private readonly GoatEduContext _context;
 
-    public CachedRoleRepository(RoleRepository decorated, IDistributedCache distributedCache,GoatEduContext context)
+    public CachedRoleRepository(IRoleRepository decorated, IDistributedCache distributedCache, GoatEduContext context)
     {
-        _decorated = decorated;
+        _decorated = decorated as RoleRepository ?? throw new ArgumentException("Decorated repository must be of type RoleRepository", nameof(decorated));
         _distributedCache = distributedCache;
         _context = context;
     }
+
     public async Task<ICollection<RoleResponseDto>> GetAllRole()
     {
         string key = "all-roles";

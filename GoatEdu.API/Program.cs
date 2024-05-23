@@ -18,9 +18,13 @@ ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
-//Dependency Injection for Cache Repository
-builder.Services.AddScoped<IRoleRepository,RoleRepository>();
-builder.Services.Decorate<IRoleRepository, CachedRoleRepository>(); 
+// Register RoleRepository first
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+
+// Then decorate it with CachedRoleRepository
+builder.Services.Decorate<IRoleRepository, CachedRoleRepository>();
+
+// Register Redis cache
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("Redis");

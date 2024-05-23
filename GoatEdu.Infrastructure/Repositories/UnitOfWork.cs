@@ -7,6 +7,7 @@ using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using Infrastructure.Data;
+using Infrastructure.Repositories.CacheRepository;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace Infrastructure.Repositories;
@@ -35,7 +36,9 @@ public class UnitOfWork : IUnitOfWork
     
     //add interface of repo
     public IUserRepository UserRepository => _userRepository ?? new UserRepository(_context);
-    public IRoleRepository RoleRepository => _roleRepository ?? new RoleRepository(_context);
+    //public IRoleRepository RoleRepository => _roleRepository ?? new RoleRepository(_context);
+    public IRoleRepository RoleRepository => _roleRepository ?? new CachedRoleRepository(new RoleRepository(_context), _distributedCache, _context);
+
     public INotificationRepository NotificationRepository => _notificationRepository ?? new NotificationRepository(_context);
     public INoteRepository NoteRepository => _noteRepository ?? new NoteRepository(_context);
     public ISubjectRepository SubjectRepository => _subjectRepository ?? new SubjectRepository(_context);
