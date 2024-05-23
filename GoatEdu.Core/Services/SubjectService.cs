@@ -1,11 +1,14 @@
 using System.Net;
 using AutoMapper;
+using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Models;
+using GoatEdu.Core.QueriesFilter;
 using Infrastructure;
+using Microsoft.Extensions.Options;
 
 namespace GoatEdu.Core.Services;
 
@@ -13,18 +16,29 @@ public class SubjectService : ISubjectService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly PaginationOptions _paginationOptions;
 
     public SubjectService(
-        IUnitOfWork unitOfWork, IMapper mapper)
+        IUnitOfWork unitOfWork, IMapper mapper, IOptions<PaginationOptions> paginationOptions)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _paginationOptions = paginationOptions.Value;
     }
 
-    public async Task<ICollection<SubjectResponseDto>> GetAllSubjects()
+    public async Task<ICollection<SubjectResponseDto>> GetAllSubjects(SubjectQueryFilter queryFilter)
     {
-        var result = await _unitOfWork.SubjectRepository.GetAllSubjects();
-        return result;
+        queryFilter.PageNumber = queryFilter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.PageNumber;
+        queryFilter.PageSize = queryFilter.PageSize == 0 ? _paginationOptions.DefaultPageSize : queryFilter.PageSize;
+        
+        var listNote = await _unitOfWork.SubjectRepository.GetAllSubjects(queryFilter);
+        
+        if (!listNote.Any())
+        {
+            return new PagedList<SubjectResponseDto>(new List<SubjectResponseDto>(), 0, 0, 0);
+        }
+        var mapperList = _mapper.Map<List<SubjectResponseDto>>(listNote);
+        return PagedList<SubjectResponseDto>.Create(mapperList, queryFilter.PageNumber, queryFilter.PageSize);
     }
 
     public async Task<SubjectResponseDto> GetSubjectBySubjectId(Guid id)
@@ -62,6 +76,6 @@ public class SubjectService : ISubjectService
 
     public Task<SubjectResponseDto> GetSubjectBySubjectName(string subjectName)
     {
-        throw new NotImplementedException();
+        return _unitOfWork.SubjectRepository.GetSubjectBySubjectName(subjectName);
     }
 }

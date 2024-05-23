@@ -15,6 +15,8 @@ public class MapperConfigProfile : Profile
         CreateMap<Notification, NotificationResponseDto>().ReverseMap();
         CreateMap<Notification, NotificationRequestDto>().ReverseMap();
         CreateMap<Subject, SubjectResponseDto>().ReverseMap();
+        CreateMap<Subject, SubjectCreateDto>().ReverseMap();
+        CreateMap<Subject, SubjectDto>().ReverseMap();
         CreateMap<SubjectResponseDto, Subject>().ReverseMap();
         CreateMap<Note, NoteResponseDto>().ReverseMap();
         CreateMap<Note, NoteRequestDto>().ReverseMap();

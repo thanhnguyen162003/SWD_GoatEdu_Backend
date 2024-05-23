@@ -1,8 +1,10 @@
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using FluentValidation;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
+using GoatEdu.Core.QueriesFilter;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoatEdu.API.Controllers;
@@ -22,15 +24,20 @@ public class SubjectController : ControllerBase
         _validator = validator;
     }
     [HttpGet]
-    public async Task<ICollection<SubjectResponseDto>> GetAllSubject()
+    public async Task<ICollection<SubjectResponseDto>> GetAllSubject([FromQuery, Required] SubjectQueryFilter queryFilter)
     {
-        return await _subjectService.GetAllSubjects();
+        return await _subjectService.GetAllSubjects(queryFilter);
     }
     
     [HttpGet("id/{id}")]
     public async Task<SubjectResponseDto> GetSubjectById(Guid id)
     {
         return await _subjectService.GetSubjectBySubjectId(id);
+    }
+    [HttpGet("name")]
+    public async Task<SubjectResponseDto> GetSubjectById([FromQuery] string subjectName)
+    {
+        return await _subjectService.GetSubjectBySubjectName(subjectName);
     }
     [HttpDelete("id/{id}")]
     public async Task<ResponseDto> DeleteSubject(Guid id)

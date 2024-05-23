@@ -5,6 +5,7 @@ using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Models;
+using GoatEdu.Core.QueriesFilter;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,29 +20,33 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
         _context = context;
     }
 
-    public async Task<ICollection<SubjectResponseDto>> GetAllSubjects()
+    public async Task<ICollection<Subject>> GetAllSubjects(SubjectQueryFilter queryFilter)
     {
-        return await _entities
-            .AsNoTracking()
-            .Where(x => x.IsDeleted == false)
-            .Select(x => new SubjectResponseDto()
-            {
-                Id = x.Id,
-                SubjectName = x.SubjectName,
-                Image = x.Image,
-                SubjectCode = x.SubjectCode,
-                Information = x.Information,
-                Class = x.Class,
-                Chapters = x.Chapters.Select(c => new ChapterSubjectDto()
-                {
-                    Id = c.Id,
-                    ChapterName = c.ChapterName,
-                    ChapterLevel = c.ChapterLevel
-                    // Include other Chapter properties you need here
-                }).ToList(),
-                CreatedAt = x.CreatedAt
-            })
-            .ToListAsync();
+        // return await _entities
+        //     .AsNoTracking()
+        //     .Where(x => x.IsDeleted == false)
+        //     .Select(x => new SubjectResponseDto()
+        //     {
+        //         Id = x.Id,
+        //         SubjectName = x.SubjectName,
+        //         Image = x.Image,
+        //         SubjectCode = x.SubjectCode,
+        //         Information = x.Information,
+        //         Class = x.Class,
+        //         Chapters = x.Chapters.Select(c => new ChapterSubjectDto()
+        //         {
+        //             Id = c.Id,
+        //             ChapterName = c.ChapterName,
+        //             ChapterLevel = c.ChapterLevel
+        //             // Include other Chapter properties you need here
+        //         }).ToList(),
+        //         CreatedAt = x.CreatedAt
+        //     })
+        //     .ToListAsync();
+        var subjects = _entities.AsQueryable();
+        subjects = ApplyFilterSortAndSearch(subjects, queryFilter);
+        subjects = ApplySorting(subjects, queryFilter);
+        return await subjects.ToListAsync();
     }
 
     public async Task<SubjectResponseDto> GetSubjectBySubjectId(Guid id)
@@ -115,8 +120,49 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
         return new ResponseDto(HttpStatusCode.OK, "Create Success");
     }
 
-    public Task<SubjectResponseDto> GetSubjectBySubjectName(string subjectName)
+    public async Task<SubjectResponseDto> GetSubjectBySubjectName(string subjectName)
     {
-        throw new NotImplementedException();
+        return await _entities.AsNoTracking()
+            .Where(
+            x => x.SubjectName == subjectName && x.IsDeleted == false).Select(x => new SubjectResponseDto()
+        {
+            Id = x.Id,
+            SubjectName = x.SubjectName,
+            SubjectCode = x.SubjectCode,
+            Class = x.Class,
+            Information = x.Information,
+            Image = x.Image,
+            CreatedAt = x.CreatedAt,
+            Chapters = x.Chapters.Select(c => new ChapterSubjectDto()
+            {
+                Id = c.Id,
+                ChapterName = c.ChapterName,
+                ChapterLevel = c.ChapterLevel
+            }).ToList()
+        }).FirstOrDefaultAsync();
+    }
+    private IQueryable<Subject> ApplyFilterSortAndSearch(IQueryable<Subject> subjects, SubjectQueryFilter queryFilter)
+    {
+        subjects = subjects.Where(x => x.IsDeleted == false);
+        
+        if (!string.IsNullOrEmpty(queryFilter.Search))
+        {
+            subjects = subjects.Where(x => x.SubjectName.Contains(queryFilter.Search));
+        }
+        return subjects;
+    }
+    
+    private IQueryable<Subject> ApplySorting(IQueryable<Subject> subjects, SubjectQueryFilter queryFilter)
+    {
+        subjects = queryFilter.Sort.ToLower() switch
+        {
+            "name" => queryFilter.SortDirection.ToLower() == "desc"
+                ? subjects.OrderByDescending(x => x.SubjectName)
+                : subjects.OrderBy(x => x.SubjectName),
+            _ => queryFilter.SortDirection.ToLower() == "desc"
+                ? subjects.OrderByDescending(x => x.CreatedAt).ThenBy(x => x.SubjectName)
+                : subjects.OrderBy(x => x.CreatedAt).ThenBy(x => x.SubjectName),
+        };
+        return subjects;
     }
 }
