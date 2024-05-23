@@ -8,7 +8,7 @@ namespace GoatEdu.Core.Interfaces.NotificationInterfaces;
 public interface INotificationRepository
 {
     Task<Notification?> GetByIdAsync(Guid id);
-    Task AddRangeAsync(List<Notification> entities);
+    Task AddAsync(Notification entitie);
     Task<List<Notification>> GetNotificationByUserId(Guid userId);
     Task<List<Notification>> GetNotificationByIds(List<Guid> ids);
     void DeleteAsync(List<Notification> listNoti);

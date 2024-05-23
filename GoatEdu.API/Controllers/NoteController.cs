@@ -1,8 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using System.Net;
+using FluentValidation;
 using GoatEdu.Core.CustomEntities;
+using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.NoteDto;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.QueriesFilter;
+using GoatEdu.Core.Validator;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -14,10 +18,12 @@ namespace GoatEdu.API.Controllers;
 public class NoteController : ControllerBase
 {
     private readonly INoteService _noteService;
+    private readonly IValidator<NoteRequestDto> _validator;
 
-    public NoteController(INoteService noteService)
+    public NoteController(INoteService noteService, IValidator<NoteRequestDto> validator)
     {
         _noteService = noteService;
+        _validator = validator;
     }
 
     [HttpGet("{id}")]
@@ -66,6 +72,11 @@ public class NoteController : ControllerBase
     {
         try
         {
+            var validationResult = await _validator.ValidateAsync(noteRequestDto);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}")) ;
+            }
             var result = await _noteService.InsertNote(noteRequestDto);
             return Ok(result);
         }

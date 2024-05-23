@@ -56,10 +56,10 @@ public class NotificationService : INotificationService
         return PagedList<NotificationResponseDto>.Create(mapperList, queryFilter.PageNumber, queryFilter.PageSize);
     }
 
-    public async Task<ResponseDto> InsertNotifications(List<NotificationRequestDto> notification)
+    public async Task<ResponseDto> InsertNotification(NotificationRequestDto notification)
     {
-        var noti = _mapper.Map<List<Notification>>(notification);
-        await _unitOfWork.NotificationRepository.AddRangeAsync(noti);
+        var noti = _mapper.Map<Notification>(notification);
+        await _unitOfWork.NotificationRepository.AddAsync(noti);
         var result = await _unitOfWork.SaveChangesAsync();
         
         if (result > 0)
