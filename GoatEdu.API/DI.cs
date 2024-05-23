@@ -29,7 +29,7 @@ public static class DI
         // Repositories
         services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IRoleRepository, RoleRepository>();
+        // services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<ISubjectRepository, SubjectRepository>();
         services.AddScoped<ILessonRepository, LessonRepository>();

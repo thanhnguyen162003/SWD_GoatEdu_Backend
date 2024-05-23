@@ -1,7 +1,10 @@
 using System.Text;
 using GoatEdu.API;
 using GoatEdu.Core.DTOs.MailDto;
+using GoatEdu.Core.Interfaces.RoleInterfaces;
 using Infrastructure.Data;
+using Infrastructure.Repositories;
+using Infrastructure.Repositories.CacheRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -10,30 +13,26 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//Dependency Injection for Cache Repository
-// builder.Services.AddScoped<RoleRepository>();
-// builder.Services.AddScoped<IRoleRepository, CachedRoleRepository>();
-// builder.Services.AddStackExchangeRedisCache(redisOptions =>
-// {
-//     string connection = builder.Configuration.GetConnectionString("Redis");
-//     redisOptions.Configuration = connection;
-// } );
-
-
 //Other Config
 ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
+//Dependency Injection for Cache Repository
+builder.Services.AddScoped<IRoleRepository,RoleRepository>();
+builder.Services.Decorate<IRoleRepository, CachedRoleRepository>(); 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+});
+builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddDbContext<GoatEduContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddCors();
 builder.Services.AddWebApiService();
 builder.Services.AddControllers();
-// builder.Services.AddAuthentication().AddGoogle(googleOptions =>
-// {
-//     googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
-//     googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
-// });
+
 //JWT Config
 builder.Services.AddAuthentication(opt =>
 {

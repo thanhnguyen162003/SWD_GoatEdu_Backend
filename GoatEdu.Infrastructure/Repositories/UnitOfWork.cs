@@ -7,6 +7,8 @@ using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using Infrastructure.Data;
+using Microsoft.Extensions.Caching.Distributed;
+
 namespace Infrastructure.Repositories;
 
 public class UnitOfWork : IUnitOfWork
@@ -21,11 +23,14 @@ public class UnitOfWork : IUnitOfWork
     private readonly ISubjectRepository _subjectRepository;
     private readonly IChapterRepository _chapterRepository;
     private readonly ILessonRepository _lessonRepository;
+    private readonly IDistributedCache _distributedCache;
+    
 
 
-    public UnitOfWork(GoatEduContext context)
+    public UnitOfWork(GoatEduContext context, IDistributedCache distributedCache)
     {
         _context = context;
+        _distributedCache = distributedCache;
     }
     
     //add interface of repo
