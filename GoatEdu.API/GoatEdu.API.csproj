@@ -6,6 +6,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
 <PreserveCompilationContext>true</PreserveCompilationContext>
 <PreserveCompilationReferences>true</PreserveCompilationReferences>
+<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+<UserSecretsId>9b9d94a7-69b3-42d1-b550-83134b64d662</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,6 +22,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.4" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="OpenAI" Version="1.11.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
@@ -29,6 +32,12 @@
     <ItemGroup>
       <ProjectReference Include="..\GoatEdu.Core\GoatEdu.Core.csproj" />
       <ProjectReference Include="..\GoatEdu.Infrastructure\GoatEdu.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>
