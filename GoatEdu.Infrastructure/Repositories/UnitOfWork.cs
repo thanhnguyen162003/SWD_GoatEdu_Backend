@@ -36,7 +36,6 @@ public class UnitOfWork : IUnitOfWork
     
     //add interface of repo
     public IUserRepository UserRepository => _userRepository ?? new UserRepository(_context);
-    //public IRoleRepository RoleRepository => _roleRepository ?? new RoleRepository(_context);
     public IRoleRepository RoleRepository => _roleRepository ?? new CachedRoleRepository(new RoleRepository(_context), _distributedCache, _context);
 
     public INotificationRepository NotificationRepository => _notificationRepository ?? new NotificationRepository(_context);
@@ -64,5 +63,21 @@ public class UnitOfWork : IUnitOfWork
             _context.Dispose();
         }
     }
+    
+    
+    private bool IsRedisAvailable()
+    {
+        try
+        {
+            _distributedCache.SetString("RedisConnectionTest", "test");
+            var test = _distributedCache.GetString("RedisConnectionTest");
+            return test == "test";
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+    
 
 }

@@ -27,10 +27,12 @@ builder.Services.Decorate<IRoleRepository, CachedRoleRepository>();
 // Register Redis cache
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    var redisConnection = builder.Configuration.GetConnectionString("Redis");
+    var redisPassword = builder.Configuration["ConnectionStrings:RedisPassword"];
+    options.Configuration = $"{redisConnection},password={redisPassword}";
 });
 builder.Services.AddDistributedMemoryCache();
-
+//dbcontext
 builder.Services.AddDbContext<GoatEduContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddCors();

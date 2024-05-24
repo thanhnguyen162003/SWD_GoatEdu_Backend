@@ -1,5 +1,6 @@
 using FluentValidation;
 using GoatEdu.API.Controllers;
+using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.NoteDto;
 using GoatEdu.Core.DTOs.NotificationDto;
 using GoatEdu.Core.DTOs.SubjectDto;
@@ -66,6 +67,8 @@ public static class DI
         services.AddScoped<IValidator<SubjectDto>, SubjectCreateDtoValidator>();
         services.AddScoped<IValidator<NotificationRequestDto>, NotificationRequestDtoValidator>();
         services.AddScoped<IValidator<NoteRequestDto>, NoteRequestDtoValidator>();
+        services.AddScoped<IValidator<ChapterDto>, ChapterRequestDtoValidator>();
+
         
         return services;
     }

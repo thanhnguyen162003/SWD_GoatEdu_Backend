@@ -31,13 +31,13 @@ public class SubjectService : ISubjectService
         queryFilter.PageNumber = queryFilter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.PageNumber;
         queryFilter.PageSize = queryFilter.PageSize == 0 ? _paginationOptions.DefaultPageSize : queryFilter.PageSize;
         
-        var listNote = await _unitOfWork.SubjectRepository.GetAllSubjects(queryFilter);
+        var listSubject = await _unitOfWork.SubjectRepository.GetAllSubjects(queryFilter);
         
-        if (!listNote.Any())
+        if (!listSubject.Any())
         {
             return new PagedList<SubjectResponseDto>(new List<SubjectResponseDto>(), 0, 0, 0);
         }
-        var mapperList = _mapper.Map<List<SubjectResponseDto>>(listNote);
+        var mapperList = _mapper.Map<List<SubjectResponseDto>>(listSubject);
         return PagedList<SubjectResponseDto>.Create(mapperList, queryFilter.PageNumber, queryFilter.PageSize);
     }
 

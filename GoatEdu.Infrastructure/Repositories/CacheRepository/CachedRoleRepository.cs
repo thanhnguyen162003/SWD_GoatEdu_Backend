@@ -60,8 +60,28 @@ public class CachedRoleRepository : IRoleRepository
         return role;
     }
 
-    public Task<RoleResponseDto> GetRoleByRoleName(string roleName)
+    public async Task<RoleResponseDto> GetRoleByRoleName(string roleName)
     {
-        throw new NotImplementedException();
+        string key = $"role-{roleName}";
+        string? cachedRole = await _distributedCache.GetStringAsync(key);
+        RoleResponseDto role;
+        if (string.IsNullOrEmpty(cachedRole))
+        {
+            role = await _decorated.GetRoleByRoleName(roleName);
+            if (role is null)
+            {
+                return role;
+            }
+            await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(role));
+            return role;
+        }
+
+        role = JsonConvert.DeserializeObject<RoleResponseDto>(cachedRole,
+            new JsonSerializerSettings
+            {
+                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
+            }
+        );
+        return role;
     }
 }
