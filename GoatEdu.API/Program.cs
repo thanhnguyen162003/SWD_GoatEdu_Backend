@@ -2,6 +2,7 @@ using System.Text;
 using GoatEdu.API;
 using GoatEdu.Core.DTOs.MailDto;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
+using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.CacheRepository;
@@ -23,6 +24,9 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 // Then decorate it with CachedRoleRepository
 builder.Services.Decorate<IRoleRepository, CachedRoleRepository>();
+builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+builder.Services.Decorate<ISubjectRepository, CacheSubjectRepository>();
+
 
 // Register Redis cache
 builder.Services.AddStackExchangeRedisCache(options =>

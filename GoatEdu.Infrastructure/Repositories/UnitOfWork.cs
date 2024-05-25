@@ -40,7 +40,9 @@ public class UnitOfWork : IUnitOfWork
 
     public INotificationRepository NotificationRepository => _notificationRepository ?? new NotificationRepository(_context);
     public INoteRepository NoteRepository => _noteRepository ?? new NoteRepository(_context);
-    public ISubjectRepository SubjectRepository => _subjectRepository ?? new SubjectRepository(_context);
+    // public ISubjectRepository SubjectRepository => _subjectRepository ?? new SubjectRepository(_context);
+    public ISubjectRepository SubjectRepository => _subjectRepository ?? new CacheSubjectRepository(new SubjectRepository(_context), _distributedCache, _context);
+
     public IChapterRepository ChapterRepository => _chapterRepository ?? new ChapterRepository(_context);
     public ILessonRepository LessonRepository => _lessonRepository ?? new LessonRepository(_context);
 
