@@ -22,27 +22,6 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
 
     public async Task<ICollection<Subject>> GetAllSubjects(SubjectQueryFilter queryFilter)
     {
-        // return await _entities
-        //     .AsNoTracking()
-        //     .Where(x => x.IsDeleted == false)
-        //     .Select(x => new SubjectResponseDto()
-        //     {
-        //         Id = x.Id,
-        //         SubjectName = x.SubjectName,
-        //         Image = x.Image,
-        //         SubjectCode = x.SubjectCode,
-        //         Information = x.Information,
-        //         Class = x.Class,
-        //         Chapters = x.Chapters.Select(c => new ChapterSubjectDto()
-        //         {
-        //             Id = c.Id,
-        //             ChapterName = c.ChapterName,
-        //             ChapterLevel = c.ChapterLevel
-        //             // Include other Chapter properties you need here
-        //         }).ToList(),
-        //         CreatedAt = x.CreatedAt
-        //     })
-        //     .ToListAsync();
         var subjects = _entities.AsQueryable();
         subjects = ApplyFilterSortAndSearch(subjects, queryFilter);
         subjects = ApplySorting(subjects, queryFilter);
@@ -66,9 +45,11 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
                 Id = c.Id,
                 ChapterName = c.ChapterName,
                 ChapterLevel = c.ChapterLevel
-            }).ToList()
+            }).ToList(),
+            NumberOfChapters = x.Chapters.Count // New field for number of chapters
         }).FirstOrDefaultAsync();
     }
+
 
     public async Task<ResponseDto> DeleteSubject(Guid id)
     {
@@ -133,6 +114,7 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
             Information = x.Information,
             Image = x.Image,
             CreatedAt = x.CreatedAt,
+            NumberOfChapters = x.Chapters.Count,
             Chapters = x.Chapters.Select(c => new ChapterSubjectDto()
             {
                 Id = c.Id,
