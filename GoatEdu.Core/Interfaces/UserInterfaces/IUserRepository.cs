@@ -1,7 +1,6 @@
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.RoleDto;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
-using GoatEdu.Core.Models;
 using Infrastructure;
 
 

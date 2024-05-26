@@ -1,6 +1,5 @@
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.SubjectDto;
-using GoatEdu.Core.Models;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure;
 

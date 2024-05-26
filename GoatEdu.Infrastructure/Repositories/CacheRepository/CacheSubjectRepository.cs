@@ -2,7 +2,6 @@ using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.RoleDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
-using GoatEdu.Core.Models;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure.Data;
 using Microsoft.Extensions.Caching.Distributed;

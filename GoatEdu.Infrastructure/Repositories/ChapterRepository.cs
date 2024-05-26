@@ -4,7 +4,6 @@ using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Interfaces.ChapterInterfaces;
-using GoatEdu.Core.Models;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using GoatEdu.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -48,14 +47,12 @@ namespace Infrastructure.Data
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseNpgsql("Host=35.240.220.220;Port=5432;Username=root;Password=Admin123456789@;Database=goateduprimary;");
+                optionsBuilder.UseNpgsql("Host=35.240.220.220;Port=5432;Username=root;Password=Admin123456789@;Database=goateduprimary");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasPostgresExtension("uuid-ossp");
-
             modelBuilder.Entity<Achievement>(entity =>
             {
                 entity.ToTable("Achievement");
@@ -63,8 +60,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.UserId, "IX_Achievement_userId");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.AchievementContent)
                     .HasColumnType("character varying")
@@ -84,8 +81,7 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Achievements)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("Achievement_userId_fkey");
+                    .HasForeignKey(d => d.UserId);
             });
 
             modelBuilder.Entity<Answer>(entity =>
@@ -97,8 +93,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.UserId, "IX_Answer_userId");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.AnswerBody)
                     .HasColumnType("character varying")
@@ -138,13 +134,11 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.Answers)
-                    .HasForeignKey(d => d.QuestionId)
-                    .HasConstraintName("Answer_questionId_fkey");
+                    .HasForeignKey(d => d.QuestionId);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Answers)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("Answer_userId_fkey");
+                    .HasForeignKey(d => d.UserId);
             });
 
             modelBuilder.Entity<Calculation>(entity =>
@@ -179,8 +173,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.SubjectId, "IX_Chapter_subjectId");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.ChapterLevel).HasColumnName("chapterLevel");
 
@@ -206,8 +200,7 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.Subject)
                     .WithMany(p => p.Chapters)
-                    .HasForeignKey(d => d.SubjectId)
-                    .HasConstraintName("Chapter_subjectId_fkey");
+                    .HasForeignKey(d => d.SubjectId);
             });
 
             modelBuilder.Entity<Discussion>(entity =>
@@ -219,8 +212,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.UserId, "IX_Discussion_userId");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -266,13 +259,11 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.Subject)
                     .WithMany(p => p.Discussions)
-                    .HasForeignKey(d => d.SubjectId)
-                    .HasConstraintName("Discussion_subjectId_fkey");
+                    .HasForeignKey(d => d.SubjectId);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Discussions)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("Discussion_userId_fkey");
+                    .HasForeignKey(d => d.UserId);
 
                 entity.HasMany(d => d.Tags)
                     .WithMany(p => p.Discussions)
@@ -300,8 +291,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.SubjectId, "IX_Enrollment_subjectId");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -317,13 +308,11 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.Subject)
                     .WithMany(p => p.Enrollments)
-                    .HasForeignKey(d => d.SubjectId)
-                    .HasConstraintName("Enrollment_subjectId_fkey");
+                    .HasForeignKey(d => d.SubjectId);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Enrollments)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("Enrollment_userId_fkey");
+                    .HasForeignKey(d => d.UserId);
             });
 
             modelBuilder.Entity<EnrollmentProcess>(entity =>
@@ -334,8 +323,8 @@ namespace Infrastructure.Data
                     .IsUnique();
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.ChapterId).HasColumnName("chapterId");
 
@@ -349,8 +338,7 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.Enrollment)
                     .WithOne(p => p.EnrollmentProcess)
-                    .HasForeignKey<EnrollmentProcess>(d => d.EnrollmentId)
-                    .HasConstraintName("EnrollmentProcess_enrollmentId_fkey");
+                    .HasForeignKey<EnrollmentProcess>(d => d.EnrollmentId);
             });
 
             modelBuilder.Entity<Flashcard>(entity =>
@@ -362,8 +350,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.UserId, "IX_Flashcard_userId");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -391,8 +379,6 @@ namespace Infrastructure.Data
 
                 entity.Property(e => e.SubjectId).HasColumnName("subjectId");
 
-                entity.Property(e => e.TagId).HasColumnName("tagId");
-
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnType("timestamp without time zone")
                     .HasColumnName("updatedAt");
@@ -405,13 +391,11 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.Subject)
                     .WithMany(p => p.Flashcards)
-                    .HasForeignKey(d => d.SubjectId)
-                    .HasConstraintName("Flashcard_subjectId_fkey");
+                    .HasForeignKey(d => d.SubjectId);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Flashcards)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("Flashcard_userId_fkey");
+                    .HasForeignKey(d => d.UserId);
 
                 entity.HasMany(d => d.Tags)
                     .WithMany(p => p.Flashcards)
@@ -436,8 +420,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.FlashcardId, "IX_FlashcardContent_flashcardId");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -477,8 +461,7 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.Flashcard)
                     .WithMany(p => p.FlashcardContents)
-                    .HasForeignKey(d => d.FlashcardId)
-                    .HasConstraintName("FlashcardContent_flashcardId_fkey");
+                    .HasForeignKey(d => d.FlashcardId);
             });
 
             modelBuilder.Entity<Lesson>(entity =>
@@ -488,8 +471,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.ChapterId, "IX_Lesson_chapterId");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.ChapterId).HasColumnName("chapterId");
 
@@ -527,8 +510,7 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.Chapter)
                     .WithMany(p => p.Lessons)
-                    .HasForeignKey(d => d.ChapterId)
-                    .HasConstraintName("Lesson_chapterId_fkey");
+                    .HasForeignKey(d => d.ChapterId);
             });
 
             modelBuilder.Entity<Note>(entity =>
@@ -538,8 +520,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.UserId, "IX_Note_userId");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -571,8 +553,7 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Notes)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("Note_userId_fkey");
+                    .HasForeignKey(d => d.UserId);
             });
 
             modelBuilder.Entity<Notification>(entity =>
@@ -582,8 +563,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.UserId, "IX_Notification_userId");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -605,8 +586,7 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Notifications)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("Notification_userId_fkey");
+                    .HasForeignKey(d => d.UserId);
             });
 
             modelBuilder.Entity<QuestionInQuiz>(entity =>
@@ -616,8 +596,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.QuizId, "IX_QuestionInQuiz_quizId");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -653,8 +633,7 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.Quiz)
                     .WithMany(p => p.QuestionInQuizzes)
-                    .HasForeignKey(d => d.QuizId)
-                    .HasConstraintName("QuestionInQuiz_quizId_fkey");
+                    .HasForeignKey(d => d.QuizId);
             });
 
             modelBuilder.Entity<Quiz>(entity =>
@@ -668,8 +647,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.SubjectId, "IX_Quiz_subjectId");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.ChapterId).HasColumnName("chapterId");
 
@@ -697,18 +676,15 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.Chapter)
                     .WithMany(p => p.Quizzes)
-                    .HasForeignKey(d => d.ChapterId)
-                    .HasConstraintName("Quiz_chapterId_fkey");
+                    .HasForeignKey(d => d.ChapterId);
 
                 entity.HasOne(d => d.Lesson)
                     .WithMany(p => p.Quizzes)
-                    .HasForeignKey(d => d.LessonId)
-                    .HasConstraintName("Quiz_lessonId_fkey");
+                    .HasForeignKey(d => d.LessonId);
 
                 entity.HasOne(d => d.Subject)
                     .WithMany(p => p.Quizzes)
-                    .HasForeignKey(d => d.SubjectId)
-                    .HasConstraintName("Quiz_subjectId_fkey");
+                    .HasForeignKey(d => d.SubjectId);
             });
 
             modelBuilder.Entity<Report>(entity =>
@@ -718,8 +694,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.UserId, "IX_Report_userId");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -747,8 +723,7 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Reports)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("Report_userId_fkey");
+                    .HasForeignKey(d => d.UserId);
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -756,8 +731,8 @@ namespace Infrastructure.Data
                 entity.ToTable("Role");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -779,8 +754,8 @@ namespace Infrastructure.Data
                 entity.ToTable("Subject");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.Class)
                     .HasColumnType("character varying")
@@ -818,8 +793,8 @@ namespace Infrastructure.Data
                 entity.ToTable("Subscription");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -845,7 +820,7 @@ namespace Infrastructure.Data
                 entity.ToTable("Tag");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
+                    .HasDefaultValueSql("uuid_generate_v4()")
                     .HasColumnName("id");
 
                 entity.Property(e => e.CreatedAt)
@@ -870,8 +845,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.LessonId, "IX_Theory_lessonId");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -903,8 +878,7 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.Lesson)
                     .WithMany(p => p.Theories)
-                    .HasForeignKey(d => d.LessonId)
-                    .HasConstraintName("Theory_lessonId_fkey");
+                    .HasForeignKey(d => d.LessonId);
             });
 
             modelBuilder.Entity<TheoryFlashCardContent>(entity =>
@@ -914,8 +888,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.TheoryId, "IX_TheoryFlashCardContent_theoryId");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.Answer)
                     .HasColumnType("character varying")
@@ -943,8 +917,7 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.Theory)
                     .WithMany(p => p.TheoryFlashCardContents)
-                    .HasForeignKey(d => d.TheoryId)
-                    .HasConstraintName("TheoryFlashCardContent_theoryId_fkey");
+                    .HasForeignKey(d => d.TheoryId);
             });
 
             modelBuilder.Entity<Transaction>(entity =>
@@ -954,8 +927,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.SubscriptionId, "IX_Transaction_subscriptionId");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -985,8 +958,7 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.Subscription)
                     .WithMany(p => p.Transactions)
-                    .HasForeignKey(d => d.SubscriptionId)
-                    .HasConstraintName("Transaction_subscriptionId_fkey");
+                    .HasForeignKey(d => d.SubscriptionId);
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -995,9 +967,12 @@ namespace Infrastructure.Data
 
                 entity.HasIndex(e => e.RoleId, "IX_User_roleId");
 
+                entity.HasIndex(e => e.WalletId, "IX_User_walletId")
+                    .IsUnique();
+
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -1053,47 +1028,47 @@ namespace Infrastructure.Data
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Users)
-                    .HasForeignKey(d => d.RoleId)
-                    .HasConstraintName("User_roleId_fkey");
+                    .HasForeignKey(d => d.RoleId);
+
+                entity.HasOne(d => d.Wallet)
+                    .WithOne(p => p.User)
+                    .HasForeignKey<User>(d => d.WalletId);
             });
 
             modelBuilder.Entity<Vote>(entity =>
             {
-                entity.ToTable("Vote");
+                entity.HasIndex(e => e.AnswerId, "IX_Votes_answerId");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("nextval('votes_voteid_seq'::regclass)");
+                entity.HasIndex(e => e.DiscussionId, "IX_Votes_discussionId");
 
-                entity.Property(e => e.Answerid).HasColumnName("answerid");
+                entity.HasIndex(e => e.UserId, "IX_Votes_userId");
 
-                entity.Property(e => e.Discussionid).HasColumnName("discussionid");
+                entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Userid).HasColumnName("userid");
+                entity.Property(e => e.AnswerId).HasColumnName("answerId");
 
-                entity.Property(e => e.Votetimestamp)
+                entity.Property(e => e.DiscussionId).HasColumnName("discussionId");
+
+                entity.Property(e => e.UserId).HasColumnName("userId");
+
+                entity.Property(e => e.VoteTimeStamp)
                     .HasColumnType("timestamp without time zone")
-                    .HasColumnName("votetimestamp")
+                    .HasColumnName("voteTimeStamp")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                entity.Property(e => e.Votevalue).HasColumnName("votevalue");
+                entity.Property(e => e.VoteValue).HasColumnName("voteValue");
 
                 entity.HasOne(d => d.Answer)
                     .WithMany(p => p.Votes)
-                    .HasForeignKey(d => d.Answerid)
-                    .HasConstraintName("vote_answerid_fkey");
+                    .HasForeignKey(d => d.AnswerId);
 
                 entity.HasOne(d => d.Discussion)
                     .WithMany(p => p.Votes)
-                    .HasForeignKey(d => d.Discussionid)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("vote_discussionid_fkey");
+                    .HasForeignKey(d => d.DiscussionId);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Votes)
-                    .HasForeignKey(d => d.Userid)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("vote_userid_fkey");
+                    .HasForeignKey(d => d.UserId);
             });
 
             modelBuilder.Entity<Wallet>(entity =>
@@ -1101,8 +1076,8 @@ namespace Infrastructure.Data
                 entity.ToTable("Wallet");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .HasColumnName("id");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -1115,11 +1090,6 @@ namespace Infrastructure.Data
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnType("timestamp without time zone")
                     .HasColumnName("updatedAt");
-
-                entity.HasOne(d => d.IdNavigation)
-                    .WithOne(p => p.Wallet)
-                    .HasForeignKey<Wallet>(d => d.Id)
-                    .HasConstraintName("Wallet_userId_fkey");
             });
 
             OnModelCreatingPartial(modelBuilder);

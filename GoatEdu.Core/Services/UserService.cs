@@ -7,7 +7,6 @@ using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.Security;
 using GoatEdu.Core.Interfaces.UserInterfaces;
-using GoatEdu.Core.Models;
 using Infrastructure;
 using MailKit;
 
@@ -113,7 +112,7 @@ public class UserService : IUserService
             Password = login.Password
         };
        
-        var token = _tokenGenerator.GenerateToken(loginDtoRequest);
+        var token = await _tokenGenerator.GenerateToken(loginDtoRequest);
         var loginResponse = _mapper.Map<LoginResponseDto>(user);
         loginResponse.Token = token;
         return new ResponseDto(HttpStatusCode.OK, "Login successfully!", loginResponse);

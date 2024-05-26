@@ -1,4 +1,3 @@
-using GoatEdu.Core.Models;
 
 namespace GoatEdu.Core.DTOs.ChapterDto;
 

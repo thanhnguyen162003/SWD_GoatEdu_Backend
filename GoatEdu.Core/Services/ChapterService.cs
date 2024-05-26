@@ -5,8 +5,8 @@ using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.ChapterInterfaces;
-using GoatEdu.Core.Models;
 using GoatEdu.Core.QueriesFilter;
+using Infrastructure;
 using Microsoft.Extensions.Options;
 
 namespace GoatEdu.Core.Services;

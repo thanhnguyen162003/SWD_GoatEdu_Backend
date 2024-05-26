@@ -8,7 +8,6 @@ using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.ClaimInterfaces;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
-using GoatEdu.Core.Models;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -65,7 +64,7 @@ public class NoteService : INoteService
     {
         var note = _mapper.Map<Note>(noteRequestDto);
         note.CreatedAt = _currentTime.GetCurrentTime();
-        note.CreatedBy = _claimsService.GetCurrentUserId;
+        note.CreatedBy = _claimsService.GetCurrentUserId.ToString();
         note.IsDeleted = false;
         await _unitOfWork.NoteRepository.AddAsync(note);
         var result = await _unitOfWork.SaveChangesAsync();
@@ -87,5 +86,22 @@ public class NoteService : INoteService
         return new ResponseDto(HttpStatusCode.OK, "Delete Failed !");
     }
 
-   
+    public async Task<ResponseDto> UpdateNote(Guid guid, NoteRequestDto noteRequestDto)
+    {
+        var note = await _unitOfWork.NoteRepository.GetByIdAsync(guid);
+        if (note == null)
+        {
+            return new ResponseDto(HttpStatusCode.NotFound, "Kiếm không có thấy");
+        }
+
+        note = _mapper.Map(noteRequestDto, note);
+        _unitOfWork.NoteRepository.Update(note);
+        var result = await _unitOfWork.SaveChangesAsync();
+        if (result > 0)
+        {
+            return new ResponseDto(HttpStatusCode.OK,"Update Successfully!");
+        }
+
+        return new ResponseDto(HttpStatusCode.BadRequest, "Update Failed!");
+    }
 }

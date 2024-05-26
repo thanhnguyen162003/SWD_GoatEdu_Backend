@@ -1,5 +1,4 @@
 using GoatEdu.Core.DTOs;
-using GoatEdu.Core.Models;
 using Infrastructure;
 
 namespace GoatEdu.Core.Interfaces.UserInterfaces;
