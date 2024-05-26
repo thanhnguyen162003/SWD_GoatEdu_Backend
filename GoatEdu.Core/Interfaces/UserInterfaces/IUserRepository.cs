@@ -1,4 +1,5 @@
 using GoatEdu.Core.DTOs;
+using GoatEdu.Core.DTOs.RoleDto;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
 using GoatEdu.Core.Models;
 using Infrastructure;
@@ -14,4 +15,6 @@ public interface IUserRepository : IRepository<User>
     Task<User> GetUserByGoogle(string email);
     Task<User> GetUserByUsernameNotGoogle(string username);
     Task<User> GetUserByUsernameWithEmailCheckRegister(string username, string email);
+    Task<ICollection<UserMinimalDto>> GetUsersInRole(Guid roleId);
+
 }

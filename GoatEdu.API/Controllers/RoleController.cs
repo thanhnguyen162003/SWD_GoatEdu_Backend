@@ -1,6 +1,7 @@
 using GoatEdu.Core.DTOs.RoleDto;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoatEdu.API.Controllers;
@@ -29,5 +30,13 @@ public class RoleController : ControllerBase
     public async Task<RoleResponseDto> GetRoleByName(string name)
     {
         return await _roleService.GetRoleByRoleName(name);
+    }
+    
+    //paging later
+    [HttpGet("user/{id}")]
+    [Authorize]
+    public async Task<UserRoleDto> GetUserInRole([FromRoute] Guid id)
+    {
+        return await _roleService.GetUsersInRole(id);
     }
 }

@@ -46,4 +46,5 @@ public class RoleRepository : BaseRepository<Role>, IRoleRepository
             RoleName = x.RoleName
         }).FirstOrDefaultAsync();
     }
+    
 }

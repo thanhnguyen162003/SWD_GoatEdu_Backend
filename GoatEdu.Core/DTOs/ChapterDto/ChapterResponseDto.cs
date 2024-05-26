@@ -10,7 +10,7 @@ public class ChapterResponseDto
     public Guid? SubjectId { get; set; } 
     public DateTime? CreatedAt { get; set; } 
     
-    public ICollection<Lesson>? Lessons { get; set; }
+    // public ICollection<Lesson>? Lessons { get; set; }
 
     
 }

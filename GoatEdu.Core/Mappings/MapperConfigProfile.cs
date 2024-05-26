@@ -1,5 +1,6 @@
 using AutoMapper;
 using GoatEdu.Core.DTOs;
+using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.NoteDto;
 using GoatEdu.Core.DTOs.NotificationDto;
 using GoatEdu.Core.DTOs.SubjectDto;
@@ -17,6 +18,10 @@ public class MapperConfigProfile : Profile
         CreateMap<Subject, SubjectResponseDto>().ReverseMap();
         CreateMap<Subject, SubjectCreateDto>().ReverseMap();
         CreateMap<Subject, SubjectDto>().ReverseMap();
+        CreateMap<Chapter, ChapterDto>().ReverseMap();
+        CreateMap<ChapterDto, Chapter>().ReverseMap();
+        CreateMap<Chapter, ChapterResponseDto>().ReverseMap();
+        CreateMap<ChapterResponseDto, Chapter>().ReverseMap();
         CreateMap<SubjectResponseDto, Subject>().ReverseMap();
         CreateMap<Note, NoteResponseDto>().ReverseMap();
         CreateMap<Note, NoteRequestDto>().ReverseMap();

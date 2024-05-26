@@ -8,4 +8,5 @@ public interface IRoleService
     Task<ICollection<RoleResponseDto>> GetAllRole();
     Task<RoleResponseDto> GetRoleByRoleId(Guid id);
     Task<RoleResponseDto> GetRoleByRoleName(string roleName);
+    Task<UserRoleDto> GetUsersInRole(Guid roleId);
 }

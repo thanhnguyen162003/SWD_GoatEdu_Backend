@@ -1,3 +1,4 @@
+using GoatEdu.Core.DTOs.RoleDto;
 using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using GoatEdu.Core.Models;
@@ -46,6 +47,23 @@ public class UserRepository : BaseRepository<User>, IUserRepository
             .FirstOrDefaultAsync();
     }
 
+    public async Task<ICollection<UserMinimalDto>> GetUsersInRole(Guid roleId)
+    {
+        return await _context.Users
+            .Where(ur => ur.Role.Id == roleId)
+            .Select(ur => new UserMinimalDto
+            {
+                Id = ur.Id,
+                Username = ur.Username,
+                Email = ur.Email,
+                PhoneNumber = ur.PhoneNumber,
+                Fullname = ur.Fullname,
+                RoleName = ur.Role.RoleName,
+                IsConfirmMail = ur.EmailVerify,
+                IsDeleted = ur.IsDeleted
+            })
+            .ToListAsync();
+    }
     
     public async Task<User> AddUser(User user)
     {
