@@ -48,7 +48,7 @@ public class SubjectController : ControllerBase
     }
     [HttpPost]
     [Authorize]
-    public async Task<ResponseDto> CreateSubject([FromBody] SubjectDto dto)
+    public async Task<ResponseDto> CreateSubject([FromForm]SubjectDto dto)
     {
         var validationResult = await _validator.ValidateAsync(dto);
         if (!validationResult.IsValid)
@@ -59,7 +59,7 @@ public class SubjectController : ControllerBase
     }
     [HttpPut("id/{id}")]
     [Authorize]
-    public async Task<ResponseDto> UpdateSubject([FromBody] SubjectCreateDto dto)
+    public async Task<ResponseDto> UpdateSubject([FromForm] SubjectCreateDto dto)
     {
         return await _subjectService.UpdateSubject(dto);
     }

@@ -7,6 +7,7 @@ using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.ChapterInterfaces;
 using GoatEdu.Core.Interfaces.ClaimInterfaces;
+using GoatEdu.Core.Interfaces.CloudinaryInterfaces;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
 using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
@@ -62,6 +63,10 @@ public static class DI
         services.AddScoped<ICurrentTime, CurrentTime>();
         services.AddScoped<IClaimsService, ClaimsService>();
         services.AddHttpContextAccessor();
+        
+        
+        //DI for Cloudinary Cloud
+        services.AddScoped<ICloudinaryService, CloudinaryService>();
         
         // Add FluentValidation
         services.AddScoped<IValidator<SubjectDto>, SubjectCreateDtoValidator>();

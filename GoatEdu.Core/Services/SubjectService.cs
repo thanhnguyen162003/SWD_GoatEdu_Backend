@@ -4,10 +4,12 @@ using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Interfaces;
+using GoatEdu.Core.Interfaces.CloudinaryInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Models;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
 namespace GoatEdu.Core.Services;
@@ -17,13 +19,15 @@ public class SubjectService : ISubjectService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly PaginationOptions _paginationOptions;
+    private readonly ICloudinaryService _cloudinaryService;
 
     public SubjectService(
-        IUnitOfWork unitOfWork, IMapper mapper, IOptions<PaginationOptions> paginationOptions)
+        IUnitOfWork unitOfWork, IMapper mapper, IOptions<PaginationOptions> paginationOptions,ICloudinaryService cloudinaryService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _paginationOptions = paginationOptions.Value;
+        _cloudinaryService = cloudinaryService;
     }
 
     public async Task<ICollection<SubjectResponseDto>> GetAllSubjects(SubjectQueryFilter queryFilter)
@@ -50,20 +54,43 @@ public class SubjectService : ISubjectService
     {
         return await _unitOfWork.SubjectRepository.DeleteSubject(id);
     }
+    
+    //process image
 
     public async Task<ResponseDto> UpdateSubject(SubjectCreateDto dto)
     {
-        return await _unitOfWork.SubjectRepository.UpdateSubject(dto);
+        var uploadResult = await _cloudinaryService.UploadAsync(dto.image);
+        if (uploadResult.Error != null)
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, uploadResult.Error.Message);
+        }
+
+        var updateSubject = new Subject()
+        {
+            Id = dto.Id,
+            SubjectName = dto.SubjectName,
+            SubjectCode = dto.SubjectCode,
+            Information = dto.Information,
+            Image = uploadResult.Url.ToString(),
+            Class = dto.Class
+        };
+        return await _unitOfWork.SubjectRepository.UpdateSubject(updateSubject);
     }
 
+    //process image
     public async Task<ResponseDto> CreateSubject(SubjectDto dto)
     {
+        var uploadResult = await _cloudinaryService.UploadAsync(dto.image);
+        if (uploadResult.Error != null)
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, uploadResult.Error.Message);
+        }
         var newSubject = new Subject
         {
             SubjectName = dto.SubjectName,
             SubjectCode = dto.SubjectCode,
             Information = dto.Information,
-            Image = dto.Image,
+            Image = uploadResult.Url.ToString(),
             Class = dto.Class,
             CreatedAt = DateTime.Now,
             IsDeleted = false

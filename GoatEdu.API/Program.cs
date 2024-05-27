@@ -6,7 +6,10 @@ using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.CacheRepository;
+using Infrastructure.Ultils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -27,6 +30,9 @@ builder.Services.Decorate<IRoleRepository, CachedRoleRepository>();
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 builder.Services.Decorate<ISubjectRepository, CacheSubjectRepository>();
 
+
+//add Cloudinary
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
 
 // Register Redis cache
 builder.Services.AddStackExchangeRedisCache(options =>
@@ -115,7 +121,17 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
+//config unlock potential of upload image
+//Set size limit for request
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+    options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10mb*1024*1024
+});
 
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 10 * 1024 * 1024; // 10mb*1024*1024
+});
 var app = builder.Build();
 
 

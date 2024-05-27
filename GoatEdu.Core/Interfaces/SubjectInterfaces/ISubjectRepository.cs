@@ -11,7 +11,7 @@ public interface ISubjectRepository
     Task<ICollection<Subject>> GetAllSubjects(SubjectQueryFilter queryFilter);
     Task<SubjectResponseDto> GetSubjectBySubjectId(Guid id);
     Task<ResponseDto> DeleteSubject(Guid id);
-    Task<ResponseDto> UpdateSubject(SubjectCreateDto dto);
+    Task<ResponseDto> UpdateSubject(Subject dto);
     Task<ResponseDto> CreateSubject(Subject dto);
     Task<SubjectResponseDto> GetSubjectBySubjectName(string subjectName);
 }

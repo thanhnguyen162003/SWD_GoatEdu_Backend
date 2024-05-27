@@ -1,6 +1,7 @@
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.QueriesFilter;
+using Microsoft.AspNetCore.Http;
 
 namespace GoatEdu.Core.Interfaces.SubjectInterfaces;
 

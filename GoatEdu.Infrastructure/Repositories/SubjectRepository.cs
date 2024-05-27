@@ -70,7 +70,9 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
         return new ResponseDto(HttpStatusCode.OK, "Subject successfully deleted.");
     }
 
-    public async Task<ResponseDto> UpdateSubject(SubjectCreateDto dto)
+    
+    // can optimise in feature now it map 2 time (maybe not good perfomance)
+    public async Task<ResponseDto> UpdateSubject(Subject dto)
     {
         var subject = await _context.Subjects.FirstOrDefaultAsync(x => x.Id == dto.Id);
 

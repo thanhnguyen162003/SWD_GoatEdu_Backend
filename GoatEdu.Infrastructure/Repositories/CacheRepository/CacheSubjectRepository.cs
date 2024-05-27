@@ -75,7 +75,7 @@ public class CacheSubjectRepository : ISubjectRepository
         return response;
     }
 
-    public async Task<ResponseDto> UpdateSubject(SubjectCreateDto dto)
+    public async Task<ResponseDto> UpdateSubject(Subject dto)
     {
         // Perform update operation
         var response = await _decorated.UpdateSubject(dto);
