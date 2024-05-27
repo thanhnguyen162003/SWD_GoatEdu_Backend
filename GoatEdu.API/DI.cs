@@ -1,13 +1,17 @@
 using FluentValidation;
 using GoatEdu.API.Controllers;
+using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.NoteDto;
 using GoatEdu.Core.DTOs.NotificationDto;
 using GoatEdu.Core.DTOs.SubjectDto;
+using GoatEdu.Core.DTOs.TagDto;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.ChapterInterfaces;
 using GoatEdu.Core.Interfaces.ClaimInterfaces;
 using GoatEdu.Core.Interfaces.CloudinaryInterfaces;
+using GoatEdu.Core.Interfaces.DiscussionInterfaces;
+using GoatEdu.Core.Interfaces.FlashcardInterfaces;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
 using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
@@ -15,6 +19,7 @@ using GoatEdu.Core.Interfaces.NotificationInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.Security;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
+using GoatEdu.Core.Interfaces.TagInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using GoatEdu.Core.Mappings;
 using GoatEdu.Core.Models;
@@ -52,6 +57,8 @@ public static class DI
         services.AddScoped<ISubjectService, SubjectService>();
         services.AddScoped<ILessonService, LessonService>();
         services.AddScoped<IChapterService, ChapterService>();
+        services.AddScoped<ITagService, TagService>();
+        services.AddScoped<IDiscussionService, DiscussionService>();
 
         
         
@@ -73,7 +80,8 @@ public static class DI
         services.AddScoped<IValidator<NotificationRequestDto>, NotificationRequestDtoValidator>();
         services.AddScoped<IValidator<NoteRequestDto>, NoteRequestDtoValidator>();
         services.AddScoped<IValidator<ChapterDto>, ChapterRequestDtoValidator>();
-
+        services.AddScoped<IValidator<TagRequestDto>, TagRequestDtoValidator>();
+        services.AddScoped<IValidator<DiscussionRequestDto>, DisscussionRequestDtoValidator>();
         
         return services;
     }

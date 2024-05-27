@@ -1,6 +1,5 @@
 using AutoMapper;
 using GoatEdu.Core.DTOs.RoleDto;
-using GoatEdu.Core.Models;
 
 namespace Infrastructure.Mappings;
 

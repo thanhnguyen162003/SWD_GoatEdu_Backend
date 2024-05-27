@@ -1,23 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GoatEdu.Core.Models
+namespace Infrastructure;
+[Table("Tag")]
+public class Tag : BaseEntity
 {
-    public partial class Tag
+    public Tag()
     {
-        public Tag()
-        {
-            Discussions = new HashSet<Discussion>();
-            Flashcards = new HashSet<Flashcard>();
-        }
-
-        public Guid Id { get; set; }
-        public string? TagName { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
-        public bool? IsDeleted { get; set; }
-
-        public virtual ICollection<Discussion> Discussions { get; set; }
-        public virtual ICollection<Flashcard> Flashcards { get; set; }
+        Discussions = new HashSet<Discussion>();
+        Flashcards = new HashSet<Flashcard>();
     }
+
+    [Key]
+    [Column("id")]
+    public Guid Id { get; set; }
+    [Column("tagName", TypeName = "character varying")]
+    public string? TagName { get; set; }
+    [Column("createdAt", TypeName = "timestamp without time zone")]
+    public DateTime? CreatedAt { get; set; }
+    [Column("updatedAt", TypeName = "timestamp without time zone")]
+    public DateTime? UpdatedAt { get; set; }
+    [InverseProperty("Tags")]
+    public virtual ICollection<Discussion> Discussions { get; set; }
+    [InverseProperty("Tags")]
+    public virtual ICollection<Flashcard> Flashcards { get; set; }
 }

@@ -12,5 +12,5 @@ public interface INoteService
     Task<PagedList<NoteResponseDto>> GetNoteByFilter(NoteQueryFilter queryFilter);
     Task<ResponseDto> InsertNote(NoteRequestDto noteRequestDto);
     Task<ResponseDto> DeleteNotes(List<Guid> guids);
-    
+    Task<ResponseDto> UpdateNote(Guid guid, NoteRequestDto noteRequestDto);
 }

@@ -4,7 +4,7 @@ using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.NoteDto;
 using GoatEdu.Core.DTOs.NotificationDto;
 using GoatEdu.Core.DTOs.SubjectDto;
-using GoatEdu.Core.Models;
+using GoatEdu.Core.DTOs.TagDto;
 using Infrastructure;
 
 namespace GoatEdu.Core.Mappings;
@@ -26,6 +26,16 @@ public class MapperConfigProfile : Profile
         CreateMap<Note, NoteResponseDto>().ReverseMap();
         CreateMap<Note, NoteRequestDto>().ReverseMap();
         CreateMap<Note, NoteDetailResponseDto>().ReverseMap();
+        CreateMap<Tag, TagRequestDto>().ReverseMap();
+        CreateMap<Tag, TagResponseDto>().ReverseMap();
+        CreateMap<Discussion, DiscussionRequestDto>().ReverseMap();
+        CreateMap<Discussion, DiscussionResponseDto>().ReverseMap();
+        CreateMap<Discussion, DiscussionDetailResponseDto>()
+            .ForPath(dest => dest.UserAndSubject.UserId, opt => opt.MapFrom(src => src.UserId))
+            .ForPath(dest => dest.UserAndSubject.UserName, opt => opt.MapFrom(src => src.User.Fullname))
+            .ForPath(dest => dest.UserAndSubject.SubjectId, opt => opt.MapFrom(src => src.SubjectId))
+            .ForPath(dest => dest.UserAndSubject.SubjectName, opt => opt.MapFrom(src => src.Subject.SubjectName));
+        
         
         CreateMap<User, LoginResponseDto>()
             .ForMember(dest => dest.userId, opt => opt.MapFrom(src => src.Id))

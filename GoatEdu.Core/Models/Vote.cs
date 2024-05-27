@@ -1,19 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GoatEdu.Core.Models
+namespace Infrastructure;
+
+public class Vote
 {
-    public partial class Vote
-    {
-        public int Id { get; set; }
-        public Guid Discussionid { get; set; }
-        public Guid? Answerid { get; set; }
-        public Guid Userid { get; set; }
-        public short Votevalue { get; set; }
-        public DateTime? Votetimestamp { get; set; }
-
-        public virtual Answer? Answer { get; set; }
-        public virtual Discussion Discussion { get; set; } = null!;
-        public virtual User User { get; set; } = null!;
-    }
+    [Key]
+    [Column("id")]
+    public int Id { get; set; }
+    [Column("discussionId")]
+    public Guid? DiscussionId { get; set; }
+    [Column("answerId")]
+    public Guid? AnswerId { get; set; }
+    [Column("userId")]
+    public Guid? UserId { get; set; }
+    [Column("voteValue")]
+    public short? VoteValue { get; set; }
+    [Column("voteTimeStamp", TypeName = "timestamp without time zone")]
+    public DateTime? VoteTimeStamp { get; set; }
+    
+    [ForeignKey("AnswerId")]
+    [InverseProperty("Votes")]
+    public virtual Answer? Answer { get; set; }
+    [ForeignKey("DiscussionId")]
+    [InverseProperty("Votes")]
+    public virtual Discussion? Discussion { get; set; }
+    [ForeignKey("UserId")]
+    [InverseProperty("Votes")]
+    public virtual User? User { get; set; }
 }

@@ -24,9 +24,9 @@ public class JWTConfig : JWTGenerator
         _userRepository = userRepository;
     }
 
-    public string GenerateToken(LoginDtoRequest userDTO)
+    public async Task<string> GenerateToken(LoginDtoRequest userDTO)
     {
-        var user = _userRepository.GetUserByUsername(userDTO.Username);
+        var user = await _userRepository.GetUserByUsername(userDTO.Username);
         if (user == null)
         {
             return "Error! Unauthorized.";
@@ -38,8 +38,9 @@ public class JWTConfig : JWTGenerator
             Subject = new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Name, userDTO.Username),
-                new Claim("UserId", user.Result.Id.ToString()),
-                new Claim("RoleId",user.Result.RoleId.ToString())
+                new Claim("UserId", user.Id.ToString()),
+                new Claim("RoleId",user.RoleId.ToString()),
+                new Claim(ClaimTypes.Role, user.Role.RoleName)
                 
             }),
             Expires = DateTime.UtcNow.AddDays(7),

@@ -4,9 +4,9 @@ using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.NotificationDto;
 using GoatEdu.Core.Interfaces;
+using GoatEdu.Core.Interfaces.ClaimInterfaces;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
-using GoatEdu.Core.Models;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure;
 using Microsoft.Extensions.Options;
@@ -19,13 +19,15 @@ public class NotificationService : INotificationService
     private readonly ICurrentTime _currentTime;
     private readonly IMapper _mapper;
     private readonly PaginationOptions _paginationOptions;
+    private readonly IClaimsService _claimsService;
 
-    public NotificationService(IUnitOfWork unitOfWork, ICurrentTime currentTime, IMapper mapper, IOptions<PaginationOptions> options)
+    public NotificationService(IUnitOfWork unitOfWork,IClaimsService claimsService, ICurrentTime currentTime, IMapper mapper, IOptions<PaginationOptions> options)
     {
         _unitOfWork = unitOfWork;
         _currentTime = currentTime;
         _mapper = mapper;
         _paginationOptions = options.Value;
+        _claimsService = claimsService;
     }
     
     public async Task<ResponseDto> GetNotificationById(Guid id)
@@ -41,12 +43,12 @@ public class NotificationService : INotificationService
         return new ResponseDto(HttpStatusCode.OK, "Kiếm không ra :))");
     }
 
-    public async Task<PagedList<NotificationResponseDto>> GetNotificationByUserId(NotificationQueryFilter queryFilter)
+    public async Task<PagedList<NotificationResponseDto>> GetNotificationByCurrentUser(NotificationQueryFilter queryFilter)
     {
         queryFilter.PageNumber = queryFilter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.PageNumber;
         queryFilter.PageSize = queryFilter.PageSize == 0 ? _paginationOptions.DefaultPageSize : queryFilter.PageSize;
-        
-        var listNoti = await _unitOfWork.NotificationRepository.GetNotificationByUserId(queryFilter.UserId);
+        var userId = _claimsService.GetCurrentUserId;
+        var listNoti = await _unitOfWork.NotificationRepository.GetNotificationByUserId(userId);
 
         if (!listNoti.Any())
         {

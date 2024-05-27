@@ -1,5 +1,4 @@
 using GoatEdu.Core.Interfaces.LessonInterfaces;
-using GoatEdu.Core.Models;
 using Infrastructure.Data;
 
 namespace Infrastructure.Repositories;

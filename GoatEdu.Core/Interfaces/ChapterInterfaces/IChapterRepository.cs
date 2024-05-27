@@ -1,8 +1,8 @@
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.SubjectDto;
-using GoatEdu.Core.Models;
 using GoatEdu.Core.QueriesFilter;
+using Infrastructure;
 
 namespace GoatEdu.Core.Interfaces.ChapterInterfaces;
 
