@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using FluentValidation;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.Interfaces.DiscussionInterfaces;
 using GoatEdu.Core.QueriesFilter;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -14,12 +16,12 @@ namespace GoatEdu.API.Controllers;
 public class DiscussionController : ControllerBase
 {
     private readonly IDiscussionService _discussionService;
-    // private readonly IValidator<TagRequestDto> _validator;
+    private readonly IValidator<DiscussionRequestDto> _validator;
 
-    public DiscussionController(IDiscussionService discussionService)
+    public DiscussionController(IDiscussionService discussionService, IValidator<DiscussionRequestDto> validator)
     {
         _discussionService = discussionService;
-        // _validator = validator;
+        _validator = validator;
     }
     
     [HttpGet("{id}")]
@@ -37,7 +39,7 @@ public class DiscussionController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetDetailsDiscussionById([FromQuery, Required] DiscussionQueryFilter queryFilter)
+    public async Task<IActionResult> GetDetailsDiscussionByFilter([FromQuery, Required] DiscussionQueryFilter queryFilter)
     {
         try
         {
@@ -64,7 +66,8 @@ public class DiscussionController : ControllerBase
     }
     
     [HttpGet("user")]
-    public async Task<IActionResult> GetDetailsDiscussionByUser([FromQuery, Required] DiscussionQueryFilter queryFilter)
+    [Authorize]
+    public async Task<IActionResult> GetDetailsDiscussionByCurrentUser([FromQuery, Required] DiscussionQueryFilter queryFilter)
     {
         try
         {
@@ -91,17 +94,16 @@ public class DiscussionController : ControllerBase
     }
     
     [HttpPost]
-    // [Authorize (Roles = "Admin")]
+    [Authorize (Roles = "Student, Teacher")]
     public async Task<IActionResult> AddDiscussion(DiscussionRequestDto discussionRequestDto)
     {
         try
         {
-                // var validationResult = await _validator.ValidateAsync(data);
-                // if (!validationResult.IsValid)
-                // {
-                //     return BadRequest(new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}")) ;
-                // }
-            
+            var validationResult = await _validator.ValidateAsync(discussionRequestDto);
+            if (!validationResult.IsValid)
+            { 
+                return BadRequest(new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}")) ;
+            }
             
             var result = await _discussionService.InsertDiscussion(discussionRequestDto);
             return Ok(result);
@@ -113,11 +115,27 @@ public class DiscussionController : ControllerBase
     }
     
     [HttpDelete]
+    [Authorize (Roles = "Student, Teacher")]
     public async Task<IActionResult> DeleteDiscussions(List<Guid> ids)
     {
         try
         {
             var result = await _discussionService.DeleteDiscussions(ids);
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpPut ("{id}")]
+    [Authorize (Roles = "Student, Teacher")]
+    public async Task<IActionResult> UpdateDiscussion(Guid id, DiscussionRequestDto discussionRequestDto)
+    {
+        try
+        {
+            var result = await _discussionService.UpdateDiscussion(id, discussionRequestDto);
             return Ok(result);
         }
         catch (Exception e)

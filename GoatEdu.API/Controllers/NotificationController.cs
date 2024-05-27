@@ -9,6 +9,7 @@ using GoatEdu.Core.DTOs.NotificationDto;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using GoatEdu.Core.Validator;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -32,6 +33,7 @@ public class NotificationController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize (Roles = "Student, Teacher")]
     public async Task<IActionResult> GetDetailedNotificationById([Required] Guid id)
     {
         try
@@ -41,21 +43,17 @@ public class NotificationController : ControllerBase
         }
         catch (Exception e)
         {
-            if (e.InnerException != null)
-            {
-                return BadRequest(e.InnerException.Message);
-            }
-
             return BadRequest(e.Message);
         }
     }
 
     [HttpGet("user")]
-    public async Task<IActionResult> GetNotificationByUserId([FromQuery, Required] NotificationQueryFilter queryFilter)
+    [Authorize (Roles = "Student, Teacher")]
+    public async Task<IActionResult> GetNotificationByCurrentUser([FromQuery, Required] NotificationQueryFilter queryFilter)
     {
         try
         {
-            var result = await _notificationService.GetNotificationByUserId(queryFilter);
+            var result = await _notificationService.GetNotificationByCurrentUser(queryFilter);
 
             var metadata = new Metadata
             {
@@ -98,6 +96,7 @@ public class NotificationController : ControllerBase
     }
 
     [HttpDelete]
+    [Authorize (Roles = "Student, Teacher")]
     public async Task<IActionResult> DeleteNotifications(List<Guid> ids)
     {
         try

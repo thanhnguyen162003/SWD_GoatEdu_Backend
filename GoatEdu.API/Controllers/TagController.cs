@@ -14,7 +14,6 @@ namespace GoatEdu.API.Controllers;
 
 [Route("api/tag")]
 [ApiController]
-
 public class TagController : ControllerBase
 {
     private readonly ITagService _tagService;
@@ -27,6 +26,7 @@ public class TagController : ControllerBase
     }
     
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<IActionResult> GetDetailsTagById([Required] Guid id)
     {
         try
@@ -40,7 +40,7 @@ public class TagController : ControllerBase
         }
     }
     
-    [HttpGet("search")]
+    [HttpGet("query")]
     public async Task<IActionResult> GetTagByFilter([FromQuery, Required] TagQueryFilter queryFilter)
     {
         try
@@ -67,8 +67,10 @@ public class TagController : ControllerBase
         }
     }
     
+    
+    
     [HttpPost]
-    [Authorize (Roles = "Admin")]
+    [Authorize]
     public async Task<IActionResult> AddTag(List<TagRequestDto> tagRequestDto)
     {
         try
@@ -92,6 +94,7 @@ public class TagController : ControllerBase
     }
     
     [HttpDelete]
+    [Authorize (Roles = "Admin")]
     public async Task<IActionResult> DeleteTags(List<Guid> ids)
     {
         try
@@ -106,6 +109,7 @@ public class TagController : ControllerBase
     }
     
     [HttpPut("{id}")]
+    [Authorize (Roles = "Admin")]
     public async Task<IActionResult> UpdateTag(Guid id, TagRequestDto tagRequestDto)
     {
         try
