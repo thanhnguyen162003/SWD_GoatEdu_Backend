@@ -8,6 +8,7 @@ using GoatEdu.Core.Interfaces.NotificationInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.TagInterfaces;
+using GoatEdu.Core.Interfaces.UserDetailInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using Infrastructure.Data;
 using Infrastructure.Repositories.CacheRepository;
@@ -31,7 +32,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly ITagRepository _tagRepository;
     private readonly IFlashcardRepository _flashcardRepository;
     private readonly IDiscussionRepository _discussionRepository;
-    
+    private readonly IUserDetailRepository _userDetailRepository;
 
 
     public UnitOfWork(GoatEduContext context, IDistributedCache distributedCache)
@@ -45,13 +46,13 @@ public class UnitOfWork : IUnitOfWork
     public IRoleRepository RoleRepository => _roleRepository ?? new CachedRoleRepository(new RoleRepository(_context), _distributedCache, _context);
     public INotificationRepository NotificationRepository => _notificationRepository ?? new NotificationRepository(_context);
     public INoteRepository NoteRepository => _noteRepository ?? new NoteRepository(_context);
-    // public ISubjectRepository SubjectRepository => _subjectRepository ?? new SubjectRepository(_context);
     public ISubjectRepository SubjectRepository => _subjectRepository ?? new CacheSubjectRepository(new SubjectRepository(_context), _distributedCache, _context);
     public IChapterRepository ChapterRepository => _chapterRepository ?? new ChapterRepository(_context);
     public ILessonRepository LessonRepository => _lessonRepository ?? new LessonRepository(_context);
     public ITagRepository TagRepository => _tagRepository ?? new TagRepository(_context);
     public IFlashcardRepository FlashcardRepository => _flashcardRepository ?? new FlashcardRepository(_context);
     public IDiscussionRepository DiscussionRepository => _discussionRepository ?? new DiscussionRepository(_context);
+    public IUserDetailRepository UserDetailRepository => _userDetailRepository ?? new UserDetailRepository(_context);
 
 
 

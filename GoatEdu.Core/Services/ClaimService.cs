@@ -14,5 +14,5 @@ public class ClaimsService : IClaimsService
         var extractedId = AuthenTools.GetCurrentAccountId(identity);
         GetCurrentUserId = string.IsNullOrEmpty(extractedId) ? Guid.Empty : new Guid(extractedId);
     }
-    public Guid? GetCurrentUserId { get; }
+    public Guid GetCurrentUserId { get; }
 }

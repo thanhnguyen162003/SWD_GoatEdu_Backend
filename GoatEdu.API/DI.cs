@@ -18,6 +18,7 @@ using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.Security;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.TagInterfaces;
+using GoatEdu.Core.Interfaces.UserDetailInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using GoatEdu.Core.Mappings;
 using GoatEdu.Core.Services;
@@ -41,7 +42,7 @@ public static class DI
         services.AddScoped<ISubjectRepository, SubjectRepository>();
         services.AddScoped<ILessonRepository, LessonRepository>();
         services.AddScoped<IChapterRepository, ChapterRepository>();
-
+        services.AddScoped<IUserDetailRepository, UserDetailRepository>();
         services.AddScoped<INoteRepository, NoteRepository>();
         
         
@@ -56,7 +57,8 @@ public static class DI
         services.AddScoped<IChapterService, ChapterService>();
         services.AddScoped<ITagService, TagService>();
         services.AddScoped<IDiscussionService, DiscussionService>();
-
+        services.AddScoped<IUserDetailService, UserDetailService>();
+        
         
         
         // Others

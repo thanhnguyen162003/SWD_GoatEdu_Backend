@@ -3,6 +3,7 @@ using System.Net;
 using FluentValidation;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.SubjectDto;
+using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using Microsoft.AspNetCore.Authorization;
@@ -41,13 +42,13 @@ public class SubjectController : ControllerBase
         return await _subjectService.GetSubjectBySubjectName(subjectName);
     }
     [HttpDelete("id/{id}")]
-    [Authorize]
+    [Authorize (Roles = UserEnum.MODERATOR)]
     public async Task<ResponseDto> DeleteSubject(Guid id)
     {
         return await _subjectService.DeleteSubject(id);
     }
     [HttpPost]
-    [Authorize]
+    [Authorize (Roles = UserEnum.MODERATOR)]
     public async Task<ResponseDto> CreateSubject([FromForm]SubjectDto dto)
     {
         var validationResult = await _validator.ValidateAsync(dto);
@@ -58,7 +59,7 @@ public class SubjectController : ControllerBase
         return await _subjectService.CreateSubject(dto);
     }
     [HttpPut("id/{id}")]
-    [Authorize]
+    [Authorize (Roles = UserEnum.MODERATOR)]
     public async Task<ResponseDto> UpdateSubject([FromForm] SubjectCreateDto dto)
     {
         return await _subjectService.UpdateSubject(dto);

@@ -7,6 +7,7 @@ using GoatEdu.Core.Interfaces.NotificationInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.TagInterfaces;
+using GoatEdu.Core.Interfaces.UserDetailInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 
 namespace GoatEdu.Core.Interfaces
@@ -25,6 +26,7 @@ namespace GoatEdu.Core.Interfaces
         ITagRepository TagRepository { get; }
         IFlashcardRepository FlashcardRepository { get; }
         IDiscussionRepository DiscussionRepository { get; }
+        IUserDetailRepository UserDetailRepository { get; }
 
         
         void SaveChanges();

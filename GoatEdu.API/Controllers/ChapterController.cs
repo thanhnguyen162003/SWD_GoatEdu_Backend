@@ -4,6 +4,7 @@ using FluentValidation;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.SubjectDto;
+using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces.ChapterInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using Microsoft.AspNetCore.Authorization;
@@ -41,13 +42,13 @@ public class ChapterController : ControllerBase
         return await _chapterService.GetChapterByChapterName(chapterName);
     }
     [HttpDelete("id/{id}")]
-    [Authorize]
+    [Authorize (Roles = UserEnum.MODERATOR)]
     public async Task<ResponseDto> DeleteChapter(Guid id)
     {
         return await _chapterService.DeleteChapter(id);
     }
     [HttpPost]
-    [Authorize]
+    [Authorize (Roles = UserEnum.MODERATOR)]
     public async Task<ResponseDto> CreateChapter([FromBody] ChapterDto dto)
     {
         var validationResult = await _validator.ValidateAsync(dto);
@@ -58,7 +59,7 @@ public class ChapterController : ControllerBase
         return await _chapterService.CreateChapter(dto);
     }
     [HttpPut("id/{id}")]
-    [Authorize]
+    [Authorize (Roles = UserEnum.MODERATOR)]
     public async Task<ResponseDto> UpdateChapter([FromBody] ChapterCreateDto dto)
     {
         return await _chapterService.UpdateChapter(dto);
