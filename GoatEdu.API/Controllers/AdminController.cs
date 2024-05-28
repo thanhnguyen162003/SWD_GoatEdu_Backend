@@ -1,8 +1,11 @@
+using System.ComponentModel.DataAnnotations;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.AdminDto;
+using GoatEdu.Core.DTOs.RoleDto;
 using GoatEdu.Core.DTOs.UserDetailDto;
 using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces.AdminInterfaces;
+using GoatEdu.Core.QueriesFilter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,5 +31,10 @@ public class AdminController : ControllerBase
     public async Task<ResponseDto> CreateUser([FromBody] CreateUserRequestDto dto)
     {
         return await _adminService.CreateUser(dto);
+    }
+    [HttpGet("user")]
+    public async Task<ICollection<UserMinimalDto>> GetUsers([FromQuery, Required] UserQueryFilter queryFilter)
+    {
+        return await _adminService.GetUsers(queryFilter);
     }
 }

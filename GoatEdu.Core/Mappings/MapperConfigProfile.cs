@@ -4,6 +4,7 @@ using GoatEdu.Core.DTOs.AdminDto;
 using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.NoteDto;
 using GoatEdu.Core.DTOs.NotificationDto;
+using GoatEdu.Core.DTOs.RoleDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.DTOs.TagDto;
 using Infrastructure;
@@ -33,6 +34,12 @@ public class MapperConfigProfile : Profile
         CreateMap<Discussion, DiscussionResponseDto>().ReverseMap();
         CreateMap<User, CreateUserResponse>().ReverseMap();
         CreateMap<CreateUserResponse, User>().ReverseMap();
+        CreateMap<User, UserMinimalDto>()
+            .ForMember(dest => dest.IsConfirmMail, opt => opt.MapFrom(src => src.EmailVerify))
+            .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.RoleName))
+            .ReverseMap()
+            .ForMember(dest => dest.EmailVerify, opt => opt.MapFrom(src => src.IsConfirmMail))
+            .ForMember(dest => dest.Role, opt => opt.Ignore());
         CreateMap<Discussion, DiscussionDetailResponseDto>()
             .ForPath(dest => dest.UserAndSubject.UserId, opt => opt.MapFrom(src => src.UserId))
             .ForPath(dest => dest.UserAndSubject.UserName, opt => opt.MapFrom(src => src.User.Fullname))
