@@ -23,14 +23,15 @@ public class UserRepository : BaseRepository<User>, IUserRepository
     public async Task<User> GetUserByGoogle(string email)
     {
         return await _entities.Where(
-            x => x.Email == email && x.IsDeleted == false).FirstOrDefaultAsync();
+            x => x.Email == email && x.IsDeleted == false).Include(x => x.Role).FirstOrDefaultAsync();
     }
 
     public async Task<User> GetUserByUsername(string username)
     {
-        return await _entities.Where(
-            x => x.Username == username && x.IsDeleted == false || x.Email == username && x.IsDeleted == false
-            ).FirstOrDefaultAsync();
+        return await _entities
+            .Where(x => (x.Username == username || x.Email == username) && x.IsDeleted == false)
+            .Include(x => x.Role)
+            .FirstOrDefaultAsync();
     }
     public async Task<User> GetUserByUsernameWithEmailCheckRegister(string username, string email)
     {

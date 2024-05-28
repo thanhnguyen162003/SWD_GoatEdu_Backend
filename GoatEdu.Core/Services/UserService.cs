@@ -5,7 +5,7 @@ using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces;
-using GoatEdu.Core.Interfaces.Security;
+using GoatEdu.Core.Security;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using Infrastructure;
 using MailKit;
@@ -32,24 +32,19 @@ public class UserService : IUserService
         return await _unitOfWork.UserRepository.GetUserByUsername(username);
     }
     
-    public async Task<ResponseDto> LoginByGoogle(LoginGoogleDto dto)
+    public async Task<ResponseDto> LoginByGoogle(string email)
     {
-        var user = await _unitOfWork.UserRepository.GetUserByGoogle(dto.Email);
+        var user = await _unitOfWork.UserRepository.GetUserByGoogle(email);
         if (user == null)
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Email not existed!");
         }
         if (user.IsDeleted == true)
         {
-            return new ResponseDto(HttpStatusCode.Forbidden, "Your account is suspense!");
+            return new ResponseDto(HttpStatusCode.Forbidden, "Your account is suspended!");
         }
 
-        LoginDtoRequest loginDtoRequest = new LoginDtoRequest()
-        {
-            Email = dto.Email,
-            Username = user.Fullname
-        };
-        var token = _tokenGenerator.GenerateToken(loginDtoRequest);
+        var token = await _tokenGenerator.GenerateTokenGoogle(email);
         return new ResponseDto(HttpStatusCode.OK, "Login successfully!", token);
     }
 

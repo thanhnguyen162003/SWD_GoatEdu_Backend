@@ -9,7 +9,7 @@ public interface IUserService
     Task<ResponseDto> GetLoginByCredentials(LoginCredentialDto login);
     Task<ResponseDto> Register(RegisterDto registerUser);
 
-    Task<ResponseDto> LoginByGoogle(LoginGoogleDto dto);
+    Task<ResponseDto> LoginByGoogle(string email);
 
     Task<ResponseDto> RegisterByGoogle(GoogleRegisterDto dto);
 

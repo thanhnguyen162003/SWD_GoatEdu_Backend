@@ -6,6 +6,7 @@ using GoatEdu.Core.DTOs.NotificationDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.DTOs.TagDto;
 using GoatEdu.Core.Interfaces;
+using GoatEdu.Core.Interfaces.AdminInterfaces;
 using GoatEdu.Core.Interfaces.ChapterInterfaces;
 using GoatEdu.Core.Interfaces.ClaimInterfaces;
 using GoatEdu.Core.Interfaces.CloudinaryInterfaces;
@@ -15,7 +16,7 @@ using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
-using GoatEdu.Core.Interfaces.Security;
+using GoatEdu.Core.Security;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.TagInterfaces;
 using GoatEdu.Core.Interfaces.UserDetailInterfaces;
@@ -44,7 +45,8 @@ public static class DI
         services.AddScoped<IChapterRepository, ChapterRepository>();
         services.AddScoped<IUserDetailRepository, UserDetailRepository>();
         services.AddScoped<INoteRepository, NoteRepository>();
-        
+        services.AddScoped<IAdminRepository, AdminRepository>();
+
         
         // Services
         services.AddScoped<IUserService, UserService>();
@@ -58,7 +60,8 @@ public static class DI
         services.AddScoped<ITagService, TagService>();
         services.AddScoped<IDiscussionService, DiscussionService>();
         services.AddScoped<IUserDetailService, UserDetailService>();
-        
+        services.AddScoped<IAdminService, AdminService>();
+
         
         
         // Others

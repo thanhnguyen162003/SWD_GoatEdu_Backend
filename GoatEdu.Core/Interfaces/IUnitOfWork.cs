@@ -1,3 +1,4 @@
+using GoatEdu.Core.Interfaces.AdminInterfaces;
 using GoatEdu.Core.Interfaces.ChapterInterfaces;
 using GoatEdu.Core.Interfaces.DiscussionInterfaces;
 using GoatEdu.Core.Interfaces.FlashcardInterfaces;
@@ -27,6 +28,8 @@ namespace GoatEdu.Core.Interfaces
         IFlashcardRepository FlashcardRepository { get; }
         IDiscussionRepository DiscussionRepository { get; }
         IUserDetailRepository UserDetailRepository { get; }
+        IAdminRepository AdminRepository { get; }
+
 
         
         void SaveChanges();

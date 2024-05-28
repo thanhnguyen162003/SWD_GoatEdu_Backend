@@ -1,5 +1,6 @@
 using AutoMapper;
 using GoatEdu.Core.DTOs;
+using GoatEdu.Core.DTOs.AdminDto;
 using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.NoteDto;
 using GoatEdu.Core.DTOs.NotificationDto;
@@ -30,6 +31,8 @@ public class MapperConfigProfile : Profile
         CreateMap<Tag, TagResponseDto>().ReverseMap();
         CreateMap<Discussion, DiscussionRequestDto>().ReverseMap();
         CreateMap<Discussion, DiscussionResponseDto>().ReverseMap();
+        CreateMap<User, CreateUserResponse>().ReverseMap();
+        CreateMap<CreateUserResponse, User>().ReverseMap();
         CreateMap<Discussion, DiscussionDetailResponseDto>()
             .ForPath(dest => dest.UserAndSubject.UserId, opt => opt.MapFrom(src => src.UserId))
             .ForPath(dest => dest.UserAndSubject.UserName, opt => opt.MapFrom(src => src.User.Fullname))

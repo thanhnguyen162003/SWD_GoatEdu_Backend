@@ -1,4 +1,5 @@
 using GoatEdu.Core.Interfaces;
+using GoatEdu.Core.Interfaces.AdminInterfaces;
 using GoatEdu.Core.Interfaces.ChapterInterfaces;
 using GoatEdu.Core.Interfaces.DiscussionInterfaces;
 using GoatEdu.Core.Interfaces.FlashcardInterfaces;
@@ -33,6 +34,8 @@ public class UnitOfWork : IUnitOfWork
     private readonly IFlashcardRepository _flashcardRepository;
     private readonly IDiscussionRepository _discussionRepository;
     private readonly IUserDetailRepository _userDetailRepository;
+    private readonly IAdminRepository _adminRepository;
+
 
 
     public UnitOfWork(GoatEduContext context, IDistributedCache distributedCache)
@@ -53,6 +56,8 @@ public class UnitOfWork : IUnitOfWork
     public IFlashcardRepository FlashcardRepository => _flashcardRepository ?? new FlashcardRepository(_context);
     public IDiscussionRepository DiscussionRepository => _discussionRepository ?? new DiscussionRepository(_context);
     public IUserDetailRepository UserDetailRepository => _userDetailRepository ?? new UserDetailRepository(_context);
+    public IAdminRepository AdminRepository => _adminRepository ?? new AdminRepository(_context);
+
 
 
 
