@@ -28,9 +28,12 @@ public class CachedRoleRepository : IRoleRepository
         {
             return JsonConvert.DeserializeObject<ICollection<RoleResponseDto>>(cachedRoles)!; // Null-forgiving operator
         }
-
+        var cacheOptions = new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10080) //near 1 week expire cache
+        };
         var roles = await _decorated.GetAllRole();
-        await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(roles));
+        await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(roles),cacheOptions);
         return roles;
     }
 
@@ -46,7 +49,11 @@ public class CachedRoleRepository : IRoleRepository
             {
                 return role;
             }
-            await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(role));
+            var cacheOptions = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10080) //near 1 week expire cache
+            };
+            await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(role),cacheOptions);
             return role;
         }
 
@@ -72,7 +79,11 @@ public class CachedRoleRepository : IRoleRepository
             {
                 return role;
             }
-            await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(role));
+            var cacheOptions = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10080) //near 1 week expire cache
+            };
+            await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(role),cacheOptions);
             return role;
         }
 

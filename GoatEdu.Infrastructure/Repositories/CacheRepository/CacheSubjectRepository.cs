@@ -30,10 +30,13 @@ public class CacheSubjectRepository : ISubjectRepository
         {
             return JsonConvert.DeserializeObject<ICollection<Subject>>(cachedSubjects)!; // Null-forgiving operator
         }
-
-        var roles = await _decorated.GetAllSubjects(queryFilter);
-        await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(roles));
-        return roles;
+        var cacheOptions = new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1000) //near 1 day expire cache
+        };
+        var subjects = await _decorated.GetAllSubjects(queryFilter);
+        await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(subjects),cacheOptions);
+        return subjects;
     }
 
     public async Task<SubjectResponseDto> GetSubjectBySubjectId(Guid id)
@@ -48,10 +51,14 @@ public class CacheSubjectRepository : ISubjectRepository
             {
                 return subject;
             }
-            await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(subject));
+            var cacheOptions = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1000) //near 1 day expire cache
+            };
+            await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(subject),cacheOptions);
             return subject;
         }
-
+        
         subject = JsonConvert.DeserializeObject<SubjectResponseDto>(cacheSubject,
             // tell that it need to find constructor that dont have public or private default
             new JsonSerializerSettings
@@ -108,7 +115,11 @@ public class CacheSubjectRepository : ISubjectRepository
             {
                 return subject;
             }
-            await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(subject));
+            var cacheOptions = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1000) //near 1 day expire cache
+            };
+            await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(subject),cacheOptions);
             return subject;
         }
 
