@@ -1,5 +1,4 @@
 using System.Net;
-using EntityFramework.Extensions;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.Interfaces.UserDetailInterfaces;
 using Infrastructure.Data;
@@ -17,15 +16,20 @@ public class UserDetailRepository : BaseRepository<User>, IUserDetailRepository
 
     public async Task<ResponseDto> UpdateProfile(User user)
     {
-        await _entities
-            .Where(x => x.Id == user.Id)
-            .UpdateAsync(s => new User()
-            {
-                Fullname = user.Fullname,
-                Image = user.Image,
-                PhoneNumber = user.PhoneNumber,
-                UpdatedAt = DateTime.Now
-            });
+        var existingUser = await _entities.FindAsync(user.Id);
+        if (existingUser == null)
+        {
+            return new ResponseDto(HttpStatusCode.NotFound, "User not found.");
+        }
+
+        existingUser.Fullname = user.Fullname;
+        existingUser.Image = user.Image;
+        existingUser.PhoneNumber = user.PhoneNumber;
+        existingUser.UpdatedAt = DateTime.Now;
+
+        _context.Users.Update(existingUser);
+        await _context.SaveChangesAsync();
+
         return new ResponseDto(HttpStatusCode.OK, "User successfully updated.");
     }
 

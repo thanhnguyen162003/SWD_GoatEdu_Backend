@@ -1,4 +1,3 @@
-using System.Linq.Dynamic;
 using GoatEdu.Core.Interfaces.DiscussionInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure.Data;

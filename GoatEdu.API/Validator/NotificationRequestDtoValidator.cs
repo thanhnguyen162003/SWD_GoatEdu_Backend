@@ -1,4 +1,3 @@
-using System.Data.Entity;
 using FluentValidation;
 using GoatEdu.Core.DTOs.NotificationDto;
 using Infrastructure.Data;

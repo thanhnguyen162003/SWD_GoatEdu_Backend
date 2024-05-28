@@ -1,4 +1,3 @@
-using System.Linq.Dynamic;
 using GoatEdu.Core.Interfaces.TagInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure.Data;

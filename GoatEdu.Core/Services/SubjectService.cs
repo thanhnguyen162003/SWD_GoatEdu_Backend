@@ -58,19 +58,25 @@ public class SubjectService : ISubjectService
 
     public async Task<ResponseDto> UpdateSubject(SubjectCreateDto dto)
     {
-        var uploadResult = await _cloudinaryService.UploadAsync(dto.image);
-        if (uploadResult.Error != null)
-        {
-            return new ResponseDto(HttpStatusCode.BadRequest, uploadResult.Error.Message);
-        }
+        string imageUrl = null;
 
+        if (dto.image != null)
+        {
+            var uploadResult = await _cloudinaryService.UploadAsync(dto.image);
+            if (uploadResult.Error != null)
+            {
+                return new ResponseDto(HttpStatusCode.BadRequest, uploadResult.Error.Message);
+            }
+            imageUrl = uploadResult.Url.ToString();
+        }
+        
         var updateSubject = new Subject()
         {
             Id = dto.Id,
             SubjectName = dto.SubjectName,
             SubjectCode = dto.SubjectCode,
             Information = dto.Information,
-            Image = uploadResult.Url.ToString(),
+            Image = imageUrl,
             Class = dto.Class
         };
         return await _unitOfWork.SubjectRepository.UpdateSubject(updateSubject);

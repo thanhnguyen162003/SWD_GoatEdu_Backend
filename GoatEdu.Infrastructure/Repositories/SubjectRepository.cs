@@ -1,5 +1,4 @@
 using System.Net;
-using EntityFramework.Extensions;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.SubjectDto;
@@ -80,18 +79,15 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
             return new ResponseDto(HttpStatusCode.BadRequest, "Subject does not exist anymore!!!");
         }
 
-        // Update the subject using EntityFramework.Extended
-        await _entities
-            .Where(x => x.Id == dto.Id)
-            .UpdateAsync(s => new Subject
-            {
-                SubjectName = dto.SubjectName,
-                SubjectCode = dto.SubjectCode,
-                Information = dto.Information,
-                Image = dto.Image,
-                Class = dto.Class,
-                UpdatedAt = DateTime.Now
-            });
+        subject.SubjectName = dto.SubjectName ?? subject.SubjectName;
+        subject.SubjectCode = dto.SubjectCode ?? subject.SubjectCode;
+        subject.Information = dto.Information ?? subject.Information;
+        subject.Image = dto.Image ?? subject.Image;
+        subject.Class = dto.Class ?? subject.Class;
+        subject.UpdatedAt = DateTime.Now;
+
+         _entities.Update(subject);
+         await _context.SaveChangesAsync();
         return new ResponseDto(HttpStatusCode.OK, "Subject successfully updated.");
     }
 

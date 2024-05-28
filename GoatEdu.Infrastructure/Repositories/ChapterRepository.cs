@@ -1,5 +1,4 @@
 using System.Net;
-using EntityFramework.Extensions;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.SubjectDto;
@@ -89,15 +88,11 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
             return new ResponseDto(HttpStatusCode.BadRequest, "Chapter does not exist anymore!!!");
         }
 
-        // Update the chapter using EntityFramework.Extended
-        await _entities
-            .Where(c => c.Id == dto.Id)
-            .UpdateAsync(c => new Chapter
-            {
-                ChapterName = dto.ChapterName,
-                ChapterLevel = dto.ChapterLevel,
-                UpdatedAt = DateTime.Now
-            });
+        chapter.ChapterName = dto.ChapterName;
+        chapter.ChapterLevel = dto.ChapterLevel;
+        chapter.UpdatedAt = DateTime.Now;
+        _entities.Update(chapter);
+        await _context.SaveChangesAsync();
         return new ResponseDto(HttpStatusCode.OK, "Chapter successfully updated.");
     }
 
