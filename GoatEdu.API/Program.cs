@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PaypalCheckoutExample.Clients;
+using Stripe;
 using SwaggerThemes;
 
 
@@ -53,6 +54,13 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.Configuration = $"{redisConnection},password={redisPassword}";
 });
 builder.Services.AddDistributedMemoryCache();
+
+//add Stripe Payment Gateway
+builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<CustomerService>();
+builder.Services.AddScoped<ChargeService>();
+StripeConfiguration.ApiKey = builder.Configuration.GetValue<string>("StripeOptions:SecretKey");
+
 //dbcontext
 builder.Services.AddDbContext<GoatEduContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));

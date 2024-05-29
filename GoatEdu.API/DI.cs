@@ -17,6 +17,7 @@ using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
 using GoatEdu.Core.Interfaces.ReportInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
+using GoatEdu.Core.Interfaces.StripeInterface;
 using GoatEdu.Core.Security;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.TagInterfaces;
@@ -65,6 +66,8 @@ public static class DI
         services.AddScoped<IUserDetailService, UserDetailService>();
         services.AddScoped<IAdminService, AdminService>();
         services.AddScoped<IReportService, ReportService>();
+        services.AddScoped<IStripeService, StripeService>();
+
 
         
         
