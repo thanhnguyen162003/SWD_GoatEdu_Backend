@@ -12,7 +12,14 @@ public class ClaimsService : IClaimsService
         // todo implementation to get the current userId
         var identity = httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity;
         var extractedId = AuthenTools.GetCurrentAccountId(identity);
+        var username = AuthenTools.GetCurrentUsernam(identity);
+        var fullname = AuthenTools.GetCurrentFullname(identity);
         GetCurrentUserId = string.IsNullOrEmpty(extractedId) ? Guid.Empty : new Guid(extractedId);
+        GetCurrentUsername = string.IsNullOrEmpty(username) ? "" : username;
+        GetCurrentFullname = string.IsNullOrEmpty(fullname) ? "" : fullname;
+
     }
     public Guid GetCurrentUserId { get; }
+    public string GetCurrentUsername { get; }
+    public string GetCurrentFullname { get; }
 }
