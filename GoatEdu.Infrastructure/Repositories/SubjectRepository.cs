@@ -18,7 +18,7 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
         _context = context;
     }
 
-    public async Task<ICollection<Subject>> GetAllSubjects(SubjectQueryFilter queryFilter)
+    public async Task<IEnumerable<Subject>> GetAllSubjects(SubjectQueryFilter queryFilter)
     {
         var subjects = _entities.Include(x => x.Chapters).AsQueryable();
         subjects = ApplyFilterSortAndSearch(subjects, queryFilter);

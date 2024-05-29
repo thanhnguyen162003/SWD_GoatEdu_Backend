@@ -20,7 +20,7 @@ public class CacheSubjectRepository : ISubjectRepository
         _distributedCache = distributedCache;
         _context = context;
     }
-    public async Task<ICollection<Subject>> GetAllSubjects(SubjectQueryFilter queryFilter)
+    public async Task<IEnumerable<Subject>> GetAllSubjects(SubjectQueryFilter queryFilter)
     {
         string key = $"all-subject-{queryFilter.PageSize}-{queryFilter.PageNumber}-{queryFilter.Search}-{queryFilter.Sort}-{queryFilter.SortDirection}";
         string? cachedSubjects = await _distributedCache.GetStringAsync(key);

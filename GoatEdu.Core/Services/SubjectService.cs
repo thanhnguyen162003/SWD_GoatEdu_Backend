@@ -29,7 +29,7 @@ public class SubjectService : ISubjectService
         _cloudinaryService = cloudinaryService;
     }
 
-    public async Task<ICollection<SubjectResponseDto>> GetAllSubjects(SubjectQueryFilter queryFilter)
+    public async Task<IEnumerable<SubjectResponseDto>> GetAllSubjects(SubjectQueryFilter queryFilter)
     {
         queryFilter.PageNumber = queryFilter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.PageNumber;
         queryFilter.PageSize = queryFilter.PageSize == 0 ? _paginationOptions.DefaultPageSize : queryFilter.PageSize;

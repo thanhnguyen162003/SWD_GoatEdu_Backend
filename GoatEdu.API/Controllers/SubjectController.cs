@@ -26,7 +26,7 @@ public class SubjectController : ControllerBase
         _validator = validator;
     }
     [HttpGet]
-    public async Task<ICollection<SubjectResponseDto>> GetAllSubject([FromQuery, Required] SubjectQueryFilter queryFilter)
+    public async Task<IEnumerable<SubjectResponseDto>> GetAllSubject([FromQuery, Required] SubjectQueryFilter queryFilter)
     {
         return await _subjectService.GetAllSubjects(queryFilter);
     }
