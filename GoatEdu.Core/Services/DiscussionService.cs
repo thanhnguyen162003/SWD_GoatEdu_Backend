@@ -2,6 +2,7 @@ using System.Net;
 using AutoMapper;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
+using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.ClaimInterfaces;
 using GoatEdu.Core.Interfaces.DiscussionInterfaces;
@@ -67,7 +68,15 @@ public class DiscussionService : IDiscussionService
 
     public async Task<ResponseDto> InsertDiscussion(DiscussionRequestDto discussionRequestDto)
     {
+        var tagCheck = await _unitOfWork.TagRepository.GetTagNameByNameAsync(discussionRequestDto.Tags);
+        var tagNoExist = discussionRequestDto.Tags.Except(tagCheck).ToList();
+        // if (tagNoExist.Any())
+        // {
+        //     await _unitOfWork.TagRepository.AddRangeAsync();
+        // }
+        
         var mapper = _mapper.Map<Discussion>(discussionRequestDto);
+        mapper.Status = DiscussionStatus.Unapproved.ToString();
         mapper.UserId = _claimsService.GetCurrentUserId;
         mapper.CreatedBy = _claimsService.GetCurrentUserId.ToString();
         await _unitOfWork.DiscussionRepository.AddAsync(mapper);

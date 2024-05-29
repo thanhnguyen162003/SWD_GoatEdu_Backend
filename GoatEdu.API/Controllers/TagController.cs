@@ -40,6 +40,21 @@ public class TagController : ControllerBase
         }
     }
     
+    [HttpGet("name")]
+    [Authorize]
+    public async Task<IActionResult> GetTagByName([FromQuery, Required] List<string> name)
+    {
+        try
+        {
+            var result = await _tagService.getTagByName(name);
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
     [HttpGet("query")]
     public async Task<IActionResult> GetTagByFilter([FromQuery, Required] TagQueryFilter queryFilter)
     {

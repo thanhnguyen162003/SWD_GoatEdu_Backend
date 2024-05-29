@@ -46,6 +46,18 @@ public class TagService : ITagService
         return PagedList<TagResponseDto>.Create(mapperList, queryFilter.PageNumber, queryFilter.PageSize);
     }
 
+    public async Task<ResponseDto> getTagByName(List<string> name)
+    {
+        var tagFound = await _unitOfWork.TagRepository.GetTagNameByNameAsync(name);
+        
+        if (!tagFound.Any())
+        {
+            return new ResponseDto(HttpStatusCode.NotFound, "Có đâu mà tìm");
+        }
+
+        return new ResponseDto(HttpStatusCode.OK, "Có rồi nè!", tagFound);
+    }
+
     public async Task<ResponseDto> GetTagById(Guid guid)
     {
         var tagFound = await _unitOfWork.TagRepository.GetByIdAsync(guid);

@@ -11,12 +11,16 @@ public class DisscussionRequestDtoValidator : AbstractValidator<DiscussionReques
     public DisscussionRequestDtoValidator(GoatEduContext context)
     {
         RuleFor(x => x.DiscussionName)
-            .NotEmpty().WithMessage("Tag name is required!")
-            .MaximumLength(100).WithMessage("Tag name cannot exceed 100 characters.");
+            .NotEmpty().WithMessage("Discussion name is required!")
+            .MaximumLength(100).WithMessage("Discussion name cannot exceed 100 characters.");
 
         RuleFor(x => x.SubjectId)
             .NotEmpty().WithMessage("Subject Id is required!")
             .MustAsync(async (id, cancellation) => await context.Subjects.AnyAsync(x => x.Id == id))
             .WithMessage("Subject Id must exist!");
+
+        RuleFor(x => x.Tags)
+            .NotEmpty().WithMessage("Tags is required!")
+            .Must(list => list.Count() == 4).WithMessage("Tags must have only 4 tags");
     }
 }

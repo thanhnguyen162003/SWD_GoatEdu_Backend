@@ -25,8 +25,7 @@ public class TagRepository : BaseRepository<Tag>, ITagRepository
 
     public async Task<List<string?>> GetTagNameByNameAsync(List<string?> tagName)
     {
-        var result = await _entities.ToListAsync();
-        return result.Where(x => tagName.Any(name => name.Equals(x.TagName?.ToUpper()))).Select(x => x.TagName).ToList();
+        return await _entities.Where(x => tagName.Any(name => name.Equals(x.TagName.ToUpper()))).Select(x => x.TagName).ToListAsync();
     }
     
     public async Task SoftDelete(List<Guid> guids)
