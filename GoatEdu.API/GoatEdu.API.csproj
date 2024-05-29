@@ -28,4 +28,14 @@
       <ProjectReference Include="..\GoatEdu.Infrastructure\GoatEdu.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Responses\Paypal\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Responses\Paypal\Success.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Paypal\Index.cshtml" />
+      <AdditionalFiles Include="Paypal\Success.cshtml" />
+    </ItemGroup>
+
 </Project>

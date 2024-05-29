@@ -132,6 +132,7 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
+
 //config unlock potential of upload image
 //Set size limit for request
 builder.Services.Configure<KestrelServerOptions>(options =>

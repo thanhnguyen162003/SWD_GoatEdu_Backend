@@ -1,5 +1,4 @@
 using GoatEdu.Core.DTOs;
-using GoatEdu.Core.DTOs.RoleDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.QueriesFilter;
@@ -23,7 +22,7 @@ public class CacheSubjectRepository : ISubjectRepository
     }
     public async Task<ICollection<Subject>> GetAllSubjects(SubjectQueryFilter queryFilter)
     {
-        string key = "all-subject";
+        string key = $"all-subject-{queryFilter.PageSize}-{queryFilter.PageNumber}-{queryFilter.Search}-{queryFilter.Sort}-{queryFilter.SortDirection}";
         string? cachedSubjects = await _distributedCache.GetStringAsync(key);
         
         if (!string.IsNullOrEmpty(cachedSubjects))
@@ -34,8 +33,13 @@ public class CacheSubjectRepository : ISubjectRepository
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1000) //near 1 day expire cache
         };
+        //add loop handling for serializeObject, dont know perfomance have impact or not. still consider remove chapter from subject to better perfomance
+        var loopHandling = new JsonSerializerSettings 
+        { 
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        };
         var subjects = await _decorated.GetAllSubjects(queryFilter);
-        await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(subjects),cacheOptions);
+        await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(subjects,loopHandling),cacheOptions);
         return subjects;
     }
 

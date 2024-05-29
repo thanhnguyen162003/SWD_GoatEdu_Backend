@@ -20,7 +20,7 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
 
     public async Task<ICollection<Subject>> GetAllSubjects(SubjectQueryFilter queryFilter)
     {
-        var subjects = _entities.AsQueryable();
+        var subjects = _entities.Include(x => x.Chapters).AsQueryable();
         subjects = ApplyFilterSortAndSearch(subjects, queryFilter);
         subjects = ApplySorting(subjects, queryFilter);
         return await subjects.ToListAsync();

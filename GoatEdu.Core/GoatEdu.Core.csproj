@@ -21,6 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="DTOs\DeveloperDto\" />
       <Folder Include="DTOs\WalletDto\" />
     </ItemGroup>
 

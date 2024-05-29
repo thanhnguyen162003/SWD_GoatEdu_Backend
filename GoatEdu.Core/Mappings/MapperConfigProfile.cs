@@ -21,10 +21,21 @@ public class MapperConfigProfile : Profile
         CreateMap<Subject, SubjectCreateDto>().ReverseMap();
         CreateMap<Subject, SubjectDto>().ReverseMap();
         CreateMap<Chapter, ChapterDto>().ReverseMap();
-        CreateMap<ChapterDto, Chapter>().ReverseMap();
+
         CreateMap<Chapter, ChapterResponseDto>().ReverseMap();
-        CreateMap<ChapterResponseDto, Chapter>().ReverseMap();
-        CreateMap<SubjectResponseDto, Subject>().ReverseMap();
+
+        CreateMap<Subject, SubjectResponseDto>()
+            .ForMember(dest => dest.NumberOfChapters, opt => opt.MapFrom(src => src.Chapters.Count))
+            .ForMember(dest => dest.Chapters, opt => opt.MapFrom(src => src.Chapters))
+            .ReverseMap();
+
+        // Map Chapter to ChapterSubjectDto
+        CreateMap<Chapter, ChapterSubjectDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.ChapterName, opt => opt.MapFrom(src => src.ChapterName))
+            .ForMember(dest => dest.ChapterLevel, opt => opt.MapFrom(src => src.ChapterLevel))
+            .ReverseMap();
+        
         CreateMap<Note, NoteResponseDto>().ReverseMap();
         CreateMap<Note, NoteRequestDto>().ReverseMap();
         CreateMap<Note, NoteDetailResponseDto>().ReverseMap();
