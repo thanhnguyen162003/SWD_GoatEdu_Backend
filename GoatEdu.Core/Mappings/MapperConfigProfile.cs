@@ -41,7 +41,10 @@ public class MapperConfigProfile : Profile
         CreateMap<Note, NoteDetailResponseDto>().ReverseMap();
         CreateMap<Tag, TagRequestDto>().ReverseMap();
         CreateMap<Tag, TagResponseDto>().ReverseMap();
-        CreateMap<Discussion, DiscussionRequestDto>().ReverseMap();
+        CreateMap<Discussion, DiscussionRequestDto>().ReverseMap()
+            .ForMember(dest => dest.Tags, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(dest => dest.Tags, opt => opt.Ignore());
         CreateMap<Discussion, DiscussionResponseDto>().ReverseMap();
         CreateMap<User, CreateUserResponse>().ReverseMap();
         CreateMap<CreateUserResponse, User>().ReverseMap();
@@ -51,6 +54,7 @@ public class MapperConfigProfile : Profile
             .ReverseMap()
             .ForMember(dest => dest.EmailVerify, opt => opt.MapFrom(src => src.IsConfirmMail))
             .ForMember(dest => dest.Role, opt => opt.Ignore());
+        
         CreateMap<Discussion, DiscussionDetailResponseDto>()
             .ForPath(dest => dest.UserAndSubject.UserId, opt => opt.MapFrom(src => src.UserId))
             .ForPath(dest => dest.UserAndSubject.UserName, opt => opt.MapFrom(src => src.User.Fullname))

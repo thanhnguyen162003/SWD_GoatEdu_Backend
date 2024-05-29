@@ -71,7 +71,7 @@ public class TagService : ITagService
 
     public async Task<ResponseDto> InsertTags(List<TagRequestDto> tagRequestDtos)
     {
-        var listName = tagRequestDtos.Select(x => x.TagName?.ToUpper()).ToList();
+        var listName = tagRequestDtos.Select(x => x.TagName).ToList();
         
         var listExistName = await _unitOfWork.TagRepository.GetTagNameByNameAsync(listName);
 
@@ -81,7 +81,7 @@ public class TagService : ITagService
         if (listExistName.Any())
         {
             tagIsDuplicated = tagRequestDtos.Join(
-                listExistName, 
+                listExistName.Select(a => a.TagName).ToList(), 
                 x => x.TagName,
                 name => name,
                 (x, _) => x).ToList();

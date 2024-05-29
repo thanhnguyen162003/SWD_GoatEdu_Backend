@@ -8,6 +8,6 @@ public interface ITagRepository : IRepository<Tag>
 {
     Task<List<Tag>> GetTagByFilters(TagQueryFilter queryFilter); 
 
-    Task<List<string?>> GetTagNameByNameAsync(List<string?> tagName);
+    Task<List<Tag?>> GetTagNameByNameAsync(List<string?> tagName);
     Task SoftDelete(List<Guid> guids);
 }

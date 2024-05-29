@@ -21,7 +21,8 @@ public class DiscussionService : IDiscussionService
     private readonly IClaimsService _claimsService;
     private readonly PaginationOptions _paginationOptions;
 
-    public DiscussionService(IUnitOfWork unitOfWork, IMapper mapper, ICurrentTime currentTime, IClaimsService claimsService, IOptions<PaginationOptions> options)
+    public DiscussionService(IUnitOfWork unitOfWork, IMapper mapper, ICurrentTime currentTime,
+        IClaimsService claimsService, IOptions<PaginationOptions> options)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -29,13 +30,14 @@ public class DiscussionService : IDiscussionService
         _claimsService = claimsService;
         _paginationOptions = options.Value;
     }
-    
+
     public async Task<PagedList<DiscussionResponseDto>> GetDiscussionByFilter(DiscussionQueryFilter queryFilter)
     {
         var list = await _unitOfWork.DiscussionRepository.GetDiscussionByFilters(null, queryFilter);
         if (!list.Any())
         {
-            return new PagedList<DiscussionResponseDto>(new List<DiscussionResponseDto>(), 0, 0, 0);}
+            return new PagedList<DiscussionResponseDto>(new List<DiscussionResponseDto>(), 0, 0, 0);
+        }
 
         var mapper = _mapper.Map<List<DiscussionResponseDto>>(list);
         return PagedList<DiscussionResponseDto>.Create(mapper, queryFilter.PageNumber, queryFilter.PageSize);
@@ -59,28 +61,58 @@ public class DiscussionService : IDiscussionService
         var list = await _unitOfWork.DiscussionRepository.GetDiscussionByFilters(userId, queryFilter);
         if (!list.Any())
         {
-            return new PagedList<DiscussionResponseDto>(new List<DiscussionResponseDto>(), 0, 0, 0);}
+            return new PagedList<DiscussionResponseDto>(new List<DiscussionResponseDto>(), 0, 0, 0);
+        }
 
         var mapper = _mapper.Map<List<DiscussionResponseDto>>(list);
-        return PagedList<DiscussionResponseDto>.Create(mapper, queryFilter.PageNumber, queryFilter.PageSize); 
+        return PagedList<DiscussionResponseDto>.Create(mapper, queryFilter.PageNumber, queryFilter.PageSize);
     }
 
 
     public async Task<ResponseDto> InsertDiscussion(DiscussionRequestDto discussionRequestDto)
     {
-        var tagCheck = await _unitOfWork.TagRepository.GetTagNameByNameAsync(discussionRequestDto.Tags);
-        var tagNoExist = discussionRequestDto.Tags.Except(tagCheck).ToList();
-        // if (tagNoExist.Any())
-        // {
-        //     await _unitOfWork.TagRepository.AddRangeAsync();
-        // }
+        bool hasDuplicates = discussionRequestDto.Tags.Count != discussionRequestDto.Tags.Distinct().Count();
+
+        if (hasDuplicates)
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "Có tag trùng nhau");
+        }
         
+        var tagCheck = await _unitOfWork.TagRepository.GetTagNameByNameAsync(discussionRequestDto.Tags);
+
+        var tagNoExist = discussionRequestDto.Tags.ExceptBy(tagCheck.Select(x => x.TagName).ToList(), x => x).ToList();
+        if (tagNoExist.Any())
+        {
+            var tags = tagNoExist.Select(x =>
+            {
+                var tag = new Tag
+                {
+                    TagName = x,
+                    CreatedAt = _currentTime.GetCurrentTime(),
+                    IsDeleted = false
+                };
+                return tag;
+            }).ToList();
+
+            await _unitOfWork.TagRepository.AddRangeAsync(tags);
+            
+            var save = await _unitOfWork.SaveChangesAsync();
+            
+            if (save < 1)
+            {
+                return new ResponseDto(HttpStatusCode.BadRequest, "Có lỗi ở chỗ insertDiscussion");
+            }
+        }
+
+        var tag = await _unitOfWork.TagRepository.GetTagNameByNameAsync(discussionRequestDto.Tags);
         var mapper = _mapper.Map<Discussion>(discussionRequestDto);
+        mapper.Tags = tag;
         mapper.Status = DiscussionStatus.Unapproved.ToString();
         mapper.UserId = _claimsService.GetCurrentUserId;
         mapper.CreatedBy = _claimsService.GetCurrentUserId.ToString();
         await _unitOfWork.DiscussionRepository.AddAsync(mapper);
         var result = await _unitOfWork.SaveChangesAsync();
+        
         if (result > 0)
         {
             return new ResponseDto(HttpStatusCode.OK, "Add Successfully!");
@@ -92,10 +124,12 @@ public class DiscussionService : IDiscussionService
     {
         await _unitOfWork.DiscussionRepository.SoftDelete(guids);
         var result = await _unitOfWork.SaveChangesAsync();
+
         if (result > 0)
         {
             return new ResponseDto(HttpStatusCode.OK, "Delete Successfully!");
         }
+
         return new ResponseDto(HttpStatusCode.BadRequest, "Delete Failed!");
     }
 
@@ -112,6 +146,7 @@ public class DiscussionService : IDiscussionService
         disscussion.UpdatedAt = _currentTime.GetCurrentTime();
         _unitOfWork.DiscussionRepository.Update(disscussion);
         var result = await _unitOfWork.SaveChangesAsync();
+
         if (result > 0)
         {
             return new ResponseDto(HttpStatusCode.OK, "Update Successfully!");
