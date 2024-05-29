@@ -6,6 +6,7 @@ using GoatEdu.Core.Interfaces.FlashcardInterfaces;
 using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
+using GoatEdu.Core.Interfaces.ReportInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.TagInterfaces;
@@ -35,6 +36,8 @@ public class UnitOfWork : IUnitOfWork
     private readonly IDiscussionRepository _discussionRepository;
     private readonly IUserDetailRepository _userDetailRepository;
     private readonly IAdminRepository _adminRepository;
+    private readonly IReportRepository _reportRepository;
+
 
 
 
@@ -57,6 +60,8 @@ public class UnitOfWork : IUnitOfWork
     public IDiscussionRepository DiscussionRepository => _discussionRepository ?? new DiscussionRepository(_context);
     public IUserDetailRepository UserDetailRepository => _userDetailRepository ?? new UserDetailRepository(_context);
     public IAdminRepository AdminRepository => _adminRepository ?? new AdminRepository(_context);
+    public IReportRepository ReportRepository => _reportRepository ?? new ReportRepository(_context);
+
 
 
 

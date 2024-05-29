@@ -5,6 +5,7 @@ using GoatEdu.Core.Interfaces.FlashcardInterfaces;
 using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
+using GoatEdu.Core.Interfaces.ReportInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.TagInterfaces;
@@ -29,6 +30,8 @@ namespace GoatEdu.Core.Interfaces
         IDiscussionRepository DiscussionRepository { get; }
         IUserDetailRepository UserDetailRepository { get; }
         IAdminRepository AdminRepository { get; }
+        IReportRepository ReportRepository { get; }
+
 
 
         

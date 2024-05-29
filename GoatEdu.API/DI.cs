@@ -15,6 +15,7 @@ using GoatEdu.Core.Interfaces.GenericInterfaces;
 using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
+using GoatEdu.Core.Interfaces.ReportInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Security;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
@@ -46,6 +47,8 @@ public static class DI
         services.AddScoped<IUserDetailRepository, UserDetailRepository>();
         services.AddScoped<INoteRepository, NoteRepository>();
         services.AddScoped<IAdminRepository, AdminRepository>();
+        services.AddScoped<IReportRepository, ReportRepository>();
+
 
         
         // Services
@@ -61,6 +64,7 @@ public static class DI
         services.AddScoped<IDiscussionService, DiscussionService>();
         services.AddScoped<IUserDetailService, UserDetailService>();
         services.AddScoped<IAdminService, AdminService>();
+        services.AddScoped<IReportService, ReportService>();
 
         
         
