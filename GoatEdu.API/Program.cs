@@ -146,7 +146,7 @@ builder.Services.Configure<FormOptions>(options =>
 var app = builder.Build();
 
 //random theme =)))
-var availableThemes = new[] { Theme.OneDark, Theme.UniversalDark, Theme.XCodeLight, Theme.Sepia }; 
+var availableThemes = new[] { Theme.OneDark, Theme.UniversalDark, Theme.XCodeLight, Theme.Sepia, Theme.Dracula, Theme.NordDark }; 
 var randomIndex = new Random().Next(availableThemes.Length); // 0 to (array length - 1)
 var selectedTheme = availableThemes[randomIndex];
 // if (app.Environment.IsDevelopment())
