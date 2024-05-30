@@ -36,13 +36,12 @@ public class NoteService : INoteService
 
     public async Task<ResponseDto> GetNoteById(Guid id)
     {
+        
         var noteFound = await _unitOfWork.NoteRepository.GetByIdAsync(id);
-        if (noteFound != null)
-        {
-            var mapperNote = _mapper.Map<NoteDetailResponseDto>(noteFound);
-            return new ResponseDto(HttpStatusCode.OK, "", mapperNote);
-        }
-        return new ResponseDto(HttpStatusCode.OK, "Kiếm không thấy :))");
+        if (noteFound == null) return new ResponseDto(HttpStatusCode.NotFound, "Kiếm không thấy :))");
+        
+        var mapperNote = _mapper.Map<NoteDetailResponseDto>(noteFound);
+        return new ResponseDto(HttpStatusCode.OK, "", mapperNote);
     }
 
     public async Task<PagedList<NoteResponseDto>> GetNoteByFilter(NoteQueryFilter queryFilter)
@@ -50,12 +49,11 @@ public class NoteService : INoteService
         queryFilter.PageNumber = queryFilter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.PageNumber;
         queryFilter.PageSize = queryFilter.PageSize == 0 ? _paginationOptions.DefaultPageSize : queryFilter.PageSize;
         
-        var listNote = await _unitOfWork.NoteRepository.GetNoteByFilters(queryFilter);
+        var userId = _claimsService.GetCurrentUserId;
+        var listNote = await _unitOfWork.NoteRepository.GetNoteByFilters(userId, queryFilter);
         
-        if (!listNote.Any())
-        {
-            return new PagedList<NoteResponseDto>(new List<NoteResponseDto>(), 0, 0, 0);
-        }
+        if (!listNote.Any()) return new PagedList<NoteResponseDto>(new List<NoteResponseDto>(), 0, 0, 0);
+        
         var mapperList = _mapper.Map<List<NoteResponseDto>>(listNote);
         return PagedList<NoteResponseDto>.Create(mapperList, queryFilter.PageNumber, queryFilter.PageSize);
     }
@@ -64,44 +62,35 @@ public class NoteService : INoteService
     {
         var note = _mapper.Map<Note>(noteRequestDto);
         note.CreatedAt = _currentTime.GetCurrentTime();
-        note.CreatedBy = _claimsService.GetCurrentUserId.ToString();
+        note.CreatedBy = _claimsService.GetCurrentFullname;
         note.IsDeleted = false;
+        
         await _unitOfWork.NoteRepository.AddAsync(note);
         var result = await _unitOfWork.SaveChangesAsync();
-        if (result > 0)
-        {
-            return new ResponseDto(HttpStatusCode.OK, "Add Successfully!");
-        }
-        return new ResponseDto(HttpStatusCode.OK, "Add Failed !");
+        
+        return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Add Successfully!") : new ResponseDto(HttpStatusCode.BadRequest, "Add Failed !");
     }
 
     public async Task<ResponseDto> DeleteNotes(List<Guid> guids)
     {
         await _unitOfWork.NoteRepository.SoftDelete(guids);
         var result = await _unitOfWork.SaveChangesAsync();
-        if (result > 0)
-        {
-            return new ResponseDto(HttpStatusCode.OK, "Delete Successfully !");
-        }
-        return new ResponseDto(HttpStatusCode.OK, "Delete Failed !");
+        return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Delete Successfully !") : new ResponseDto(HttpStatusCode.BadRequest, "Delete Failed !");
     }
 
     public async Task<ResponseDto> UpdateNote(Guid guid, NoteRequestDto noteRequestDto)
     {
         var note = await _unitOfWork.NoteRepository.GetByIdAsync(guid);
-        if (note == null)
-        {
-            return new ResponseDto(HttpStatusCode.NotFound, "Kiếm không có thấy");
-        }
-
+        
+        if (note == null) return new ResponseDto(HttpStatusCode.NotFound, "Kiếm không có thấy");
+        
         note = _mapper.Map(noteRequestDto, note);
+        note.UpdatedBy = _claimsService.GetCurrentFullname;
+        note.UpdatedAt = _currentTime.GetCurrentTime();
+        
         _unitOfWork.NoteRepository.Update(note);
         var result = await _unitOfWork.SaveChangesAsync();
-        if (result > 0)
-        {
-            return new ResponseDto(HttpStatusCode.OK,"Update Successfully!");
-        }
-
-        return new ResponseDto(HttpStatusCode.BadRequest, "Update Failed!");
+        
+        return result > 0 ? new ResponseDto(HttpStatusCode.OK,"Update Successfully!") : new ResponseDto(HttpStatusCode.BadRequest, "Update Failed!");
     }
 }

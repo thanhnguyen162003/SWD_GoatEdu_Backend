@@ -16,7 +16,8 @@ public class MapperConfigProfile : Profile
     public MapperConfigProfile()
     {
         CreateMap<Notification, NotificationResponseDto>().ReverseMap();
-        CreateMap<Notification, NotificationRequestDto>().ReverseMap();
+        CreateMap<Notification, NotificationRequestDto>().ReverseMap()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         CreateMap<Subject, SubjectResponseDto>().ReverseMap();
         CreateMap<Subject, SubjectCreateDto>().ReverseMap();
         CreateMap<Subject, SubjectDto>().ReverseMap();
@@ -37,14 +38,20 @@ public class MapperConfigProfile : Profile
             .ReverseMap();
         
         CreateMap<Note, NoteResponseDto>().ReverseMap();
-        CreateMap<Note, NoteRequestDto>().ReverseMap();
+        CreateMap<Note, NoteRequestDto>().ReverseMap()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         CreateMap<Note, NoteDetailResponseDto>().ReverseMap();
-        CreateMap<Tag, TagRequestDto>().ReverseMap();
+        CreateMap<Tag, TagRequestDto>().ReverseMap()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
         CreateMap<Tag, TagResponseDto>().ReverseMap();
+
+
         CreateMap<Discussion, DiscussionRequestDto>().ReverseMap()
             .ForMember(dest => dest.Tags, opt => opt.Ignore())
             .ReverseMap()
-            .ForMember(dest => dest.Tags, opt => opt.Ignore());
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         CreateMap<Discussion, DiscussionResponseDto>().ReverseMap();
         CreateMap<User, CreateUserResponse>().ReverseMap();
         CreateMap<CreateUserResponse, User>().ReverseMap();

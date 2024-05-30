@@ -6,9 +6,9 @@ namespace GoatEdu.Core.Interfaces.NoteInterfaces;
 
 public interface INoteRepository : IRepository<Note>
 {
-    Task<List<Note>> GetNoteByFilters(NoteQueryFilter queryFilter); 
-    Task<List<Note>> GetNoteByUserId(Guid userId);
-    Task<List<Note>> GetNoteByIds(List<Guid> ids);
+    Task<IEnumerable<Note>> GetNoteByFilters(Guid userId, NoteQueryFilter queryFilter); 
+    Task<IEnumerable<Note>> GetNoteByUserId(Guid userId);
+    Task<IEnumerable<Note>> GetNoteByIds(List<Guid> ids);
     Task SoftDelete(List<Guid> guids);
     
 

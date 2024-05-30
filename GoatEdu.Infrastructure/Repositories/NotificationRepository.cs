@@ -24,17 +24,17 @@ public class NotificationRepository : INotificationRepository
         await _context.Notifications.AddAsync(entitie);
     }
 
-    public async Task<List<Notification>> GetNotificationByUserId(Guid? id)
+    public async Task<IEnumerable<Notification>> GetNotificationByUserId(Guid? id)
     {
         return await _context.Notifications.Where(x => x.UserId == id).OrderByDescending(x => x.CreatedAt).ToListAsync();
     }
 
-    public async Task<List<Notification>> GetNotificationByIds(List<Guid> ids)
+    public async Task<IEnumerable<Notification>> GetNotificationByIds(List<Guid> ids)
     {
         return await _context.Notifications.Where(x => ids.Any(id => id == x.Id)).ToListAsync();
     }
 
-    public void DeleteAsync(List<Notification> listNoti)
+    public void DeleteAsync(IEnumerable<Notification> listNoti)
     {
         _context.Notifications.RemoveRange(listNoti);
     }
