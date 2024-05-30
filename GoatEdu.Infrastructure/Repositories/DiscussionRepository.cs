@@ -15,7 +15,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
     }
 
 
-    public async Task<List<Discussion>> GetDiscussionByFilters(Guid? userId, DiscussionQueryFilter queryFilter)
+    public async Task<IEnumerable<Discussion>> GetDiscussionByFilters(Guid? userId, DiscussionQueryFilter queryFilter)
     {
         var discussions = _entities.AsQueryable();
         discussions = ApplyFilterSortAndSearch(discussions, queryFilter, userId);
@@ -23,7 +23,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
         return await discussions.ToListAsync(); 
     }
 
-    public async Task<Discussion> GetById(Guid guid)
+    public async Task<Discussion?> GetById(Guid guid)
     {
         return await _entities
             .Include(x => x.User)

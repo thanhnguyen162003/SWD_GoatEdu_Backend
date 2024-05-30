@@ -107,7 +107,7 @@ public class TagService : ITagService
         {
             return new ResponseDto(HttpStatusCode.OK, "Add Successfully!", tagIsDuplicated);
         }
-        return new ResponseDto(HttpStatusCode.OK, "Add Failed Because of Dup Names!", tagIsDuplicated);
+        return new ResponseDto(HttpStatusCode.BadRequest, "Add Failed!", tagIsDuplicated);
     }
 
     public async Task<ResponseDto> DeleteTags(List<Guid> guids)

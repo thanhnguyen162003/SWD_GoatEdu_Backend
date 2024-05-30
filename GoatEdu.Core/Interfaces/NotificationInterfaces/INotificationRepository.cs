@@ -8,7 +8,7 @@ public interface INotificationRepository
 {
     Task<Notification?> GetByIdAsync(Guid id);
     Task AddAsync(Notification entitie);
-    Task<List<Notification>> GetNotificationByUserId(Guid? userId);
-    Task<List<Notification>> GetNotificationByIds(List<Guid> ids);
-    void DeleteAsync(List<Notification> listNoti);
+    Task<IEnumerable<Notification>> GetNotificationByUserId(Guid? userId);
+    Task<IEnumerable<Notification>> GetNotificationByIds(List<Guid> ids);
+    void DeleteAsync(IEnumerable<Notification> listNoti);
 }

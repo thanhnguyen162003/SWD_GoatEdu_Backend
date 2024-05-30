@@ -21,6 +21,7 @@ public class DisscussionRequestDtoValidator : AbstractValidator<DiscussionReques
 
         RuleFor(x => x.Tags)
             .NotEmpty().WithMessage("Tags is required!")
-            .Must(list => list.Count() == 4).WithMessage("Tags must have only 4 tags");
+            .Must(list => list.Count == 4).WithMessage("Tags must have only 4 tags!")
+            .Must(list => list.Count() == list.Distinct().Count()).WithMessage("Tags must not duplicate!");
     }
 }

@@ -13,20 +13,21 @@ public class NoteRepository : BaseRepository<Note> ,INoteRepository
         _context = context;
     }
 
-    public async Task<List<Note>> GetNoteByFilters(NoteQueryFilter queryFilter)
+    public async Task<IEnumerable<Note>> GetNoteByFilters(Guid userId, NoteQueryFilter queryFilter)
     {
         var notes = _entities.AsQueryable();
+        notes = notes.Where(x => x.UserId == userId);
         notes = ApplyFilterSortAndSearch(notes, queryFilter);
         notes = ApplySorting(notes, queryFilter);
         return await notes.ToListAsync();
     }
 
-    public async Task<List<Note>> GetNoteByUserId(Guid userId)
+    public async Task<IEnumerable<Note>> GetNoteByUserId(Guid userId)
     {
         return await _context.Notes.Where(x => x.UserId == userId).ToListAsync();
     }
 
-    public async Task<List<Note>> GetNoteByIds(List<Guid> ids)
+    public async Task<IEnumerable<Note>> GetNoteByIds(List<Guid> ids)
     {
         return await _context.Notes.Where(x => ids.Any(id => id == x.Id)).ToListAsync();
     }
@@ -35,8 +36,6 @@ public class NoteRepository : BaseRepository<Note> ,INoteRepository
     {
         await _entities.Where(x => guids.Any(id => id == x.Id)).ForEachAsync(a => a.IsDeleted = true);
     }
-    
-    
     
     private IQueryable<Note> ApplyFilterSortAndSearch(IQueryable<Note> notes, NoteQueryFilter queryFilter)
     {
