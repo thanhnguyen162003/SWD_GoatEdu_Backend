@@ -14,14 +14,27 @@ public class StripeController : ControllerBase
         _stripeService = stripeService;
     }
 
+    // [HttpPost("customer")]
+    // public async Task<ActionResult<CustomerResource>> CreateCustomer([FromBody] CreateCustomerResource resource,
+    //     CancellationToken cancellationToken)
+    // {
+    //     var response = await _stripeService.CreateCustomer(resource, cancellationToken);
+    //     return Ok(response);
+    // }
+    //
+    // [HttpPost("charge")]
+    // public async Task<ActionResult<ChargeResource>> CreateCharge([FromBody] CreateChargeResource resource, CancellationToken cancellationToken)
+    // {
+    //     var response = await _stripeService.CreateCharge(resource, cancellationToken);
+    //     return Ok(response);
+    // }
     [HttpPost("customer")]
-    public async Task<ActionResult<CustomerResource>> CreateCustomer([FromBody] CreateCustomerResource resource,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<CustomerResource>> CreateCustomer([FromBody] CreateCustomerResource resource, CancellationToken cancellationToken)
     {
         var response = await _stripeService.CreateCustomer(resource, cancellationToken);
         return Ok(response);
     }
-    
+
     [HttpPost("charge")]
     public async Task<ActionResult<ChargeResource>> CreateCharge([FromBody] CreateChargeResource resource, CancellationToken cancellationToken)
     {
