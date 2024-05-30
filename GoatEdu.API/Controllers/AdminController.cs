@@ -33,7 +33,7 @@ public class AdminController : ControllerBase
         return await _adminService.CreateUser(dto);
     }
     [HttpGet("user")]
-    public async Task<ICollection<UserMinimalDto>> GetUsers([FromQuery, Required] UserQueryFilter queryFilter)
+    public async Task<PaginatedResponse<UserMinimalDto>> GetUsers([FromQuery, Required] UserQueryFilter queryFilter)
     {
         return await _adminService.GetUsers(queryFilter);
     }

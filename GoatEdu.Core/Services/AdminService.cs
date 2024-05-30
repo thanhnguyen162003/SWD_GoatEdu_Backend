@@ -63,19 +63,22 @@ public class AdminService : IAdminService
         return await _unitOfWork.AdminRepository.SuppenseUser(id);
     }
 
-    public async Task<ICollection<UserMinimalDto>> GetUsers(UserQueryFilter queryFilter)
+    public async Task<PaginatedResponse<UserMinimalDto>> GetUsers(UserQueryFilter queryFilter)
     {
         queryFilter.PageNumber = queryFilter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.PageNumber;
         queryFilter.PageSize = queryFilter.PageSize == 0 ? _paginationOptions.DefaultPageSize : queryFilter.PageSize;
-        
+
         var listUsers = await _unitOfWork.AdminRepository.GetUsers(queryFilter);
-        
+
         if (!listUsers.Any())
         {
-            return new PagedList<UserMinimalDto>(new List<UserMinimalDto>(), 0, 0, 0);
+            var emptyPagedList = new PagedList<UserMinimalDto>(new List<UserMinimalDto>(), 0, queryFilter.PageNumber, queryFilter.PageSize);
+            return new PaginatedResponse<UserMinimalDto>(emptyPagedList);
         }
-        var mappedList = _mapper.Map<List<UserMinimalDto>>(listUsers);
 
-        return PagedList<UserMinimalDto>.Create(mappedList, queryFilter.PageNumber, queryFilter.PageSize);
+        var mappedList = _mapper.Map<List<UserMinimalDto>>(listUsers);
+        var pagedList = PagedList<UserMinimalDto>.Create(mappedList, queryFilter.PageNumber, queryFilter.PageSize);
+
+        return new PaginatedResponse<UserMinimalDto>(pagedList);
     }
 }

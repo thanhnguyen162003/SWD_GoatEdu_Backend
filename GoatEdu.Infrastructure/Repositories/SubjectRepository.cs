@@ -69,7 +69,7 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
     }
 
     
-    // can optimise in feature now it map 2 time (maybe not good perfomance)
+    // can optimise in future now it map 2 time (maybe not good perfomance)
     public async Task<ResponseDto> UpdateSubject(Subject dto)
     {
         var subject = await _context.Subjects.FirstOrDefaultAsync(x => x.Id == dto.Id);

@@ -9,5 +9,5 @@ public interface IAdminService
 {
     Task<ResponseDto> CreateUser(CreateUserRequestDto user);
     Task<ResponseDto> SuppenseUser(Guid id);
-    Task<ICollection<UserMinimalDto>> GetUsers(UserQueryFilter queryFilter);
+    Task<PaginatedResponse<UserMinimalDto>> GetUsers(UserQueryFilter queryFilter);
 }
