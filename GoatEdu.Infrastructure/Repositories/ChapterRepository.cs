@@ -26,11 +26,11 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
         return await chapters.ToListAsync();
     }
 
-    public async Task<ICollection<Chapter>> GetChaptersBySubject(ChapterQueryFilter queryFilter)
+    public async Task<ICollection<Chapter>> GetChaptersBySubject(Guid subjectId)
     {
         return await _entities
             .AsNoTracking()
-            .Where(c => c.SubjectId == queryFilter.SubjectId && c.IsDeleted == false)
+            .Where(c => c.SubjectId == subjectId && c.IsDeleted == false)
             .ToListAsync();
     }
 
@@ -48,7 +48,7 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
             })
             .FirstOrDefaultAsync();
     }
-    
+
     public async Task<ResponseDto> DeleteChapter(Guid id)
     {
         var chapter = await _entities.Where(c => c.Id == id).FirstOrDefaultAsync();
@@ -70,7 +70,7 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
 
     public async Task<bool> GetAllChapterCheck(string name)
     {
-        var exitsChapter =  await _entities.Where(x => x.ChapterName == name).FirstOrDefaultAsync();
+        var exitsChapter = await _entities.Where(x => x.ChapterName == name).FirstOrDefaultAsync();
         if (exitsChapter == null)
         {
             return true;
@@ -115,14 +115,15 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
                 SubjectId = x.SubjectId,
                 CreatedAt = x.CreatedAt
                 //update lesson after
-            //     Lessons= x.Lessons.Select(c => new Lesson()
-            //     {
-            //     Id = c.Id,
-            //     ChapterName = c.ChapterName,
-            //     ChapterLevel = c.ChapterLevel
-            // }).ToList()
+                //     Lessons= x.Lessons.Select(c => new Lesson()
+                //     {
+                //     Id = c.Id,
+                //     ChapterName = c.ChapterName,
+                //     ChapterLevel = c.ChapterLevel
+                // }).ToList()
             }).FirstOrDefaultAsync();
     }
+
     private IQueryable<Chapter> ApplyFilterSortAndSearch(IQueryable<Chapter> chapters, ChapterQueryFilter queryFilter)
     {
         chapters = chapters.Where(c => c.IsDeleted == false);
@@ -131,6 +132,7 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
         {
             chapters = chapters.Where(c => c.ChapterName.Contains(queryFilter.Search));
         }
+
         return chapters;
     }
 
@@ -148,3 +150,4 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
         return chapters;
     }
 }
+    

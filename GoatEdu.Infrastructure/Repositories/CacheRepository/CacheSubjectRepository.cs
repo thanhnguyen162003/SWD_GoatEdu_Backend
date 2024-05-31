@@ -27,13 +27,14 @@ public class CacheSubjectRepository : ISubjectRepository
         
         if (!string.IsNullOrEmpty(cachedSubjects))
         {
-            return JsonConvert.DeserializeObject<ICollection<Subject>>(cachedSubjects)!; // Null-forgiving operator
+            return JsonConvert.DeserializeObject<ICollection<Subject>>(cachedSubjects)!; // Because of redis store data in object. so we need to deserialize to get data
         }
         var cacheOptions = new DistributedCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1000) //near 1 day expire cache
         };
-        //add loop handling for serializeObject, dont know perfomance have impact or not. still consider remove chapter from subject to better perfomance
+        //add loop handling for serializeObject, dont know perfomance have impact or not.
+        //still consider remove chapter from subject to better perfomance
         var loopHandling = new JsonSerializerSettings 
         { 
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore

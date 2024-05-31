@@ -9,7 +9,7 @@ namespace GoatEdu.Core.Interfaces.ChapterInterfaces;
 public interface IChapterRepository
 {
     Task<ICollection<Chapter>> GetChapters(ChapterQueryFilter queryFilter);
-    Task<ICollection<Chapter>> GetChaptersBySubject(ChapterQueryFilter queryFilter);
+    Task<ICollection<Chapter>> GetChaptersBySubject(Guid subjectId);
 
     Task<ChapterResponseDto> GetChapterByChapterId(Guid id);
     Task<ResponseDto> DeleteChapter(Guid id);

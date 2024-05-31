@@ -1,7 +1,9 @@
+using System.Collections;
 using System.Net;
 using AutoMapper;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
+using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.CloudinaryInterfaces;
@@ -47,6 +49,13 @@ public class SubjectService : ISubjectService
     public async Task<SubjectResponseDto> GetSubjectBySubjectId(Guid id)
     {
         return await _unitOfWork.SubjectRepository.GetSubjectBySubjectId(id);
+    }
+
+    public async Task<ICollection<ChapterResponseDto>> GetChaptersBySubject(Guid subjectId)
+    {
+        ICollection<Chapter> chapters = await _unitOfWork.ChapterRepository.GetChaptersBySubject(subjectId);
+        var mapperList = _mapper.Map<ICollection<ChapterResponseDto>>(chapters);
+        return mapperList;
     }
 
     public async Task<ResponseDto> DeleteSubject(Guid id)

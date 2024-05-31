@@ -1,7 +1,9 @@
+using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using FluentValidation;
 using GoatEdu.Core.DTOs;
+using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
@@ -40,6 +42,11 @@ public class SubjectController : ControllerBase
     public async Task<SubjectResponseDto> GetSubjectByName([FromQuery] string subjectName)
     {
         return await _subjectService.GetSubjectBySubjectName(subjectName);
+    }
+    [HttpGet("{id}/chapters")]
+    public async Task<ICollection<ChapterResponseDto>> GetChapterBySubject([FromRoute] Guid id)
+    {
+        return await _subjectService.GetChaptersBySubject(id);
     }
     [HttpDelete("{id}")]
     [Authorize (Roles = UserEnum.MODERATOR)]

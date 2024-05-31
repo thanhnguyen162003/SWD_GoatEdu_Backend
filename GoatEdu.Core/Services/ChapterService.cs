@@ -39,7 +39,6 @@ public class ChapterService : IChapterService
         return PagedList<ChapterResponseDto>.Create(mapperList, queryFilter.PageNumber, queryFilter.PageSize);
     }
     
-
     public async Task<ResponseDto> DeleteChapter(Guid id)
     {
         return await _unitOfWork.ChapterRepository.DeleteChapter(id);
