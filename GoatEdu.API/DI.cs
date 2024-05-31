@@ -26,7 +26,6 @@ using GoatEdu.Core.Interfaces.UserInterfaces;
 using GoatEdu.Core.Mappings;
 using GoatEdu.Core.Services;
 using GoatEdu.Core.Validator;
-using Infrastructure.Mappings;
 using Infrastructure.Repositories;
 using IMailService = GoatEdu.Core.Interfaces.MailInterfaces.IMailService;
 using MailService = GoatEdu.Core.Services.MailService;
