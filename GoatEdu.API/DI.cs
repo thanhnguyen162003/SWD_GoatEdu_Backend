@@ -72,7 +72,6 @@ public static class DI
         
         
         // Others
-        services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
         services.AddAutoMapper(typeof(MapperConfigProfile).Assembly);
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<JWTGenerator, JWTConfig>();
