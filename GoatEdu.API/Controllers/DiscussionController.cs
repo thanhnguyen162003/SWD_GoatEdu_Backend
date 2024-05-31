@@ -43,6 +43,7 @@ public class DiscussionController : ControllerBase
     {
         try
         {
+            
             var result = await _discussionService.GetDiscussionByFilter(queryFilter);
             
             var metadata = new Metadata

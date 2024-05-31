@@ -116,7 +116,10 @@ public class DiscussionService : IDiscussionService
         mapper.IsSolved = false;
         mapper.Status = DiscussionStatus.Unapproved.ToString();
         mapper.UserId = _claimsService.GetCurrentUserId;
-        mapper.CreatedBy = _claimsService.GetCurrentUserId.ToString();
+        mapper.CreatedBy = _claimsService.GetCurrentFullname;
+        mapper.CreatedAt = _currentTime.GetCurrentTime();
+        mapper.IsDeleted = false;
+        
         await _unitOfWork.DiscussionRepository.AddAsync(mapper);
         var result = await _unitOfWork.SaveChangesAsync();
         
