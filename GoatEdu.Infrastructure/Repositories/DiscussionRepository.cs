@@ -49,10 +49,9 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
         
         if (queryFilter.TagNames.Any())
         {
-            var listName = queryFilter.TagNames.Select(x => x?.ToUpper()).ToList();
             discussions = discussions.Where(x => x.Tags
-                .Any(t => listName
-                        .Any(name => name.Equals(t.TagName.ToUpper()))));
+                .Any(t => queryFilter.TagNames
+                        .Any(name => name.Equals(t.TagName))));
         }
         
         if (!string.IsNullOrEmpty(queryFilter.Search))
