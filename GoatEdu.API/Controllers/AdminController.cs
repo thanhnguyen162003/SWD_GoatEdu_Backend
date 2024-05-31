@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.AdminDto;
 using GoatEdu.Core.DTOs.RoleDto;
-using GoatEdu.Core.DTOs.UserDetailDto;
 using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces.AdminInterfaces;
 using GoatEdu.Core.QueriesFilter;

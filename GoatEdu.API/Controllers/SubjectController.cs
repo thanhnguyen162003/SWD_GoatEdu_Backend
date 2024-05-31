@@ -31,7 +31,7 @@ public class SubjectController : ControllerBase
         return await _subjectService.GetAllSubjects(queryFilter);
     }
     
-    [HttpGet("id/{id}")]
+    [HttpGet("{id}")]
     public async Task<SubjectResponseDto> GetSubjectById(Guid id)
     {
         return await _subjectService.GetSubjectBySubjectId(id);
@@ -41,7 +41,7 @@ public class SubjectController : ControllerBase
     {
         return await _subjectService.GetSubjectBySubjectName(subjectName);
     }
-    [HttpDelete("id/{id}")]
+    [HttpDelete("{id}")]
     [Authorize (Roles = UserEnum.MODERATOR)]
     public async Task<ResponseDto> DeleteSubject(Guid id)
     {
@@ -58,7 +58,7 @@ public class SubjectController : ControllerBase
         }
         return await _subjectService.CreateSubject(dto);
     }
-    [HttpPut("id/{id}")]
+    [HttpPut("{id}")]
     [Authorize (Roles = UserEnum.MODERATOR)]
     public async Task<ResponseDto> UpdateSubject([FromForm] SubjectCreateDto dto)
     {

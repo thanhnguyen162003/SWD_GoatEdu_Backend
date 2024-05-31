@@ -31,7 +31,7 @@ public class ChapterController : ControllerBase
         return await _chapterService.GetChapters(queryFilter);
     }
     
-    [HttpGet("id/{id}")]
+    [HttpGet("{id}")]
     public async Task<ChapterResponseDto> GetChapterById(Guid id)
     {
         return await _chapterService.GetChapterByChapterId(id);
@@ -41,7 +41,7 @@ public class ChapterController : ControllerBase
     {
         return await _chapterService.GetChapterByChapterName(chapterName);
     }
-    [HttpDelete("id/{id}")]
+    [HttpDelete("{id}")]
     [Authorize (Roles = UserEnum.MODERATOR)]
     public async Task<ResponseDto> DeleteChapter(Guid id)
     {
@@ -58,7 +58,7 @@ public class ChapterController : ControllerBase
         }
         return await _chapterService.CreateChapter(dto);
     }
-    [HttpPut("id/{id}")]
+    [HttpPut("{id}")]
     [Authorize (Roles = UserEnum.MODERATOR)]
     public async Task<ResponseDto> UpdateChapter([FromBody] ChapterCreateDto dto)
     {
