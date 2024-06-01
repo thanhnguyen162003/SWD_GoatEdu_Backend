@@ -11,6 +11,7 @@ using GoatEdu.Core.Interfaces.ChapterInterfaces;
 using GoatEdu.Core.Interfaces.ClaimInterfaces;
 using GoatEdu.Core.Interfaces.CloudinaryInterfaces;
 using GoatEdu.Core.Interfaces.DiscussionInterfaces;
+using GoatEdu.Core.Interfaces.EnrollmentInterfaces;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
 using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
@@ -48,7 +49,7 @@ public static class DI
         services.AddScoped<INoteRepository, NoteRepository>();
         services.AddScoped<IAdminRepository, AdminRepository>();
         services.AddScoped<IReportRepository, ReportRepository>();
-
+        services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
 
         
         // Services
@@ -66,6 +67,8 @@ public static class DI
         services.AddScoped<IAdminService, AdminService>();
         services.AddScoped<IReportService, ReportService>();
         services.AddScoped<IStripeService, StripeService>();
+        services.AddScoped<IEnrollmentService, EnrollmentService>();
+
 
 
         

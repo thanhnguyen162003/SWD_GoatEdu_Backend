@@ -47,4 +47,6 @@ public class UserDetailRepository : BaseRepository<User>, IUserDetailRepository
     {
         throw new NotImplementedException();
     }
+
+    
 }

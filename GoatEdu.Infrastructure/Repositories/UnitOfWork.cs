@@ -2,6 +2,7 @@ using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.AdminInterfaces;
 using GoatEdu.Core.Interfaces.ChapterInterfaces;
 using GoatEdu.Core.Interfaces.DiscussionInterfaces;
+using GoatEdu.Core.Interfaces.EnrollmentInterfaces;
 using GoatEdu.Core.Interfaces.FlashcardInterfaces;
 using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
@@ -37,7 +38,8 @@ public class UnitOfWork : IUnitOfWork
     private readonly IUserDetailRepository _userDetailRepository;
     private readonly IAdminRepository _adminRepository;
     private readonly IReportRepository _reportRepository;
-
+    private readonly IEnrollmentRepository _enrollmentRepository;
+    private readonly IEnrollmentProcessRepository _enrollmentProcessRepository;
 
 
 
@@ -62,6 +64,10 @@ public class UnitOfWork : IUnitOfWork
     public IUserDetailRepository UserDetailRepository => _userDetailRepository ?? new UserDetailRepository(_context);
     public IAdminRepository AdminRepository => _adminRepository ?? new AdminRepository(_context);
     public IReportRepository ReportRepository => _reportRepository ?? new ReportRepository(_context);
+    public IEnrollmentRepository EnrollmentRepository => _enrollmentRepository ?? new EnrollmentRepository(_context);
+    public IEnrollmentProcessRepository EnrollmentProcessRepository => _enrollmentProcessRepository ?? new EnrollmentProcessRepository(_context);
+
+
 
 
 

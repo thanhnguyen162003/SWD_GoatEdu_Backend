@@ -1,6 +1,7 @@
 using GoatEdu.Core.Interfaces.AdminInterfaces;
 using GoatEdu.Core.Interfaces.ChapterInterfaces;
 using GoatEdu.Core.Interfaces.DiscussionInterfaces;
+using GoatEdu.Core.Interfaces.EnrollmentInterfaces;
 using GoatEdu.Core.Interfaces.FlashcardInterfaces;
 using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
@@ -31,6 +32,10 @@ namespace GoatEdu.Core.Interfaces
         IUserDetailRepository UserDetailRepository { get; }
         IAdminRepository AdminRepository { get; }
         IReportRepository ReportRepository { get; }
+        IEnrollmentRepository EnrollmentRepository { get; }
+        IEnrollmentProcessRepository EnrollmentProcessRepository { get; }
+
+
 
 
 
