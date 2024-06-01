@@ -47,25 +47,25 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
         
         discussions = discussions.Where(x => x.IsDeleted == false);
         
-        if (queryFilter.TagNames.Any())
+        if (queryFilter.tag_names.Any())
         {
             discussions = discussions.Where(x => x.Tags
-                .Any(t => queryFilter.TagNames
+                .Any(t => queryFilter.tag_names
                         .Any(name => name.Equals(t.TagName))));
         }
         
-        if (!string.IsNullOrEmpty(queryFilter.Search))
+        if (!string.IsNullOrEmpty(queryFilter.search))
         {
-            discussions = discussions.Where(x => x.DiscussionName.Contains(queryFilter.Search));
+            discussions = discussions.Where(x => x.DiscussionName.Contains(queryFilter.search));
         }
         return discussions;
     }
     
     private IQueryable<Discussion> ApplySorting(IQueryable<Discussion> discussions, DiscussionQueryFilter queryFilter)
     {
-        discussions = queryFilter.Sort.ToLower() switch
+        discussions = queryFilter.sort.ToLower() switch
         {
-            _ => queryFilter.SortDirection.ToLower() == "desc"
+            _ => queryFilter.sort_direction.ToLower() == "desc"
                 ? discussions.OrderByDescending(x => x.CreatedAt)
                 : discussions.OrderBy(x => x.CreatedAt)
         };

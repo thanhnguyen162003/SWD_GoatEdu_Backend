@@ -47,21 +47,21 @@ public class AdminRepository : BaseRepository<User>, IAdminRepository
     {
         users = users.Where(x => x.IsDeleted == false);
         
-        if (!string.IsNullOrEmpty(queryFilter.Search))
+        if (!string.IsNullOrEmpty(queryFilter.search))
         {
-            users = users.Where(x => x.Email.Contains(queryFilter.Search));
+            users = users.Where(x => x.Email.Contains(queryFilter.search));
         }
         return users;
     }
     
     private IQueryable<User> ApplySorting(IQueryable<User> users, UserQueryFilter queryFilter)
     {
-        users = queryFilter.Sort.ToLower() switch
+        users = queryFilter.sort.ToLower() switch
         {
-            "name" => queryFilter.SortDirection.ToLower() == "desc"
+            "name" => queryFilter.sort_direction.ToLower() == "desc"
                 ? users.OrderByDescending(x => x.Email)
                 : users.OrderBy(x => x.Email),
-            _ => queryFilter.SortDirection.ToLower() == "desc"
+            _ => queryFilter.sort_direction.ToLower() == "desc"
                 ? users.OrderByDescending(x => x.CreatedAt).ThenBy(x => x.Email)
                 : users.OrderBy(x => x.CreatedAt).ThenBy(x => x.Email),
         };

@@ -26,11 +26,11 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
         return await chapters.ToListAsync();
     }
 
-    public async Task<ICollection<Chapter>> GetChaptersBySubject(Guid subjectId)
+    public async Task<ICollection<Chapter>> GetChaptersBySubject(Guid subject_id)
     {
         return await _entities
             .AsNoTracking()
-            .Where(c => c.SubjectId == subjectId && c.IsDeleted == false)
+            .Where(c => c.SubjectId == subject_id && c.IsDeleted == false)
             .ToListAsync();
     }
 
@@ -48,7 +48,7 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
             })
             .FirstOrDefaultAsync();
     }
-
+    
     public async Task<ResponseDto> DeleteChapter(Guid id)
     {
         var chapter = await _entities.Where(c => c.Id == id).FirstOrDefaultAsync();
@@ -70,7 +70,7 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
 
     public async Task<bool> GetAllChapterCheck(string name)
     {
-        var exitsChapter = await _entities.Where(x => x.ChapterName == name).FirstOrDefaultAsync();
+        var exitsChapter =  await _entities.Where(x => x.ChapterName == name).FirstOrDefaultAsync();
         if (exitsChapter == null)
         {
             return true;
@@ -115,39 +115,36 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
                 SubjectId = x.SubjectId,
                 CreatedAt = x.CreatedAt
                 //update lesson after
-                //     Lessons= x.Lessons.Select(c => new Lesson()
-                //     {
-                //     Id = c.Id,
-                //     ChapterName = c.ChapterName,
-                //     ChapterLevel = c.ChapterLevel
-                // }).ToList()
+            //     Lessons= x.Lessons.Select(c => new Lesson()
+            //     {
+            //     Id = c.Id,
+            //     ChapterName = c.ChapterName,
+            //     ChapterLevel = c.ChapterLevel
+            // }).ToList()
             }).FirstOrDefaultAsync();
     }
-
     private IQueryable<Chapter> ApplyFilterSortAndSearch(IQueryable<Chapter> chapters, ChapterQueryFilter queryFilter)
     {
         chapters = chapters.Where(c => c.IsDeleted == false);
 
-        if (!string.IsNullOrEmpty(queryFilter.Search))
+        if (!string.IsNullOrEmpty(queryFilter.search))
         {
-            chapters = chapters.Where(c => c.ChapterName.Contains(queryFilter.Search));
+            chapters = chapters.Where(c => c.ChapterName.Contains(queryFilter.search));
         }
-
         return chapters;
     }
 
     private IQueryable<Chapter> ApplySorting(IQueryable<Chapter> chapters, ChapterQueryFilter queryFilter)
     {
-        chapters = queryFilter.Sort.ToLower() switch
+        chapters = queryFilter.sort.ToLower() switch
         {
-            "name" => queryFilter.SortDirection.ToLower() == "desc"
+            "name" => queryFilter.sort_direction.ToLower() == "desc"
                 ? chapters.OrderByDescending(c => c.ChapterName)
                 : chapters.OrderBy(c => c.ChapterName),
-            _ => queryFilter.SortDirection.ToLower() == "desc"
+            _ => queryFilter.sort_direction.ToLower() == "desc"
                 ? chapters.OrderByDescending(c => c.CreatedAt).ThenBy(c => c.ChapterName)
                 : chapters.OrderBy(c => c.CreatedAt).ThenBy(c => c.ChapterName),
         };
         return chapters;
     }
 }
-    

@@ -26,8 +26,8 @@ public class ChapterService : IChapterService
 
     public async Task<ICollection<ChapterResponseDto>> GetChapters(ChapterQueryFilter queryFilter)
     {
-        queryFilter.PageNumber = queryFilter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.PageNumber;
-        queryFilter.PageSize = queryFilter.PageSize == 0 ? _paginationOptions.DefaultPageSize : queryFilter.PageSize;
+        queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
+        queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
         
         var listChapter = await _unitOfWork.ChapterRepository.GetChapters(queryFilter);
         
@@ -36,7 +36,7 @@ public class ChapterService : IChapterService
             return new PagedList<ChapterResponseDto>(new List<ChapterResponseDto>(), 0, 0, 0);
         }
         var mapperList = _mapper.Map<List<ChapterResponseDto>>(listChapter);
-        return PagedList<ChapterResponseDto>.Create(mapperList, queryFilter.PageNumber, queryFilter.PageSize);
+        return PagedList<ChapterResponseDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
     
     public async Task<ResponseDto> DeleteChapter(Guid id)

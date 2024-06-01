@@ -37,15 +37,15 @@ public class DiscussionService : IDiscussionService
 
     public async Task<PagedList<DiscussionResponseDto>> GetDiscussionByFilter(DiscussionQueryFilter queryFilter)
     {
-        queryFilter.PageNumber = queryFilter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.PageNumber;
-        queryFilter.PageSize = queryFilter.PageSize == 0 ? _paginationOptions.DefaultPageSize : queryFilter.PageSize;
+        queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
+        queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
         
         var list = await _unitOfWork.DiscussionRepository.GetDiscussionByFilters(null, queryFilter);
        
         if (!list.Any()) return new PagedList<DiscussionResponseDto>(new List<DiscussionResponseDto>(), 0, 0, 0);
         
         var mapper = _mapper.Map<List<DiscussionResponseDto>>(list);
-        return PagedList<DiscussionResponseDto>.Create(mapper, queryFilter.PageNumber, queryFilter.PageSize);
+        return PagedList<DiscussionResponseDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
     }
 
     public async Task<ResponseDto> GetDiscussionById(Guid guid)
@@ -66,7 +66,7 @@ public class DiscussionService : IDiscussionService
         if (!list.Any()) return new PagedList<DiscussionResponseDto>(new List<DiscussionResponseDto>(), 0, 0, 0);
         
         var mapper = _mapper.Map<List<DiscussionResponseDto>>(list);
-        return PagedList<DiscussionResponseDto>.Create(mapper, queryFilter.PageNumber, queryFilter.PageSize);
+        return PagedList<DiscussionResponseDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
     }
 
 
