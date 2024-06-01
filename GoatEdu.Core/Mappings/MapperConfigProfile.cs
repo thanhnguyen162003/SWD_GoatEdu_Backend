@@ -54,6 +54,7 @@ public class MapperConfigProfile : Profile
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         CreateMap<Discussion, DiscussionResponseDto>().ReverseMap();
         CreateMap<User, CreateUserResponse>().ReverseMap();
+        CreateMap<Role, RoleResponseDto>().ReverseMap();
         CreateMap<CreateUserResponse, User>().ReverseMap();
         CreateMap<User, UserMinimalDto>()
             .ForMember(dest => dest.IsConfirmMail, opt => opt.MapFrom(src => src.EmailVerify))
