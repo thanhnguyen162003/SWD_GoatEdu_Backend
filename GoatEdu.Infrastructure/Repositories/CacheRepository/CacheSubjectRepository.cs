@@ -22,7 +22,7 @@ public class CacheSubjectRepository : ISubjectRepository
     }
     public async Task<IEnumerable<Subject>> GetAllSubjects(SubjectQueryFilter queryFilter)
     {
-        string key = $"all-subject-{queryFilter.PageSize}-{queryFilter.PageNumber}-{queryFilter.Search}-{queryFilter.Sort}-{queryFilter.SortDirection}";
+        string key = $"all-subject-{queryFilter.page_size}-{queryFilter.page_number}-{queryFilter.search}-{queryFilter.sort}-{queryFilter.sort_direction}";
         string? cachedSubjects = await _distributedCache.GetStringAsync(key);
         
         if (!string.IsNullOrEmpty(cachedSubjects))

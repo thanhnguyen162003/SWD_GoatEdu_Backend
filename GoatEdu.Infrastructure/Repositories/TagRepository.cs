@@ -37,21 +37,21 @@ public class TagRepository : BaseRepository<Tag>, ITagRepository
     {
         tags = tags.Where(x => x.IsDeleted == false);
         
-        if (!string.IsNullOrEmpty(queryFilter.Search))
+        if (!string.IsNullOrEmpty(queryFilter.search))
         {
-            tags = tags.Where(x => x.TagName.Contains(queryFilter.Search));
+            tags = tags.Where(x => x.TagName.Contains(queryFilter.search));
         }
         return tags;
     }
     
     private IQueryable<Tag> ApplySorting(IQueryable<Tag> tags, TagQueryFilter queryFilter)
     {
-        tags = queryFilter.Sort.ToLower() switch
+        tags = queryFilter.sort.ToLower() switch
         {
-            "date" => queryFilter.SortDirection.ToLower() == "desc"
+            "date" => queryFilter.sort_direction.ToLower() == "desc"
                 ? tags.OrderByDescending(x => x.CreatedAt)
                 : tags.OrderBy(x => x.CreatedAt).ThenBy(x => x.TagName),
-            _ => queryFilter.SortDirection.ToLower() == "desc"
+            _ => queryFilter.sort_direction.ToLower() == "desc"
                 ? tags.OrderByDescending(x => x.TagName)
                 : tags.OrderBy(x => x.TagName)
         };

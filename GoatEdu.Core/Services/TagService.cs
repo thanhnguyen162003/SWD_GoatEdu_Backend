@@ -32,8 +32,8 @@ public class TagService : ITagService
 
     public async Task<PagedList<TagResponseDto>> GetTagByFilter(TagQueryFilter queryFilter)
     {
-        queryFilter.PageNumber = queryFilter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.PageNumber;
-        queryFilter.PageSize = queryFilter.PageSize == 0 ? _paginationOptions.DefaultPageSize : queryFilter.PageSize;
+        queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
+        queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
 
         var listTag = await _unitOfWork.TagRepository.GetTagByFilters(queryFilter);
         
@@ -43,7 +43,7 @@ public class TagService : ITagService
         }
         var mapperList = _mapper.Map<List<TagResponseDto>>(listTag);
         
-        return PagedList<TagResponseDto>.Create(mapperList, queryFilter.PageNumber, queryFilter.PageSize);
+        return PagedList<TagResponseDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
 
     public async Task<ResponseDto> getTagByName(List<string> name)

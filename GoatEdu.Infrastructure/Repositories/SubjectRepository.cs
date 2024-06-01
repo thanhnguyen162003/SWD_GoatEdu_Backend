@@ -124,21 +124,21 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
     {
         subjects = subjects.Where(x => x.IsDeleted == false);
         
-        if (!string.IsNullOrEmpty(queryFilter.Search))
+        if (!string.IsNullOrEmpty(queryFilter.search))
         {
-            subjects = subjects.Where(x => x.SubjectName.Contains(queryFilter.Search));
+            subjects = subjects.Where(x => x.SubjectName.Contains(queryFilter.search));
         }
         return subjects;
     }
     
     private IQueryable<Subject> ApplySorting(IQueryable<Subject> subjects, SubjectQueryFilter queryFilter)
     {
-        subjects = queryFilter.Sort.ToLower() switch
+        subjects = queryFilter.sort.ToLower() switch
         {
-            "name" => queryFilter.SortDirection.ToLower() == "desc"
+            "name" => queryFilter.sort_direction.ToLower() == "desc"
                 ? subjects.OrderByDescending(x => x.SubjectName)
                 : subjects.OrderBy(x => x.SubjectName),
-            _ => queryFilter.SortDirection.ToLower() == "desc"
+            _ => queryFilter.sort_direction.ToLower() == "desc"
                 ? subjects.OrderByDescending(x => x.CreatedAt).ThenBy(x => x.SubjectName)
                 : subjects.OrderBy(x => x.CreatedAt).ThenBy(x => x.SubjectName),
         };

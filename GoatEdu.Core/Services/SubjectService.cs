@@ -33,8 +33,8 @@ public class SubjectService : ISubjectService
 
     public async Task<IEnumerable<SubjectResponseDto>> GetAllSubjects(SubjectQueryFilter queryFilter)
     {
-        queryFilter.PageNumber = queryFilter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.PageNumber;
-        queryFilter.PageSize = queryFilter.PageSize == 0 ? _paginationOptions.DefaultPageSize : queryFilter.PageSize;
+        queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
+        queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
         
         var listSubject = await _unitOfWork.SubjectRepository.GetAllSubjects(queryFilter);
         
@@ -43,7 +43,7 @@ public class SubjectService : ISubjectService
             return new PagedList<SubjectResponseDto>(new List<SubjectResponseDto>(), 0, 0, 0);
         }
         var mapperList = _mapper.Map<List<SubjectResponseDto>>(listSubject);
-        return PagedList<SubjectResponseDto>.Create(mapperList, queryFilter.PageNumber, queryFilter.PageSize);
+        return PagedList<SubjectResponseDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
 
     public async Task<SubjectResponseDto> GetSubjectBySubjectId(Guid id)

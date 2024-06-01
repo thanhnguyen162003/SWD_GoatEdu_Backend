@@ -45,8 +45,8 @@ public class NotificationService : INotificationService
 
     public async Task<PagedList<NotificationResponseDto>> GetNotificationByCurrentUser(NotificationQueryFilter queryFilter)
     {
-        queryFilter.PageNumber = queryFilter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.PageNumber;
-        queryFilter.PageSize = queryFilter.PageSize == 0 ? _paginationOptions.DefaultPageSize : queryFilter.PageSize;
+        queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
+        queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
         var userId = _claimsService.GetCurrentUserId;
         var listNoti = await _unitOfWork.NotificationRepository.GetNotificationByUserId(userId);
 
@@ -55,7 +55,7 @@ public class NotificationService : INotificationService
             return new PagedList<NotificationResponseDto>(new List<NotificationResponseDto>(), 0, 0, 0);
         }
         var mapperList = _mapper.Map<List<NotificationResponseDto>>(listNoti);
-        return PagedList<NotificationResponseDto>.Create(mapperList, queryFilter.PageNumber, queryFilter.PageSize);
+        return PagedList<NotificationResponseDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
 
     public async Task<ResponseDto> InsertNotification(NotificationRequestDto notification)

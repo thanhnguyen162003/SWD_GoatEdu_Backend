@@ -46,8 +46,8 @@ public class NoteService : INoteService
 
     public async Task<PagedList<NoteResponseDto>> GetNoteByFilter(NoteQueryFilter queryFilter)
     {
-        queryFilter.PageNumber = queryFilter.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.PageNumber;
-        queryFilter.PageSize = queryFilter.PageSize == 0 ? _paginationOptions.DefaultPageSize : queryFilter.PageSize;
+        queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
+        queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
         
         var userId = _claimsService.GetCurrentUserId;
         var listNote = await _unitOfWork.NoteRepository.GetNoteByFilters(userId, queryFilter);
@@ -55,7 +55,7 @@ public class NoteService : INoteService
         if (!listNote.Any()) return new PagedList<NoteResponseDto>(new List<NoteResponseDto>(), 0, 0, 0);
         
         var mapperList = _mapper.Map<List<NoteResponseDto>>(listNote);
-        return PagedList<NoteResponseDto>.Create(mapperList, queryFilter.PageNumber, queryFilter.PageSize);
+        return PagedList<NoteResponseDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
     
     public async Task<ResponseDto> InsertNote(NoteRequestDto noteRequestDto)

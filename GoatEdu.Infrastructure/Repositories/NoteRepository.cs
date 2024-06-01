@@ -41,21 +41,21 @@ public class NoteRepository : BaseRepository<Note> ,INoteRepository
     {
         notes = notes.Where(x => x.IsDeleted == false);
         
-        if (!string.IsNullOrEmpty(queryFilter.Search))
+        if (!string.IsNullOrEmpty(queryFilter.search))
         {
-            notes = notes.Where(x => x.NoteName.Contains(queryFilter.Search));
+            notes = notes.Where(x => x.NoteName.Contains(queryFilter.search));
         }
         return notes;
     }
     
     private IQueryable<Note> ApplySorting(IQueryable<Note> notes, NoteQueryFilter queryFilter)
     {
-        notes = queryFilter.Sort.ToLower() switch
+        notes = queryFilter.sort.ToLower() switch
         {
-            "name" => queryFilter.SortDirection.ToLower() == "desc"
+            "name" => queryFilter.sort_direction.ToLower() == "desc"
                 ? notes.OrderByDescending(x => x.NoteName)
                 : notes.OrderBy(x => x.NoteName),
-            _ => queryFilter.SortDirection.ToLower() == "desc"
+            _ => queryFilter.sort_direction.ToLower() == "desc"
                 ? notes.OrderByDescending(x => x.CreatedAt).ThenBy(x => x.NoteName)
                 : notes.OrderBy(x => x.CreatedAt).ThenBy(x => x.NoteName),
         };
