@@ -10,5 +10,5 @@ public class DiscussionRequestDto
     public IFormFile? DiscussionImage { get; set; }
     public List<TagRequestDto> Tags { get; set; }
     public Guid? SubjectId { get; set; }
-    public bool? IsSolved { get; set; } = false;
+    public bool? IsSolved { get; set; }
 }

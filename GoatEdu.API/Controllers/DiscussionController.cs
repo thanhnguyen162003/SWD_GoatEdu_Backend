@@ -96,7 +96,7 @@ public class DiscussionController : ControllerBase
     
     [HttpPost]
     [Authorize (Roles = "Student, Teacher")]
-    public async Task<IActionResult> AddDiscussion(DiscussionRequestDto discussionRequestDto)
+    public async Task<IActionResult> AddDiscussion([FromForm]DiscussionRequestDto discussionRequestDto)
     {
         try
         {
