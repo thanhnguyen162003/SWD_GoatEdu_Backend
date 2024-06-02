@@ -9,6 +9,7 @@ using GoatEdu.Core.Security;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using Infrastructure;
 using MailKit;
+using IMailService = GoatEdu.Core.Interfaces.MailInterfaces.IMailService;
 
 namespace GoatEdu.Core.Services;
 
@@ -19,7 +20,7 @@ public class UserService : IUserService
     private readonly IMapper _mapper;
     private readonly Interfaces.MailInterfaces.IMailService _mailService;
 
-    public UserService(IUnitOfWork unitOfWork, JWTGenerator tokenGenerator, IMapper mapper, Interfaces.MailInterfaces.IMailService mailService)
+    public UserService(IUnitOfWork unitOfWork, JWTGenerator tokenGenerator, IMapper mapper, IMailService mailService)
     {
         _unitOfWork = unitOfWork;
         _tokenGenerator = tokenGenerator;
