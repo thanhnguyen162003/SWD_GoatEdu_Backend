@@ -149,7 +149,8 @@ public class UserService : IUserService
             Id = user.Id
         };
         //send confirm email here!!!
-        await _mailService.SendUsingTemplateFromFile("Resources/VerifyToken.cshtml","Dit me confirm cho tao", userMail);
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Resources", "VerifyToken.cshtml");
+        await _mailService.SendUsingTemplateFromFile(filePath,"Dit me confirm cho tao", userMail);
         if (result == null)
         {
             return new ResponseDto(HttpStatusCode.BadRequest, "Somethings has error!");
