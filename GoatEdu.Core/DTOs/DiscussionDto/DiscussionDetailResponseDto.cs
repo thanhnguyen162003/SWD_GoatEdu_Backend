@@ -1,3 +1,5 @@
+using GoatEdu.Core.DTOs.TagDto;
+
 namespace GoatEdu.Core.DTOs;
 
 public class DiscussionDetailResponseDto
@@ -9,5 +11,6 @@ public class DiscussionDetailResponseDto
     public int? DiscussionVote { get; set; }
     public bool? IsSolved { get; set; }
     public string? Status { get; set; }
+    public ICollection<TagResponseDto>? Tags { get; set; }
     public UserAndSubject? UserAndSubject { get; set; }
 }

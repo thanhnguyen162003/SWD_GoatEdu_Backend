@@ -33,6 +33,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
         return await _entities
             .Include(x => x.User)
             .Include(x => x.Subject)
+            .Include(x => x.Tags)
             .FirstOrDefaultAsync(x => x.Id == guid && x.IsDeleted == false);
     }
 
