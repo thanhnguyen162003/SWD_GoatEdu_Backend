@@ -40,7 +40,7 @@ public class NoteService : INoteService
         var noteFound = await _unitOfWork.NoteRepository.GetByIdAsync(id);
         if (noteFound == null) return new ResponseDto(HttpStatusCode.NotFound, "Kiếm không thấy :))");
         
-        var mapperNote = _mapper.Map<NoteDetailResponseDto>(noteFound);
+        var mapperNote = _mapper.Map<NoteResponseDto>(noteFound);
         return new ResponseDto(HttpStatusCode.OK, "", mapperNote);
     }
 
