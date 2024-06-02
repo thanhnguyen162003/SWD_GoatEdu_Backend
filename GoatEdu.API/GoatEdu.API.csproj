@@ -39,9 +39,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="Resource\*">
-            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-        </Content>
         <Content Update="Resources\VerifyToken.cshtml">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
