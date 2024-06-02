@@ -34,7 +34,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <AdditionalFiles Include="Paypal\Index.cshtml" />
       <AdditionalFiles Include="Paypal\Success.cshtml" />
       <AdditionalFiles Include="Resources\VerifyToken.cshtml" />
     </ItemGroup>
