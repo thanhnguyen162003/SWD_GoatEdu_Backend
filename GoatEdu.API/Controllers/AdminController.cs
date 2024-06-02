@@ -31,9 +31,14 @@ public class AdminController : ControllerBase
     {
         return await _adminService.CreateUser(dto);
     }
-    [HttpGet("user")]
-    public async Task<PaginatedResponse<UserMinimalDto>> GetUsers([FromQuery, Required] UserQueryFilter queryFilter)
+    [HttpGet("student")]
+    public async Task<PaginatedResponse<UserMinimalDto>> GetStudent([FromQuery, Required] UserQueryFilter queryFilter)
     {
-        return await _adminService.GetUsers(queryFilter);
+        return await _adminService.GetStudent(queryFilter);
+    }
+    [HttpGet("teacher")]
+    public async Task<PaginatedResponse<UserMinimalDto>> GetTeacher([FromQuery, Required] UserQueryFilter queryFilter)
+    {
+        return await _adminService.GetTeacher(queryFilter);
     }
 }

@@ -81,4 +81,42 @@ public class AdminService : IAdminService
 
         return new PaginatedResponse<UserMinimalDto>(pagedList);
     }
+
+    public async Task<PaginatedResponse<UserMinimalDto>> GetStudent(UserQueryFilter queryFilter)
+    {
+        queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
+        queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
+
+        var listUsers = await _unitOfWork.AdminRepository.GetStudent(queryFilter);
+
+        if (!listUsers.Any())
+        {
+            var emptyPagedList = new PagedList<UserMinimalDto>(new List<UserMinimalDto>(), 0, queryFilter.page_number, queryFilter.page_size);
+            return new PaginatedResponse<UserMinimalDto>(emptyPagedList);
+        }
+
+        var mappedList = _mapper.Map<List<UserMinimalDto>>(listUsers);
+        var pagedList = PagedList<UserMinimalDto>.Create(mappedList, queryFilter.page_number, queryFilter.page_size);
+
+        return new PaginatedResponse<UserMinimalDto>(pagedList);
+    }
+
+    public async Task<PaginatedResponse<UserMinimalDto>> GetTeacher(UserQueryFilter queryFilter)
+    {
+        queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
+        queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
+
+        var listUsers = await _unitOfWork.AdminRepository.GetTeacher(queryFilter);
+
+        if (!listUsers.Any())
+        {
+            var emptyPagedList = new PagedList<UserMinimalDto>(new List<UserMinimalDto>(), 0, queryFilter.page_number, queryFilter.page_size);
+            return new PaginatedResponse<UserMinimalDto>(emptyPagedList);
+        }
+
+        var mappedList = _mapper.Map<List<UserMinimalDto>>(listUsers);
+        var pagedList = PagedList<UserMinimalDto>.Create(mappedList, queryFilter.page_number, queryFilter.page_size);
+
+        return new PaginatedResponse<UserMinimalDto>(pagedList);
+    }
 }

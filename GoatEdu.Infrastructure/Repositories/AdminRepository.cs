@@ -1,6 +1,7 @@
 using System.Net;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.AdminDto;
+using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces.AdminInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure.Data;
@@ -40,6 +41,26 @@ public class AdminRepository : BaseRepository<User>, IAdminRepository
         users = ApplyFilterSortAndSearch(users, queryFilter);
         users = ApplySorting(users, queryFilter);
 
+        return await users.ToListAsync();
+    }
+
+    public async Task<ICollection<User>> GetStudent(UserQueryFilter queryFilter)
+    {
+        var users = _entities.Where(x => x.Role.RoleName == IdEnumeration.STUDENT_ROLE)
+            .Include(x => x.Role)
+            .AsQueryable();
+        users = ApplyFilterSortAndSearch(users, queryFilter);
+        users = ApplySorting(users, queryFilter);
+        return await users.ToListAsync();
+    }
+
+    public async Task<ICollection<User>> GetTeacher(UserQueryFilter queryFilter)
+    {
+        var users = _entities.Where(x => x.Role.RoleName == IdEnumeration.TEACHER_ROLE)
+            .Include(x => x.Role)
+            .AsQueryable();
+        users = ApplyFilterSortAndSearch(users, queryFilter);
+        users = ApplySorting(users, queryFilter);
         return await users.ToListAsync();
     }
 
