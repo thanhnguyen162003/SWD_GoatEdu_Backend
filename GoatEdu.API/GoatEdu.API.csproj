@@ -40,7 +40,7 @@
 
     <ItemGroup>
         <Content Include="Resource\*">
-            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
         </Content>
         <Content Update="Resources\VerifyToken.cshtml">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
