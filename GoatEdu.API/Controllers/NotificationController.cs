@@ -1,8 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
-using System.Text.Json.Serialization;
 using FluentValidation;
-using GoatEdu.API.Responses;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.NotificationDto;

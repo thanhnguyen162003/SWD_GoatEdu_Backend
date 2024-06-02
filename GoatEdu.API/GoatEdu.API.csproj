@@ -43,6 +43,9 @@
         <Content Include="Resource\*">
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
+        <Content Update="Resources\VerifyToken.cshtml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
 </Project>
