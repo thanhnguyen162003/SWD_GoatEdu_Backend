@@ -38,4 +38,10 @@
       <AdditionalFiles Include="Paypal\Success.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Update="Responses\VerifyToken.cshtml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>
