@@ -3,6 +3,7 @@ using System.Net;
 using FluentValidation;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
+using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces.DiscussionInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using Microsoft.AspNetCore.Authorization;
@@ -116,7 +117,7 @@ public class DiscussionController : ControllerBase
     }
     
     [HttpDelete]
-    [Authorize (Roles = "Student, Teacher")]
+    [Authorize (Roles = $"{UserEnum.MODERATOR},{UserEnum.STUDENT},{UserEnum.TEACHER}")]
     public async Task<IActionResult> DeleteDiscussions(List<Guid> ids)
     {
         try
