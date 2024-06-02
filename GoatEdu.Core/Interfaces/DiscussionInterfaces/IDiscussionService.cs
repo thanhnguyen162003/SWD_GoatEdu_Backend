@@ -8,9 +8,9 @@ namespace GoatEdu.Core.Interfaces.DiscussionInterfaces;
 
 public interface IDiscussionService
 {
-    Task<PagedList<DiscussionResponseDto>> GetDiscussionByFilter(DiscussionQueryFilter queryFilter);
+    Task<PagedList<DiscussionDetailResponseDto>> GetDiscussionByFilter(DiscussionQueryFilter queryFilter);
     Task<ResponseDto> GetDiscussionById(Guid guid);
-    Task<PagedList<DiscussionResponseDto>> GetDiscussionByUserId(DiscussionQueryFilter queryFilter);
+    Task<PagedList<DiscussionDetailResponseDto>> GetDiscussionByUserId(DiscussionQueryFilter queryFilter);
     Task<ResponseDto> InsertDiscussion (DiscussionRequestDto dto);
     Task<ResponseDto> DeleteDiscussions(List<Guid> guids);
     Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionRequestDto discussionRequestDto);

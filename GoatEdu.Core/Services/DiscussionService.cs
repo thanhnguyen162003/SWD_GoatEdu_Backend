@@ -35,17 +35,17 @@ public class DiscussionService : IDiscussionService
         _cloudinaryService = cloudinaryService;
     }
 
-    public async Task<PagedList<DiscussionResponseDto>> GetDiscussionByFilter(DiscussionQueryFilter queryFilter)
+    public async Task<PagedList<DiscussionDetailResponseDto>> GetDiscussionByFilter(DiscussionQueryFilter queryFilter)
     {
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
         
         var list = await _unitOfWork.DiscussionRepository.GetDiscussionByFilters(null, queryFilter);
        
-        if (!list.Any()) return new PagedList<DiscussionResponseDto>(new List<DiscussionResponseDto>(), 0, 0, 0);
+        if (!list.Any()) return new PagedList<DiscussionDetailResponseDto>(new List<DiscussionDetailResponseDto>(), 0, 0, 0);
         
-        var mapper = _mapper.Map<List<DiscussionResponseDto>>(list);
-        return PagedList<DiscussionResponseDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
+        var mapper = _mapper.Map<List<DiscussionDetailResponseDto>>(list);
+        return PagedList<DiscussionDetailResponseDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
     }
 
     public async Task<ResponseDto> GetDiscussionById(Guid guid)
@@ -58,15 +58,15 @@ public class DiscussionService : IDiscussionService
         return new ResponseDto(HttpStatusCode.OK, "", mapper);
     }
 
-    public async Task<PagedList<DiscussionResponseDto>> GetDiscussionByUserId(DiscussionQueryFilter queryFilter)
+    public async Task<PagedList<DiscussionDetailResponseDto>> GetDiscussionByUserId(DiscussionQueryFilter queryFilter)
     {
         var userId = _claimsService.GetCurrentUserId;
         var list = await _unitOfWork.DiscussionRepository.GetDiscussionByFilters(userId, queryFilter);
         
-        if (!list.Any()) return new PagedList<DiscussionResponseDto>(new List<DiscussionResponseDto>(), 0, 0, 0);
+        if (!list.Any()) return new PagedList<DiscussionDetailResponseDto>(new List<DiscussionDetailResponseDto>(), 0, 0, 0);
         
-        var mapper = _mapper.Map<List<DiscussionResponseDto>>(list);
-        return PagedList<DiscussionResponseDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
+        var mapper = _mapper.Map<List<DiscussionDetailResponseDto>>(list);
+        return PagedList<DiscussionDetailResponseDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
     }
 
 

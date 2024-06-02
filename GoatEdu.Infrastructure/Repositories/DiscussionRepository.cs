@@ -19,7 +19,10 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
 
     public async Task<IEnumerable<Discussion>> GetDiscussionByFilters(Guid? userId, DiscussionQueryFilter queryFilter)
     {
-        var discussions = _entities.AsQueryable();
+        var discussions = _entities
+                .Include(x => x.User)
+                .Include(x => x.Subject)
+                .AsQueryable();
         discussions = ApplyFilterSortAndSearch(discussions, queryFilter, userId);
         discussions = ApplySorting(discussions, queryFilter);
         return await discussions.ToListAsync(); 
@@ -30,6 +33,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
         return await _entities
             .Include(x => x.User)
             .Include(x => x.Subject)
+            .Include(x => x.Tags)
             .FirstOrDefaultAsync(x => x.Id == guid && x.IsDeleted == false);
     }
 
