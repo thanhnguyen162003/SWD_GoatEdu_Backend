@@ -4,6 +4,7 @@ using GoatEdu.Core.Interfaces.DiscussionInterfaces;
 using GoatEdu.Core.Interfaces.EnrollmentInterfaces;
 using GoatEdu.Core.Interfaces.FlashcardInterfaces;
 using GoatEdu.Core.Interfaces.LessonInterfaces;
+using GoatEdu.Core.Interfaces.ModeratorInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
 using GoatEdu.Core.Interfaces.ReportInterfaces;
@@ -34,8 +35,7 @@ namespace GoatEdu.Core.Interfaces
         IReportRepository ReportRepository { get; }
         IEnrollmentRepository EnrollmentRepository { get; }
         IEnrollmentProcessRepository EnrollmentProcessRepository { get; }
-
-
+        IModeratorRepository ModeratorRepository { get; }
 
 
 
