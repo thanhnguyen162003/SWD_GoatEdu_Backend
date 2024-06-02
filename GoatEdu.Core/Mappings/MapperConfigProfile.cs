@@ -66,6 +66,7 @@ public class MapperConfigProfile : Profile
             .ForPath(dest => dest.UserAndSubject.UserId, opt => opt.MapFrom(src => src.UserId))
             .ForPath(dest => dest.UserAndSubject.UserName, opt => opt.MapFrom(src => src.User.Username))
             .ForPath(dest => dest.UserAndSubject.FullName, opt => opt.MapFrom(src => src.User.Fullname))
+            .ForPath(dest => dest.UserAndSubject.UserImage, opt => opt.MapFrom(src => src.User.Image))
             .ForPath(dest => dest.UserAndSubject.SubjectId, opt => opt.MapFrom(src => src.SubjectId))
             .ForPath(dest => dest.UserAndSubject.SubjectName, opt => opt.MapFrom(src => src.Subject.SubjectName));
         
