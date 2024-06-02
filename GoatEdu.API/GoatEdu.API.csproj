@@ -36,10 +36,11 @@
     <ItemGroup>
       <AdditionalFiles Include="Paypal\Index.cshtml" />
       <AdditionalFiles Include="Paypal\Success.cshtml" />
+      <AdditionalFiles Include="Resources\VerifyToken.cshtml" />
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="Responses\*">
+        <Content Include="Resource\*">
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
     </ItemGroup>

@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Update="Responses\VerifyToken.cshtml">
+        <Content Update="Resources\VerifyToken.cshtml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
