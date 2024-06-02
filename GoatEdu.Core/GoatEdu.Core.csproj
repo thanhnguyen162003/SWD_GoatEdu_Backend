@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Update="..\GoatEdu.API\Responses\VerifyToken.cshtml">
+        <Content Update="Responses\VerifyToken.cshtml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
