@@ -3,6 +3,8 @@ using GoatEdu.API;
 using GoatEdu.Core.DTOs.MailDto;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
+using GoatEdu.Core.Services;
+using GoatEdu.Core.Services.SignalR;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.CacheRepository;
@@ -152,6 +154,10 @@ builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 10 * 1024 * 1024; // 10mb*1024*1024
 });
+
+// Add SignalR
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 //random theme =)))
@@ -178,5 +184,8 @@ app.UseAuthentication(); // Ensure this is before UseAuthorization
 app.UseAuthorization();
 
 app.MapControllers();
+
+// SignalR
+app.MapHub<HubService>("/hub");
 
 app.Run();

@@ -86,7 +86,7 @@ public class DiscussionService : IDiscussionService
                 };
                 return tag;
             }).ToList();
-
+        
             await _unitOfWork.TagRepository.AddRangeAsync(tags);
             
             var save = await _unitOfWork.SaveChangesAsync();
@@ -108,12 +108,13 @@ public class DiscussionService : IDiscussionService
             {
                 return new ResponseDto(HttpStatusCode.BadRequest, image.Error.Message);
             }
-
+        
             mapper.DiscussionImage = image.Url.ToString();
         }
         
         mapper.Tags = tag.ToList();
         mapper.IsSolved = false;
+        mapper.DiscussionVote = 0;
         mapper.Status = DiscussionStatus.Unapproved.ToString();
         mapper.UserId = _claimsService.GetCurrentUserId;
         mapper.CreatedBy = _claimsService.GetCurrentFullname;
@@ -141,8 +142,13 @@ public class DiscussionService : IDiscussionService
             return new ResponseDto(HttpStatusCode.NotFound, "Không có");
         }
 
+        if (disscussion.Status.Equals(DiscussionStatus.Approved))
+        {
+            return new ResponseDto(HttpStatusCode.Forbidden, "Update? Too Late :))");
+        }
+        
         disscussion = _mapper.Map(discussionRequestDto, disscussion);
-        disscussion.UpdatedBy = _claimsService.GetCurrentUserId.ToString();
+        disscussion.UpdatedBy = _claimsService.GetCurrentFullname;
         disscussion.UpdatedAt = _currentTime.GetCurrentTime();
         _unitOfWork.DiscussionRepository.Update(disscussion);
         var result = await _unitOfWork.SaveChangesAsync();

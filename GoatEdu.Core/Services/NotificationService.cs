@@ -7,8 +7,11 @@ using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.ClaimInterfaces;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
+using GoatEdu.Core.Interfaces.SignalR;
 using GoatEdu.Core.QueriesFilter;
+using GoatEdu.Core.Services.SignalR;
 using Infrastructure;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 
 namespace GoatEdu.Core.Services;
@@ -20,14 +23,16 @@ public class NotificationService : INotificationService
     private readonly IMapper _mapper;
     private readonly PaginationOptions _paginationOptions;
     private readonly IClaimsService _claimsService;
+    private readonly IHubContext<HubService, IHubService> _hubContext;
 
-    public NotificationService(IUnitOfWork unitOfWork,IClaimsService claimsService, ICurrentTime currentTime, IMapper mapper, IOptions<PaginationOptions> options)
+    public NotificationService(IUnitOfWork unitOfWork,IClaimsService claimsService, ICurrentTime currentTime, IMapper mapper, IOptions<PaginationOptions> options, IHubContext<HubService, IHubService> hubContext)
     {
         _unitOfWork = unitOfWork;
         _currentTime = currentTime;
         _mapper = mapper;
         _paginationOptions = options.Value;
         _claimsService = claimsService;
+        _hubContext = hubContext;
     }
     
     public async Task<ResponseDto> GetNotificationById(Guid id)
@@ -37,13 +42,13 @@ public class NotificationService : INotificationService
         {
             notiFound.ReadAt ??= _currentTime.GetCurrentTime();
             await _unitOfWork.SaveChangesAsync();
-            var notiMapper = _mapper.Map<NotificationResponseDto>(notiFound);
+            var notiMapper = _mapper.Map<NotiDetailResponseDto>(notiFound);
             return new ResponseDto(HttpStatusCode.OK, "", notiMapper);
         }
         return new ResponseDto(HttpStatusCode.OK, "Kiếm không ra :))");
     }
 
-    public async Task<PagedList<NotificationResponseDto>> GetNotificationByCurrentUser(NotificationQueryFilter queryFilter)
+    public async Task<PagedList<NotiDetailResponseDto>> GetNotificationByCurrentUser(NotificationQueryFilter queryFilter)
     {
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
@@ -52,20 +57,22 @@ public class NotificationService : INotificationService
 
         if (!listNoti.Any())
         {
-            return new PagedList<NotificationResponseDto>(new List<NotificationResponseDto>(), 0, 0, 0);
+            return new PagedList<NotiDetailResponseDto>(new List<NotiDetailResponseDto>(), 0, 0, 0);
         }
-        var mapperList = _mapper.Map<List<NotificationResponseDto>>(listNoti);
-        return PagedList<NotificationResponseDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
+        var mapperList = _mapper.Map<List<NotiDetailResponseDto>>(listNoti);
+        return PagedList<NotiDetailResponseDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
 
     public async Task<ResponseDto> InsertNotification(NotificationRequestDto notification)
     {
         var noti = _mapper.Map<Notification>(notification);
+        noti.CreatedAt = _currentTime.GetCurrentTime();
         await _unitOfWork.NotificationRepository.AddAsync(noti);
         var result = await _unitOfWork.SaveChangesAsync();
         
         if (result > 0)
         {
+            await _hubContext.Clients.All.SendNotification(new {notification.UserId, notification.NotificationName});
             return new ResponseDto(HttpStatusCode.OK, "Add Successfully !");
         }
         return new ResponseDto(HttpStatusCode.OK, "Add Failed !");

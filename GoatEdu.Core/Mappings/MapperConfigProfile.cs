@@ -15,7 +15,6 @@ public class MapperConfigProfile : Profile
 {
     public MapperConfigProfile()
     {
-        CreateMap<Notification, NotificationResponseDto>().ReverseMap();
         CreateMap<Notification, NotificationRequestDto>().ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         CreateMap<Subject, SubjectResponseDto>().ReverseMap();
@@ -40,7 +39,7 @@ public class MapperConfigProfile : Profile
         CreateMap<Note, NoteResponseDto>().ReverseMap();
         CreateMap<Note, NoteRequestDto>().ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-        CreateMap<Note, NoteDetailResponseDto>().ReverseMap();
+        CreateMap<Notification, NotiDetailResponseDto>().ReverseMap();
         CreateMap<Tag, TagRequestDto>().ReverseMap()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

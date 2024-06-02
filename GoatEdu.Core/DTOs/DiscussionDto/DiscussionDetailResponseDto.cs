@@ -8,5 +8,6 @@ public class DiscussionDetailResponseDto
     public string? DiscussionImage { get; set; }
     public int? DiscussionVote { get; set; }
     public bool? IsSolved { get; set; }
+    public string? Status { get; set; }
     public UserAndSubject? UserAndSubject { get; set; }
 }
