@@ -44,9 +44,9 @@ public class AdminRepository : BaseRepository<User>, IAdminRepository
         return await users.ToListAsync();
     }
 
-    public async Task<ICollection<User>> GetStudent(UserQueryFilter queryFilter)
+    public async Task<ICollection<User>> GetUserUsed(UserQueryFilter queryFilter)
     {
-        var users = _entities.Where(x => x.Role.RoleName == IdEnumeration.STUDENT_ROLE)
+        var users = _entities.Where(x => x.Role.RoleName == IdEnumeration.STUDENT_ROLE || x.Role.RoleName == IdEnumeration.TEACHER_ROLE)
             .Include(x => x.Role)
             .AsQueryable();
         users = ApplyFilterSortAndSearch(users, queryFilter);
@@ -54,9 +54,9 @@ public class AdminRepository : BaseRepository<User>, IAdminRepository
         return await users.ToListAsync();
     }
 
-    public async Task<ICollection<User>> GetTeacher(UserQueryFilter queryFilter)
+    public async Task<ICollection<User>> GetModerator(UserQueryFilter queryFilter)
     {
-        var users = _entities.Where(x => x.Role.RoleName == IdEnumeration.TEACHER_ROLE)
+        var users = _entities.Where(x => x.Role.RoleName == IdEnumeration.MODERATOR_ROLE)
             .Include(x => x.Role)
             .AsQueryable();
         users = ApplyFilterSortAndSearch(users, queryFilter);

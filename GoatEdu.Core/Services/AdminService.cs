@@ -82,12 +82,12 @@ public class AdminService : IAdminService
         return new PaginatedResponse<UserMinimalDto>(pagedList);
     }
 
-    public async Task<PaginatedResponse<UserMinimalDto>> GetStudent(UserQueryFilter queryFilter)
+    public async Task<PaginatedResponse<UserMinimalDto>> GetUserUsed(UserQueryFilter queryFilter)
     {
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
 
-        var listUsers = await _unitOfWork.AdminRepository.GetStudent(queryFilter);
+        var listUsers = await _unitOfWork.AdminRepository.GetUserUsed(queryFilter);
 
         if (!listUsers.Any())
         {
@@ -101,12 +101,12 @@ public class AdminService : IAdminService
         return new PaginatedResponse<UserMinimalDto>(pagedList);
     }
 
-    public async Task<PaginatedResponse<UserMinimalDto>> GetTeacher(UserQueryFilter queryFilter)
+    public async Task<PaginatedResponse<UserMinimalDto>> GetModerator(UserQueryFilter queryFilter)
     {
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
 
-        var listUsers = await _unitOfWork.AdminRepository.GetTeacher(queryFilter);
+        var listUsers = await _unitOfWork.AdminRepository.GetModerator(queryFilter);
 
         if (!listUsers.Any())
         {

@@ -10,7 +10,7 @@ public interface IAdminRepository
 {
     Task<ResponseDto> SuppenseUser(Guid id);
     Task<ICollection<User>> GetUsers(UserQueryFilter queryFilter);
-    Task<ICollection<User>> GetStudent(UserQueryFilter queryFilter);
-    Task<ICollection<User>> GetTeacher(UserQueryFilter queryFilter);
+    Task<ICollection<User>> GetUserUsed(UserQueryFilter queryFilter);
+    Task<ICollection<User>> GetModerator(UserQueryFilter queryFilter);
 
 }

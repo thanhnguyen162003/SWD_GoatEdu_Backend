@@ -10,7 +10,7 @@ public interface IAdminService
     Task<ResponseDto> CreateUser(CreateUserRequestDto user);
     Task<ResponseDto> SuppenseUser(Guid id);
     Task<PaginatedResponse<UserMinimalDto>> GetUsers(UserQueryFilter queryFilter);
-    Task<PaginatedResponse<UserMinimalDto>> GetStudent(UserQueryFilter queryFilter);
-    Task<PaginatedResponse<UserMinimalDto>> GetTeacher(UserQueryFilter queryFilter);
+    Task<PaginatedResponse<UserMinimalDto>> GetUserUsed(UserQueryFilter queryFilter);
+    Task<PaginatedResponse<UserMinimalDto>> GetModerator(UserQueryFilter queryFilter);
 
 }
