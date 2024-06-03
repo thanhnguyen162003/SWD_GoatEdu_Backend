@@ -33,12 +33,12 @@ public class AdminService : IAdminService
             return new ResponseDto(HttpStatusCode.BadRequest, "Account has been exits!");
         }
 
-        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);
+        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(DefaultData.PASSWORD_DEFAULT);
         User userByAdmin = new User()
         {
             Username = user.Username,
             Password = hashedPassword,
-            RoleId = user.RoleId,
+            RoleId = string.IsNullOrEmpty(DefaultData.ROLE_DEFAULT) ? Guid.Empty : new Guid(DefaultData.ROLE_DEFAULT),
             Fullname = user.FullName,
             PhoneNumber = user.PhoneNumber,
             Email = user.Email,
