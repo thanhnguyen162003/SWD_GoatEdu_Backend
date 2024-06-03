@@ -2,6 +2,7 @@ using GoatEdu.Core.Interfaces.AdminInterfaces;
 using GoatEdu.Core.Interfaces.ChapterInterfaces;
 using GoatEdu.Core.Interfaces.DiscussionInterfaces;
 using GoatEdu.Core.Interfaces.EnrollmentInterfaces;
+using GoatEdu.Core.Interfaces.FlashcardContentInterfaces;
 using GoatEdu.Core.Interfaces.FlashcardInterfaces;
 using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.ModeratorInterfaces;
@@ -36,9 +37,9 @@ namespace GoatEdu.Core.Interfaces
         IEnrollmentRepository EnrollmentRepository { get; }
         IEnrollmentProcessRepository EnrollmentProcessRepository { get; }
         IModeratorRepository ModeratorRepository { get; }
+        IFlashcardContentRepository FlashcardContentRepository { get; }
 
-
-
+        
         
         void SaveChanges();
         Task<int> SaveChangesAsync();

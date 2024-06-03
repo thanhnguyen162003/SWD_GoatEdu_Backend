@@ -2,6 +2,7 @@ using AutoMapper;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.AdminDto;
 using GoatEdu.Core.DTOs.ChapterDto;
+using GoatEdu.Core.DTOs.FlashcardDto;
 using GoatEdu.Core.DTOs.NoteDto;
 using GoatEdu.Core.DTOs.NotificationDto;
 using GoatEdu.Core.DTOs.RoleDto;
@@ -27,6 +28,11 @@ public class MapperConfigProfile : Profile
         CreateMap<Subject, SubjectResponseDto>()
             .ForMember(dest => dest.NumberOfChapters, opt => opt.MapFrom(src => src.Chapters.Count))
             .ForMember(dest => dest.Chapters, opt => opt.MapFrom(src => src.Chapters))
+            .ReverseMap();
+        
+        CreateMap<Flashcard, FlashcardResponseDto>()
+            .ForMember(dest => dest.numberOfFlashcardContent, opt => opt.MapFrom(src => src.FlashcardContents.Count))
+            .ForMember(dest => dest.fullName, opt => opt.MapFrom(src => src.User.Fullname))
             .ReverseMap();
 
         // Map Chapter to ChapterSubjectDto

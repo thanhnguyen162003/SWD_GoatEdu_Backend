@@ -1,10 +1,11 @@
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.UserDetailDto;
+using GoatEdu.Core.Interfaces.GenericInterfaces;
 using Infrastructure;
 
 namespace GoatEdu.Core.Interfaces.UserDetailInterfaces;
 
-public interface IUserDetailRepository
+public interface IUserDetailRepository : IRepository<User>
 {
     Task<ResponseDto> UpdateProfile(User user);
     Task<ResponseDto> GetSubcription();
