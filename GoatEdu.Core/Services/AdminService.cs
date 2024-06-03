@@ -40,7 +40,7 @@ public class AdminService : IAdminService
             Password = hashedPassword,
             RoleId = user.RoleId,
             Fullname = user.FullName,
-            PhoneNumber = null,
+            PhoneNumber = user.PhoneNumber,
             Email = user.Email,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now,
