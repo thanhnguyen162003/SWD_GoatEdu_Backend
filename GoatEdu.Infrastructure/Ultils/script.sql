@@ -1,373 +1,631 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
-CREATE TABLE "User"
+create table "__EFMigrationsHistory"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "username" VARCHAR,
-    "password" VARCHAR,
-    "email" VARCHAR,
-    "phoneNumber" VARCHAR,
-    "subscription" VARCHAR,
-    "subscriptionEnd" TIMESTAMP,
-    "provider" VARCHAR,
-    "emailVerify" BOOLEAN,
-    "image" VARCHAR,
-    "fullname" VARCHAR,
-    "roleId" UUID,
-    "walletId" UUID,
-    "createdAt" TIMESTAMP,
-    "updatedAt" TIMESTAMP,
-    "isDeleted" BOOLEAN
+    "MigrationId"    varchar(150) not null
+        constraint "PK___EFMigrationsHistory"
+            primary key,
+    "ProductVersion" varchar(32)  not null
 );
 
-CREATE TABLE "Wallet"
+alter table "__EFMigrationsHistory"
+    owner to root;
+
+create table "Calculation"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "numberWallet" FLOAT,
-    --"userId" UUID,
-    "createdAt" TIMESTAMP,
-    "updatedAt" TIMESTAMP,
-    "isDeleted" BOOLEAN
+    id             uuid default uuid_generate_v4(),
+    "lessonCount"  integer,
+    "chapterCount" integer,
+    "quizCount"    integer,
+    "theoryCount"  integer,
+    "createdAt"    timestamp,
+    "updatedAt"    timestamp
 );
 
-CREATE TABLE "Achievement"
+alter table "Calculation"
+    owner to root;
+
+create table "Role"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "achievementName" VARCHAR,
-    "achievementContent" VARCHAR,
-    "userId" UUID,
-    "createdAt" TIMESTAMP,
-    "isDeleted" BOOLEAN
+    id          uuid default uuid_generate_v4() not null
+        constraint "PK_Role"
+            primary key,
+    "roleName"  varchar,
+    "createdAt" timestamp,
+    "updatedAt" timestamp,
+    "isDeleted" boolean
 );
 
-CREATE TABLE "Role"
+alter table "Role"
+    owner to root;
+
+create table "Subject"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "roleName" VARCHAR,
-    "isDeleted" BOOLEAN,
-    "createdAt" TIMESTAMP,
-    "updatedAt" TIMESTAMP
+    id            uuid default uuid_generate_v4() not null
+        constraint "PK_Subject"
+            primary key,
+    "subjectName" varchar,
+    "subjectCode" varchar,
+    information   varchar,
+    class         varchar,
+    image         varchar,
+    "createdAt"   timestamp,
+    "updatedAt"   timestamp,
+    "isDeleted"   boolean
 );
 
-CREATE TABLE "Subscription"
+alter table "Subject"
+    owner to root;
+
+create table "Subscription"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "subscriptionName" VARCHAR,
-    "subscriptionBody" VARCHAR,
-    "price" FLOAT,
-    "duration" INTERVAL,
-    "createdAt" TIMESTAMP,
-    "isDeleted" BOOLEAN
+    id                 uuid default uuid_generate_v4() not null
+        constraint "PK_Subscription"
+            primary key,
+    "subscriptionName" varchar,
+    "subscriptionBody" varchar,
+    price              double precision,
+    duration           interval,
+    "createdAt"        timestamp,
+    "isDeleted"        boolean
 );
 
-CREATE TABLE "Transaction"
+alter table "Subscription"
+    owner to root;
+
+create table "Tag"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "transactionName" VARCHAR,
-    "note" VARCHAR,
-    "walletId" UUID,
-    "startDate" TIMESTAMP,
-    "endDate" TIMESTAMP,
-    "subscriptionId" UUID,
-    "createdAt" TIMESTAMP,
-    "isDeleted" BOOLEAN
+    id          uuid default uuid_generate_v4() not null
+        constraint "PK_Tag"
+            primary key,
+    "tagName"   varchar,
+    "createdAt" timestamp,
+    "updatedAt" timestamp,
+    "isDeleted" boolean
 );
 
-CREATE TABLE "Subject"
+alter table "Tag"
+    owner to root;
+
+create table "Wallet"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "subjectName" VARCHAR,1
-    "subjectCode" VARCHAR,
-    "information" VARCHAR,
-    "class" VARCHAR,
-    "image" VARCHAR,
-    "isDeleted" BOOLEAN,
-    "createdAt" TIMESTAMP,
-    "updatedAt" TIMESTAMP
+    id             uuid default uuid_generate_v4() not null
+        constraint "PK_Wallet"
+            primary key,
+    "numberWallet" double precision,
+    "createdAt"    timestamp,
+    "updatedAt"    timestamp,
+    "isDeleted"    boolean
 );
 
-CREATE TABLE "Chapter"
+alter table "Wallet"
+    owner to root;
+
+create table "Chapter"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "chapterName" VARCHAR,
-    "chapterLevel" INT,
-    "subjectId" UUID,
-    "isDeleted" BOOLEAN,
-    "createdAt" TIMESTAMP,
-    "createdBy" VARCHAR,
-    "updatedAt" TIMESTAMP
+    id             uuid default uuid_generate_v4() not null
+        constraint "PK_Chapter"
+            primary key,
+    "chapterName"  varchar,
+    "chapterLevel" integer,
+    "subjectId"    uuid
+        constraint "FK_Chapter_Subject_subjectId"
+            references "Subject",
+    "createdAt"    timestamp,
+    "createdBy"    varchar,
+    "updatedAt"    timestamp,
+    "isDeleted"    boolean
 );
 
-CREATE TABLE "Lesson"
+alter table "Chapter"
+    owner to root;
+
+create index "IX_Chapter_subjectId"
+    on "Chapter" ("subjectId");
+
+create table "Transaction"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "lessonName" VARCHAR,
-    "lessonBody" VARCHAR,
-    "lessonMaterial" VARCHAR,
-    "chapterId" UUID,
-    "createdAt" TIMESTAMP,
-    "createdBy" VARCHAR,
-    "updatedBy" VARCHAR,
-    "updatedAt" TIMESTAMP,
-    "isDeleted" BOOLEAN,
-    "displayOrder" INT
+    id                uuid default uuid_generate_v4() not null
+        constraint "PK_Transaction"
+            primary key,
+    "transactionName" varchar,
+    note              varchar,
+    "walletId"        uuid,
+    "startDate"       timestamp,
+    "endDate"         timestamp,
+    "subscriptionId"  uuid
+        constraint "FK_Transaction_Subscription_subscriptionId"
+            references "Subscription",
+    "createdAt"       timestamp,
+    "isDeleted"       boolean
 );
 
-CREATE TABLE "Note"
+alter table "Transaction"
+    owner to root;
+
+create index "IX_Transaction_subscriptionId"
+    on "Transaction" ("subscriptionId");
+
+create table "User"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "noteName" VARCHAR,
-    "noteBody" VARCHAR,
-    "userId" UUID,
-    "createdAt" TIMESTAMP,
-    "createdBy" VARCHAR,
-    "updatedBy" VARCHAR,
-    "updatedAt" TIMESTAMP,
-    "isDeleted" BOOLEAN
+    id                uuid default uuid_generate_v4() not null
+        constraint "PK_User"
+            primary key,
+    username          varchar,
+    fullname          varchar,
+    image             varchar,
+    password          varchar,
+    email             varchar,
+    "phoneNumber"     varchar,
+    subscription      varchar,
+    "subscriptionEnd" timestamp,
+    provider          varchar,
+    "emailVerify"     boolean,
+    "roleId"          uuid
+        constraint "FK_User_Role_roleId"
+            references "Role",
+    "walletId"        uuid
+        constraint "FK_User_Wallet_walletId"
+            references "Wallet",
+    "createdAt"       timestamp,
+    "updatedAt"       timestamp,
+    "isDeleted"       boolean
 );
 
-CREATE TABLE "Report"
+alter table "User"
+    owner to root;
+
+create index "IX_User_roleId"
+    on "User" ("roleId");
+
+create unique index "IX_User_walletId"
+    on "User" ("walletId");
+
+create table "Lesson"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "reportTitle" VARCHAR,
-    "reportContent" VARCHAR,
-    "userId" UUID,
-    "createdAt" TIMESTAMP,
-    "createdBy" VARCHAR,
-    "status" VARCHAR,
-    "isDeleted" BOOLEAN
+    id               uuid default uuid_generate_v4() not null
+        constraint "PK_Lesson"
+            primary key,
+    "lessonName"     varchar,
+    "lessonBody"     varchar,
+    "lessonMaterial" varchar,
+    "chapterId"      uuid
+        constraint "FK_Lesson_Chapter_chapterId"
+            references "Chapter",
+    "createdAt"      timestamp,
+    "createdBy"      varchar,
+    "updatedBy"      varchar,
+    "updatedAt"      timestamp,
+    "displayOrder"   integer,
+    "isDeleted"      boolean
 );
 
-CREATE TABLE "Theory"
+alter table "Lesson"
+    owner to root;
+
+create index "IX_Lesson_chapterId"
+    on "Lesson" ("chapterId");
+
+create table "Achievement"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "theoryName" VARCHAR,
-    "file" VARCHAR,
-    "image" VARCHAR,
-    "theoryContent" VARCHAR,
-    "lessonId" UUID,
-    "createdAt" TIMESTAMP,
-    "updatedAt" TIMESTAMP,
-    "isDeleted" BOOLEAN
+    id                   uuid default uuid_generate_v4() not null
+        constraint "PK_Achievement"
+            primary key,
+    "achievementName"    varchar,
+    "achievementContent" varchar,
+    "userId"             uuid
+        constraint "FK_Achievement_User_userId"
+            references "User",
+    "createdAt"          timestamp,
+    "isDeleted"          boolean
 );
 
-CREATE TABLE "Quiz"
+alter table "Achievement"
+    owner to root;
+
+create index "IX_Achievement_userId"
+    on "Achievement" ("userId");
+
+create table "Discussion"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "quiz" VARCHAR,
-    "quizLevel" INT,
-    "lessonId" UUID,
-    "chapterId" UUID,
-    "subjectId" UUID,
-    "createdAt" TIMESTAMP,
-    "updatedAt" TIMESTAMP,
-    "isDeleted" BOOLEAN,
-    "isRequire" BOOLEAN
+    id                uuid default uuid_generate_v4() not null
+        constraint "PK_Discussion"
+            primary key,
+    "discussionName"  varchar,
+    "discussionBody"  varchar,
+    "userId"          uuid
+        constraint "FK_Discussion_User_userId"
+            references "User",
+    "discussionImage" varchar,
+    "discussionVote"  integer,
+    "subjectId"       uuid
+        constraint "FK_Discussion_Subject_subjectId"
+            references "Subject",
+    "isSolved"        boolean,
+    status            varchar,
+    "createdAt"       timestamp,
+    "createdBy"       varchar,
+    "updatedBy"       varchar,
+    "updatedAt"       timestamp,
+    "isDeleted"       boolean
 );
 
-CREATE TABLE "QuestionInQuiz"
+alter table "Discussion"
+    owner to root;
+
+create index "IX_Discussion_subjectId"
+    on "Discussion" ("subjectId");
+
+create index "IX_Discussion_userId"
+    on "Discussion" ("userId");
+
+create table "Enrollment"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "quizId" UUID,
-    "quizQuestion" VARCHAR,
-    "quizAnswer1" VARCHAR,
-    "quizAnswer2" VARCHAR,
-    "quizAnswer3" VARCHAR,
-    "quizCorrect" VARCHAR,
-    "createdAt" TIMESTAMP,
-    "updatedAt" TIMESTAMP,
-    "isDeleted" BOOLEAN,
-    FOREIGN KEY ("quizId") REFERENCES "Quiz" ("id")
+    id          uuid default uuid_generate_v4() not null
+        constraint "PK_Enrollment"
+            primary key,
+    "userId"    uuid
+        constraint "FK_Enrollment_User_userId"
+            references "User",
+    "subjectId" uuid
+        constraint "FK_Enrollment_Subject_subjectId"
+            references "Subject",
+    "updatedAt" timestamp,
+    "createdAt" timestamp
 );
 
-CREATE TABLE "Discussion"
+alter table "Enrollment"
+    owner to root;
+
+create unique index "Enrollment_userId_subjectId_key"
+    on "Enrollment" ("userId", "subjectId");
+
+create index "IX_Enrollment_subjectId"
+    on "Enrollment" ("subjectId");
+
+create table "Flashcard"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "discussionName" VARCHAR,
-    "discussionBody" VARCHAR,
-    "userId" UUID,
-    "discussionImage" VARCHAR,
-    "discussionVote" INT,
-    "tag" VARCHAR,
-    "subjectId" UUID,
-    "isSolved" BOOLEAN,
-    "status" VARCHAR,
-    "createdAt" TIMESTAMP,
-    "createdBy" VARCHAR,
-    "updatedBy" VARCHAR,
-    "updatedAt" TIMESTAMP,
-    "isDeleted" BOOLEAN
+    id                     uuid default uuid_generate_v4() not null
+        constraint "PK_Flashcard"
+            primary key,
+    "flashcardName"        varchar,
+    "flashcardDescription" varchar,
+    "userId"               uuid
+        constraint "FK_Flashcard_User_userId"
+            references "User",
+    "subjectId"            uuid
+        constraint "FK_Flashcard_Subject_subjectId"
+            references "Subject",
+    status                 varchar,
+    star                   integer,
+    "createdAt"            timestamp,
+    "createdBy"            varchar,
+    "updatedBy"            varchar,
+    "updatedAt"            timestamp,
+    "isDeleted"            boolean
 );
 
-CREATE TABLE "Answer"
+alter table "Flashcard"
+    owner to root;
+
+create index "IX_Flashcard_subjectId"
+    on "Flashcard" ("subjectId");
+
+create index "IX_Flashcard_userId"
+    on "Flashcard" ("userId");
+
+create table "Note"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "answerName" VARCHAR,
-    "answerBody" VARCHAR,
-    "userId" UUID,
-    "questionId" UUID,
-    "answerImage" VARCHAR,
-    "answerVote" INT,
-    "tag" VARCHAR,
-    "createdAt" TIMESTAMP,
-    "createdBy" VARCHAR,
-    "updatedBy" VARCHAR,
-    "updatedAt" TIMESTAMP,
-    "isDeleted" BOOLEAN
+    id          uuid default uuid_generate_v4() not null
+        constraint "PK_Note"
+            primary key,
+    "noteName"  varchar,
+    "noteBody"  varchar,
+    "userId"    uuid
+        constraint "FK_Note_User_userId"
+            references "User",
+    "createdAt" timestamp,
+    "createdBy" varchar,
+    "updatedBy" varchar,
+    "updatedAt" timestamp,
+    "isDeleted" boolean
 );
 
-CREATE TABLE "Flashcard"
+alter table "Note"
+    owner to root;
+
+create index "IX_Note_userId"
+    on "Note" ("userId");
+
+create table "Notification"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "flashcardName" VARCHAR,
-    "flashcardDescription" VARCHAR,
-    "userId" UUID,
-    "tag" VARCHAR,
-    "subjectId" UUID,
-    "status" VARCHAR,
-    "star" INT,
-    "createdAt" TIMESTAMP,
-    "createdBy" VARCHAR,
-    "updatedBy" VARCHAR,
-    "updatedAt" TIMESTAMP,
-    "isDeleted" BOOLEAN
+    id                    uuid default uuid_generate_v4() not null
+        constraint "PK_Notification"
+            primary key,
+    "notificationName"    varchar,
+    "notificationMessage" varchar,
+    "userId"              uuid
+        constraint "FK_Notification_User_userId"
+            references "User",
+    "readAt"              timestamp,
+    "createdAt"           timestamp
 );
 
-CREATE TABLE "FlashcardContent"
+alter table "Notification"
+    owner to root;
+
+create index "IX_Notification_userId"
+    on "Notification" ("userId");
+
+create table "Report"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "flashcardContentQuestion" VARCHAR,
-    "flashcardContentAnswer" VARCHAR,
-    "flashcardId" UUID,
-    "image" VARCHAR,
-    "status" VARCHAR,
-    "createdAt" TIMESTAMP,
-    "createdBy" VARCHAR,
-    "updatedBy" VARCHAR,
-    "updatedAt" TIMESTAMP,
-    "isDeleted" BOOLEAN
+    id              uuid default uuid_generate_v4() not null
+        constraint "PK_Report"
+            primary key,
+    "reportTitle"   varchar,
+    "reportContent" varchar,
+    "userId"        uuid
+        constraint "FK_Report_User_userId"
+            references "User",
+    "createdAt"     timestamp,
+    "createdBy"     varchar,
+    status          varchar,
+    "isDeleted"     boolean
 );
 
-CREATE TABLE "Calculation"
+alter table "Report"
+    owner to root;
+
+create index "IX_Report_userId"
+    on "Report" ("userId");
+
+create table "Quiz"
 (
-    "id" UUID,
-    "lessonCount" INT,
-    "chapterCount" INT,
-    "quizCount" INT,
-    "theoryCount" INT,
-    "createdAt" TIMESTAMP,
-    "updatedAt" TIMESTAMP
+    id          uuid default uuid_generate_v4() not null
+        constraint "PK_Quiz"
+            primary key,
+    quiz        varchar,
+    "quizLevel" integer,
+    "lessonId"  uuid
+        constraint "FK_Quiz_Lesson_lessonId"
+            references "Lesson",
+    "chapterId" uuid
+        constraint "FK_Quiz_Chapter_chapterId"
+            references "Chapter",
+    "subjectId" uuid
+        constraint "FK_Quiz_Subject_subjectId"
+            references "Subject",
+    "createdAt" timestamp,
+    "updatedAt" timestamp,
+    "isRequire" boolean,
+    "isDeleted" boolean
 );
 
-CREATE TABLE "Notification"
+alter table "Quiz"
+    owner to root;
+
+create index "IX_Quiz_chapterId"
+    on "Quiz" ("chapterId");
+
+create index "IX_Quiz_lessonId"
+    on "Quiz" ("lessonId");
+
+create index "IX_Quiz_subjectId"
+    on "Quiz" ("subjectId");
+
+create table "Theory"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "notificationName" VARCHAR,
-    "notificationMessage" VARCHAR,
-    "userId" UUID,
-    "readAt" TIMESTAMP,
-    "createdAt" TIMESTAMP
+    id              uuid default uuid_generate_v4() not null
+        constraint "PK_Theory"
+            primary key,
+    "theoryName"    varchar,
+    file            varchar,
+    image           varchar,
+    "theoryContent" varchar,
+    "lessonId"      uuid
+        constraint "FK_Theory_Lesson_lessonId"
+            references "Lesson",
+    "createdAt"     timestamp,
+    "updatedAt"     timestamp,
+    "isDeleted"     boolean
 );
 
-CREATE TABLE "Enrollment"
-(
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "userId" UUID,
-    "subjectId" UUID,
-    "updatedAt" TIMESTAMP,
-    "createdAt" TIMESTAMP,
-    UNIQUE ("userId", "subjectId")
-);
-CREATE TABLE "EnrollmentProcess"
-(
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "enrollmentId" UUID UNIQUE,
-    "process" INT,
-    "chapterId" UUID,
-    "status" VARCHAR,
-    FOREIGN KEY ("enrollmentId") REFERENCES "Enrollment" ("id")
-);
+alter table "Theory"
+    owner to root;
 
+create index "IX_Theory_lessonId"
+    on "Theory" ("lessonId");
 
-CREATE TABLE "TheoryFlashCardContent"
+create table "Answer"
 (
-    "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "question" VARCHAR,
-    "answer" VARCHAR,
-    "theoryId" UUID,
-    "status" VARCHAR,
-    "createdAt" TIMESTAMP,
-    "updatedAt" TIMESTAMP,
-    "isDeleted" BOOLEAN,
-    FOREIGN KEY ("theoryId") REFERENCES "Theory" ("id")
+    id            uuid default uuid_generate_v4() not null
+        constraint "PK_Answer"
+            primary key,
+    "answerName"  varchar,
+    "answerBody"  varchar,
+    "userId"      uuid
+        constraint "FK_Answer_User_userId"
+            references "User",
+    "questionId"  uuid
+        constraint "FK_Answer_Discussion_questionId"
+            references "Discussion",
+    "answerImage" varchar,
+    "answerVote"  integer,
+    "createdAt"   timestamp,
+    "createdBy"   varchar,
+    "updatedBy"   varchar,
+    "updatedAt"   timestamp,
+    "isDeleted"   boolean
 );
 
--- Add foreign key constraints
-ALTER TABLE "User"
-    ADD FOREIGN KEY ("roleId") REFERENCES "Role" ("id");
+alter table "Answer"
+    owner to root;
 
-ALTER TABLE "User"
-    ADD FOREIGN KEY ("walletId") REFERENCES "Wallet" ("id");
+create index "IX_Answer_questionId"
+    on "Answer" ("questionId");
 
-ALTER TABLE "Notification"
-    ADD FOREIGN KEY ("userId") REFERENCES "User" ("id");
+create index "IX_Answer_userId"
+    on "Answer" ("userId");
 
-ALTER TABLE "Answer"
-    ADD FOREIGN KEY ("userId") REFERENCES "User" ("id");
+create table "DiscussionTag"
+(
+    "DiscussionsId" uuid not null
+        constraint "FK_DiscussionTag_Discussion_DiscussionsId"
+            references "Discussion"
+            on delete cascade,
+    "TagsId"        uuid not null
+        constraint "FK_DiscussionTag_Tag_TagsId"
+            references "Tag"
+            on delete cascade,
+    constraint "PK_DiscussionTag"
+        primary key ("DiscussionsId", "TagsId")
+);
 
-ALTER TABLE "Enrollment"
-    ADD FOREIGN KEY ("subjectId") REFERENCES "Subject" ("id");
+alter table "DiscussionTag"
+    owner to root;
 
-ALTER TABLE "Enrollment"
-    ADD FOREIGN KEY ("userId") REFERENCES "User" ("id");
+create index "IX_DiscussionTag_TagsId"
+    on "DiscussionTag" ("TagsId");
 
-ALTER TABLE "Achievement"
-    ADD FOREIGN KEY ("userId") REFERENCES "User" ("id");
+create table "EnrollmentProcess"
+(
+    id             uuid default uuid_generate_v4() not null
+        constraint "PK_EnrollmentProcess"
+            primary key,
+    "enrollmentId" uuid
+        constraint "FK_EnrollmentProcess_Enrollment_enrollmentId"
+            references "Enrollment",
+    process        integer,
+    "chapterId"    uuid,
+    status         varchar
+);
 
-ALTER TABLE "Report"
-    ADD FOREIGN KEY ("userId") REFERENCES "User" ("id");
+alter table "EnrollmentProcess"
+    owner to root;
 
-ALTER TABLE "FlashcardContent"
-    ADD FOREIGN KEY ("flashcardId") REFERENCES "Flashcard" ("id");
+create unique index "EnrollmentProcess_enrollmentId_key"
+    on "EnrollmentProcess" ("enrollmentId");
 
-ALTER TABLE "Flashcard"
-    ADD FOREIGN KEY ("userId") REFERENCES "User" ("id");
+create table "FlashcardContent"
+(
+    id                         uuid default uuid_generate_v4() not null
+        constraint "PK_FlashcardContent"
+            primary key,
+    "flashcardContentQuestion" varchar,
+    "flashcardContentAnswer"   varchar,
+    "flashcardId"              uuid
+        constraint "FK_FlashcardContent_Flashcard_flashcardId"
+            references "Flashcard",
+    image                      varchar,
+    status                     varchar,
+    "createdAt"                timestamp,
+    "createdBy"                varchar,
+    "updatedBy"                varchar,
+    "updatedAt"                timestamp,
+    "isDeleted"                boolean
+);
 
-ALTER TABLE "Transaction"
-    ADD FOREIGN KEY ("subscriptionId") REFERENCES "Subscription" ("id");
+alter table "FlashcardContent"
+    owner to root;
 
-ALTER TABLE "Discussion"
-    ADD FOREIGN KEY ("userId") REFERENCES "User" ("id");
+create index "IX_FlashcardContent_flashcardId"
+    on "FlashcardContent" ("flashcardId");
 
-ALTER TABLE "Discussion"
-    ADD FOREIGN KEY ("subjectId") REFERENCES "Subject" ("id");
+create table "FlashcardTag"
+(
+    "FlashcardsId" uuid not null
+        constraint "FK_FlashcardTag_Flashcard_FlashcardsId"
+            references "Flashcard"
+            on delete cascade,
+    "TagsId"       uuid not null
+        constraint "FK_FlashcardTag_Tag_TagsId"
+            references "Tag"
+            on delete cascade,
+    constraint "PK_FlashcardTag"
+        primary key ("FlashcardsId", "TagsId")
+);
 
-ALTER TABLE "Answer"
-    ADD FOREIGN KEY ("questionId") REFERENCES "Discussion" ("id");
+alter table "FlashcardTag"
+    owner to root;
 
-ALTER TABLE "Note"
-    ADD FOREIGN KEY ("userId") REFERENCES "User" ("id");
+create index "IX_FlashcardTag_TagsId"
+    on "FlashcardTag" ("TagsId");
 
-ALTER TABLE "Flashcard"
-    ADD FOREIGN KEY ("subjectId") REFERENCES "Subject" ("id");
+create table "QuestionInQuiz"
+(
+    id             uuid default uuid_generate_v4() not null
+        constraint "PK_QuestionInQuiz"
+            primary key,
+    "quizId"       uuid
+        constraint "FK_QuestionInQuiz_Quiz_quizId"
+            references "Quiz",
+    "quizQuestion" varchar,
+    "quizAnswer1"  varchar,
+    "quizAnswer2"  varchar,
+    "quizAnswer3"  varchar,
+    "quizCorrect"  varchar,
+    "createdAt"    timestamp,
+    "updatedAt"    timestamp,
+    "isDeleted"    boolean
+);
 
-ALTER TABLE "Lesson"
-    ADD FOREIGN KEY ("chapterId") REFERENCES "Chapter" ("id");
+alter table "QuestionInQuiz"
+    owner to root;
 
-ALTER TABLE "Quiz"
-    ADD FOREIGN KEY ("lessonId") REFERENCES "Lesson" ("id");
+create index "IX_QuestionInQuiz_quizId"
+    on "QuestionInQuiz" ("quizId");
 
-ALTER TABLE "Quiz"
-    ADD FOREIGN KEY ("chapterId") REFERENCES "Chapter" ("id");
+create table "TheoryFlashCardContent"
+(
+    id          uuid default uuid_generate_v4() not null
+        constraint "PK_TheoryFlashCardContent"
+            primary key,
+    question    varchar,
+    answer      varchar,
+    "theoryId"  uuid
+        constraint "FK_TheoryFlashCardContent_Theory_theoryId"
+            references "Theory",
+    status      varchar,
+    "createdAt" timestamp,
+    "updatedAt" timestamp,
+    "isDeleted" boolean
+);
 
-ALTER TABLE "Quiz"
-    ADD FOREIGN KEY ("subjectId") REFERENCES "Subject" ("id");
+alter table "TheoryFlashCardContent"
+    owner to root;
 
-ALTER TABLE "Theory"
-    ADD FOREIGN KEY ("lessonId") REFERENCES "Lesson" ("id");
+create index "IX_TheoryFlashCardContent_theoryId"
+    on "TheoryFlashCardContent" ("theoryId");
 
-ALTER TABLE "Chapter"
-    ADD FOREIGN KEY ("subjectId") REFERENCES "Subject" ("id");
+create table "Votes"
+(
+    id              integer generated by default as identity
+        constraint "PK_Votes"
+            primary key,
+    "discussionId"  uuid
+        constraint "FK_Votes_Discussion_discussionId"
+            references "Discussion",
+    "answerId"      uuid
+        constraint "FK_Votes_Answer_answerId"
+            references "Answer",
+    "userId"        uuid
+        constraint "FK_Votes_User_userId"
+            references "User",
+    "voteValue"     smallint,
+    "voteTimeStamp" timestamp default CURRENT_TIMESTAMP
+);
+
+alter table "Votes"
+    owner to root;
+
+create index "IX_Votes_answerId"
+    on "Votes" ("answerId");
+
+create index "IX_Votes_discussionId"
+    on "Votes" ("discussionId");
+
+create index "IX_Votes_userId"
+    on "Votes" ("userId");
+
+
 
 
 --data
@@ -859,4 +1117,5 @@ VALUES
     ('Ecology', 'ECOLOGY101', 'Study of organisms and their environments', 'Class 2', 'https://cdn.getmidnight.com/45d07b00b0188a892509950ff919e14e/2021/09/B_E19-title.png', NOW(), NOW(), false),
     ('Zoology', 'ZOO101', 'Study of animal biology and behavior', 'Class 3', 'https://cdn.getmidnight.com/45d07b00b0188a892509950ff919e14e/2021/09/B_E19-title.png', NOW(), NOW(), false),
     ('Botany', 'BOT101', 'Basics of plant biology and physiology', 'Class 4', 'https://cdn.getmidnight.com/45d07b00b0188a892509950ff919e14e/2021/09/B_E19-title.png', NOW(), NOW(), false);
+
 
