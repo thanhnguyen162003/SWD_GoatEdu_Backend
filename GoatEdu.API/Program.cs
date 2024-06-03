@@ -3,7 +3,6 @@ using GoatEdu.API;
 using GoatEdu.Core.DTOs.MailDto;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
-using GoatEdu.Core.Services;
 using GoatEdu.Core.Services.SignalR;
 using Infrastructure.Data;
 using Infrastructure.Repositories;

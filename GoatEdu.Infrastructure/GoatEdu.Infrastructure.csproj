@@ -31,4 +31,8 @@
       <ProjectReference Include="..\GoatEdu.Core\GoatEdu.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Ultils\" />
+    </ItemGroup>
+
 </Project>
