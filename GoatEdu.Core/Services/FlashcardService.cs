@@ -79,7 +79,7 @@ public class FlashcardService : IFlashcardService
         };
 
         await _unitOfWork.FlashcardRepository.CreateFlashcard(newFlashcard);
-
+        //need implement flashcard content later
         return new ResponseDto(HttpStatusCode.Created, "Subject created successfully.", newFlashcard.Id);
     }
 

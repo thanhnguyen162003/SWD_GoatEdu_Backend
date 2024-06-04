@@ -31,12 +31,12 @@ public class AdminController : ControllerBase
     {
         return await _adminService.CreateUser(dto);
     }
-    [HttpGet("student")]
+    [HttpGet("authorize/user")]
     public async Task<PaginatedResponse<UserMinimalDto>> GetUserUsed([FromQuery, Required] UserQueryFilter queryFilter)
     {
         return await _adminService.GetUserUsed(queryFilter);
     }
-    [HttpGet("teacher")]
+    [HttpGet("moderator")]
     public async Task<PaginatedResponse<UserMinimalDto>> GetModerator([FromQuery, Required] UserQueryFilter queryFilter)
     {
         return await _adminService.GetModerator(queryFilter);
