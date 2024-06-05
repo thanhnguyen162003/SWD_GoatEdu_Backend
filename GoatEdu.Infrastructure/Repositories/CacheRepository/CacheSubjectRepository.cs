@@ -44,11 +44,11 @@ public class CacheSubjectRepository : ISubjectRepository
         return subjects;
     }
 
-    public async Task<SubjectResponseDto> GetSubjectBySubjectId(Guid id)
+    public async Task<SubjectDto> GetSubjectBySubjectId(Guid id)
     {
         string key = $"subject-{id}";
         string? cacheSubject = await _distributedCache.GetStringAsync(key);
-        SubjectResponseDto subject;
+        SubjectDto subject;
         if (string.IsNullOrEmpty(cacheSubject))
         {
             subject = await _decorated.GetSubjectBySubjectId(id);
@@ -64,7 +64,7 @@ public class CacheSubjectRepository : ISubjectRepository
             return subject;
         }
         
-        subject = JsonConvert.DeserializeObject<SubjectResponseDto>(cacheSubject,
+        subject = JsonConvert.DeserializeObject<SubjectDto>(cacheSubject,
             // tell that it need to find constructor that dont have public or private default
             new JsonSerializerSettings
             {
@@ -108,11 +108,11 @@ public class CacheSubjectRepository : ISubjectRepository
         return response;
     }
 
-    public async Task<SubjectResponseDto> GetSubjectBySubjectName(string subjectName)
+    public async Task<SubjectDto> GetSubjectBySubjectName(string subjectName)
     {
         string key = $"subject-{subjectName}";
         string? cacheSubject = await _distributedCache.GetStringAsync(key);
-        SubjectResponseDto subject;
+        SubjectDto subject;
         if (string.IsNullOrEmpty(cacheSubject))
         {
             subject = await _decorated.GetSubjectBySubjectName(subjectName);
@@ -128,7 +128,7 @@ public class CacheSubjectRepository : ISubjectRepository
             return subject;
         }
 
-        subject = JsonConvert.DeserializeObject<SubjectResponseDto>(cacheSubject,
+        subject = JsonConvert.DeserializeObject<SubjectDto>(cacheSubject,
             new JsonSerializerSettings
             {
                 ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor

@@ -1,4 +1,4 @@
-namespace GoatEdu.Core.DTOs.NotificationDto;
+namespace GoatEdu.API.Request;
 
 public class NotificationRequestDto
 {

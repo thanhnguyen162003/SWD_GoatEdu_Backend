@@ -1,4 +1,4 @@
-namespace GoatEdu.Core.DTOs.TagDto;
+namespace GoatEdu.API.Response;
 
 public class TagResponseDto
 {

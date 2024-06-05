@@ -1,9 +1,11 @@
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using AutoMapper;
 using FluentValidation;
+using GoatEdu.API.Request;
+using GoatEdu.API.Response;
 using GoatEdu.Core.DTOs;
-using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
@@ -19,34 +21,44 @@ namespace GoatEdu.API.Controllers;
 public class SubjectController : ControllerBase
 {
     private readonly ISubjectService _subjectService;
-    private readonly IValidator<SubjectDto> _validator;
+    private readonly IValidator<SubjectCreateDto> _validator;
+    private readonly IMapper _mapper;
 
 
-    public SubjectController(ISubjectService subjectService, IValidator<SubjectDto> validator)
+    public SubjectController(ISubjectService subjectService, IValidator<SubjectCreateDto> validator, IMapper mapper)
     {
         _subjectService = subjectService;
         _validator = validator;
+        _mapper = mapper;
     }
     [HttpGet]
     public async Task<IEnumerable<SubjectResponseDto>> GetAllSubject([FromQuery, Required] SubjectQueryFilter queryFilter)
     {
-        return await _subjectService.GetAllSubjects(queryFilter);
+        var listSubject = await _subjectService.GetAllSubjects(queryFilter);
+        var mapper = _mapper.Map<IEnumerable<SubjectResponseDto>>(listSubject);
+        return mapper;
     }
     
     [HttpGet("{id}")]
     public async Task<SubjectResponseDto> GetSubjectById(Guid id)
     {
-        return await _subjectService.GetSubjectBySubjectId(id);
+        var subject = await _subjectService.GetSubjectBySubjectId(id);
+        var mapper = _mapper.Map<SubjectResponseDto>(subject);
+        return mapper;
     }
     [HttpGet("name")]
     public async Task<SubjectResponseDto> GetSubjectByName([FromQuery] string subjectName)
     {
-        return await _subjectService.GetSubjectBySubjectName(subjectName);
+        var subject = await _subjectService.GetSubjectBySubjectName(subjectName);
+        var mapper = _mapper.Map<SubjectResponseDto>(subject);
+        return mapper;
     }
     [HttpGet("{id}/chapters")]
     public async Task<ICollection<ChapterResponseDto>> GetChapterBySubject([FromRoute] Guid id)
     {
-        return await _subjectService.GetChaptersBySubject(id);
+        var list = await _subjectService.GetChaptersBySubject(id);
+        var mapper = _mapper.Map<ICollection<ChapterResponseDto>>(list);
+        return mapper;
     }
     [HttpDelete("{id}")]
     [Authorize (Roles = UserEnum.MODERATOR)]
@@ -56,19 +68,33 @@ public class SubjectController : ControllerBase
     }
     [HttpPost]
     [Authorize (Roles = UserEnum.MODERATOR)]
-    public async Task<ResponseDto> CreateSubject([FromForm]SubjectDto dto)
+    public async Task<IActionResult> CreateSubject([FromForm] SubjectCreateDto dto)
     {
         var validationResult = await _validator.ValidateAsync(dto);
         if (!validationResult.IsValid)
         {
-            return new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}");
+            var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
+            return BadRequest(new { Status = 400, Message = "Validation Errors", Errors = errors });
         }
-        return await _subjectService.CreateSubject(dto);
+
+        var mapper = _mapper.Map<SubjectDto>(dto);
+        var result = await _subjectService.CreateSubject(mapper);
+        return Ok(result);
     }
+
     [HttpPut("{id}")]
-    [Authorize (Roles = UserEnum.MODERATOR)]
-    public async Task<ResponseDto> UpdateSubject([FromForm] SubjectCreateDto dto)
+    [Authorize(Roles = UserEnum.MODERATOR)]
+    public async Task<IActionResult> UpdateSubject([FromForm] SubjectCreateDto dto, Guid id)
     {
-        return await _subjectService.UpdateSubject(dto);
+        var validationResult = await _validator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
+            return BadRequest(new { Status = 400, Message = "Validation Errors", Errors = errors });
+        }
+
+        var mapper = _mapper.Map<SubjectDto>(dto);
+        var result = await _subjectService.UpdateSubject(mapper, id);
+        return Ok(result);
     }
 }

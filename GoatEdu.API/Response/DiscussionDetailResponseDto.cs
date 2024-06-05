@@ -1,6 +1,7 @@
+using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.TagDto;
 
-namespace GoatEdu.Core.DTOs;
+namespace GoatEdu.API.Response;
 
 public class DiscussionDetailResponseDto
 {

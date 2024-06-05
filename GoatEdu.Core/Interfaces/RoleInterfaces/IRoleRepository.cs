@@ -5,8 +5,8 @@ namespace GoatEdu.Core.Interfaces.RoleInterfaces;
 
 public interface IRoleRepository
 {
-    Task<ICollection<RoleResponseDto>> GetAllRole();
-    Task<RoleResponseDto> GetRoleByRoleId(Guid id);
-    Task<RoleResponseDto> GetRoleByRoleName(string roleName);
+    Task<ICollection<RoleDto>> GetAllRole();
+    Task<RoleDto> GetRoleByRoleId(Guid id);
+    Task<RoleDto> GetRoleByRoleName(string roleName);
    
 }

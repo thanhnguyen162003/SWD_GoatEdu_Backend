@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using AutoMapper;
 using FluentValidation;
+using GoatEdu.API.Request;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.Enumerations;
@@ -18,11 +20,13 @@ public class DiscussionController : ControllerBase
 {
     private readonly IDiscussionService _discussionService;
     private readonly IValidator<DiscussionRequestDto> _validator;
+    private readonly IMapper _mapper;
 
-    public DiscussionController(IDiscussionService discussionService, IValidator<DiscussionRequestDto> validator)
+    public DiscussionController(IDiscussionService discussionService, IValidator<DiscussionRequestDto> validator, IMapper mapper)
     {
         _discussionService = discussionService;
         _validator = validator;
+        _mapper = mapper;
     }
     
     [HttpGet("{id}")]
@@ -104,10 +108,12 @@ public class DiscussionController : ControllerBase
             var validationResult = await _validator.ValidateAsync(discussionRequestDto);
             if (!validationResult.IsValid)
             { 
-                return BadRequest(new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}")) ;
+                var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
+                return BadRequest(new { Status = 400, Message = "Validation Errors", Errors = errors });
             }
-            
-            var result = await _discussionService.InsertDiscussion(discussionRequestDto);
+
+            var mapper = _mapper.Map<DiscussionDto>(discussionRequestDto);
+            var result = await _discussionService.InsertDiscussion(mapper);
             return Ok(result);
         }
         catch (Exception e)
@@ -137,7 +143,8 @@ public class DiscussionController : ControllerBase
     {
         try
         {
-            var result = await _discussionService.UpdateDiscussion(id, discussionRequestDto);
+            var mapper = _mapper.Map<DiscussionDto>(discussionRequestDto);
+            var result = await _discussionService.UpdateDiscussion(id, mapper);
             return Ok(result);
         }
         catch (Exception e)

@@ -1,6 +1,6 @@
 namespace GoatEdu.Core.DTOs.NotificationDto;
 
-public class NotiDetailResponseDto
+public class NotificationDto
 {
     public Guid Id { get; set; }
     public string? NotificationName { get; set; }

@@ -1,7 +1,7 @@
 using GoatEdu.Core.DTOs.ChapterDto;
 using Infrastructure;
 
-namespace GoatEdu.Core.DTOs.SubjectDto;
+namespace GoatEdu.API.Response;
 
 public class SubjectResponseDto
 {

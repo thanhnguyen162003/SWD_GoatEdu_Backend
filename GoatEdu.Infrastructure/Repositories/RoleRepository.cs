@@ -14,11 +14,11 @@ public class RoleRepository : BaseRepository<Role>, IRoleRepository
         _context = context;
     }
 
-    public async Task<ICollection<RoleResponseDto>> GetAllRole()
+    public async Task<ICollection<RoleDto>> GetAllRole()
     {
         return await _entities
             .Where(x => x.IsDeleted == false)
-            .Select(x => new RoleResponseDto()
+            .Select(x => new RoleDto()
             {
                 Id = x.Id,
                 RoleName = x.RoleName
@@ -26,20 +26,20 @@ public class RoleRepository : BaseRepository<Role>, IRoleRepository
             .ToListAsync();
     }
 
-    public async Task<RoleResponseDto> GetRoleByRoleId(Guid id)
+    public async Task<RoleDto> GetRoleByRoleId(Guid id)
     {
         return await _entities.Where(
-            x => x.Id == id && x.IsDeleted == false).Select(x => new RoleResponseDto()
+            x => x.Id == id && x.IsDeleted == false).Select(x => new RoleDto()
         {
             Id = x.Id,
             RoleName = x.RoleName
         }).FirstOrDefaultAsync();
     }
 
-    public async Task<RoleResponseDto> GetRoleByRoleName(string roleName)
+    public async Task<RoleDto> GetRoleByRoleName(string roleName)
     {
         return await _entities.Where(
-            x => x.RoleName == roleName && x.IsDeleted == false).Select(x => new RoleResponseDto()
+            x => x.RoleName == roleName && x.IsDeleted == false).Select(x => new RoleDto()
         {
             Id = x.Id,
             RoleName = x.RoleName

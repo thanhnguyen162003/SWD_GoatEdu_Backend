@@ -1,11 +1,10 @@
 using GoatEdu.Core.DTOs.ChapterDto;
 using Microsoft.AspNetCore.Http;
 
-namespace GoatEdu.Core.DTOs.SubjectDto;
+namespace GoatEdu.API.Request;
 
 public class SubjectCreateDto
 {
-    public Guid Id { get; set; } 
     public string? SubjectName { get; set; } 
     public IFormFile? image { get; set; }
 

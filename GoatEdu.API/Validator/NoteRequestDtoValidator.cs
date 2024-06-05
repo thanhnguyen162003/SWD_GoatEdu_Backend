@@ -1,4 +1,5 @@
 using FluentValidation;
+using GoatEdu.API.Request;
 using GoatEdu.Core.DTOs.NoteDto;
 using GoatEdu.Core.DTOs.NotificationDto;
 

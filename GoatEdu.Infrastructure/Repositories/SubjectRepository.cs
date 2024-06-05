@@ -26,10 +26,10 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
         return await subjects.ToListAsync();
     }
 
-    public async Task<SubjectResponseDto> GetSubjectBySubjectId(Guid id)
+    public async Task<SubjectDto> GetSubjectBySubjectId(Guid id)
     {
         return await _entities.AsNoTracking().Where(
-            x => x.Id == id && x.IsDeleted == false).Select(x => new SubjectResponseDto()
+            x => x.Id == id && x.IsDeleted == false).Select(x => new SubjectDto()
         {
             Id = x.Id,
             SubjectName = x.SubjectName,
@@ -98,11 +98,11 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
         return new ResponseDto(HttpStatusCode.OK, "Create Success");
     }
 
-    public async Task<SubjectResponseDto> GetSubjectBySubjectName(string subjectName)
+    public async Task<SubjectDto> GetSubjectBySubjectName(string subjectName)
     {
         return await _entities.AsNoTracking()
             .Where(
-            x => x.SubjectName == subjectName && x.IsDeleted == false).Select(x => new SubjectResponseDto()
+            x => x.SubjectName == subjectName && x.IsDeleted == false).Select(x => new SubjectDto()
         {
             Id = x.Id,
             SubjectName = x.SubjectName,

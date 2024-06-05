@@ -12,10 +12,10 @@ public interface IChapterRepository : IRepository<Chapter>
     Task<ICollection<Chapter>> GetChapters(ChapterQueryFilter queryFilter);
     Task<ICollection<Chapter>> GetChaptersBySubject(Guid subjectId);
 
-    Task<ChapterResponseDto> GetChapterByChapterId(Guid id);
+    Task<ChapterDto> GetChapterByChapterId(Guid id);
     Task<ResponseDto> DeleteChapter(Guid id);
-    Task<ResponseDto> UpdateChapter(ChapterCreateDto dto);
+    Task<ResponseDto> UpdateChapter(ChapterDto dto, Guid chapterId);
     Task<ResponseDto> CreateChapter(Chapter dto);
-    Task<ChapterResponseDto> GetChapterByChapterName(string chapterName);
+    Task<ChapterDto> GetChapterByChapterName(string chapterName);
     Task<bool> GetAllChapterCheck(string name);
 }

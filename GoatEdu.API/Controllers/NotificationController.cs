@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using AutoMapper;
 using FluentValidation;
+using GoatEdu.API.Request;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.NotificationDto;
@@ -22,12 +24,14 @@ public class NotificationController : ControllerBase
 {
     private readonly INotificationService _notificationService;
     private readonly IValidator<NotificationRequestDto> _validator;
+    private readonly IMapper _mapper;
 
     public NotificationController(INotificationService notificationService,
-        IValidator<NotificationRequestDto> validator)
+        IValidator<NotificationRequestDto> validator, IMapper mapper)
     {
         _notificationService = notificationService;
         _validator = validator;
+        _mapper = mapper;
     }
 
     [HttpGet("{id}")]
@@ -84,7 +88,8 @@ public class NotificationController : ControllerBase
                 return BadRequest(new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}"));
             }
 
-            var result = await _notificationService.InsertNotification(requestDto);
+            var mapper = _mapper.Map<NotificationDto>(requestDto);
+            var result = await _notificationService.InsertNotification(mapper);
             return Ok(result);
         }
         catch (Exception e)

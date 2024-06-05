@@ -25,7 +25,7 @@ public class AdminService : IAdminService
         _mapper = mapper;
         _paginationOptions = paginationOptions.Value;
     }
-    public async Task<ResponseDto> CreateUser(CreateUserRequestDto user)
+    public async Task<ResponseDto> CreateUser(CreateUserDto user)
     {
         var isUserExits = await _unitOfWork.UserRepository.GetUserByUsernameWithEmailCheckRegister(user.Username, user.Email);
         if (isUserExits != null)
@@ -54,7 +54,7 @@ public class AdminService : IAdminService
         {
             return new ResponseDto(HttpStatusCode.BadRequest, "Somethings has error!");
         }
-        var userMapper = _mapper.Map<CreateUserResponse>(userByAdmin);
+        var userMapper = _mapper.Map<CreateUserDto>(userByAdmin);
         return new ResponseDto(HttpStatusCode.OK, "Create User Success;",userMapper);
     }
 

@@ -1,4 +1,4 @@
-namespace GoatEdu.Core.DTOs.ChapterDto;
+namespace GoatEdu.API.Request;
 
 public class ChapterCreateDto
 {

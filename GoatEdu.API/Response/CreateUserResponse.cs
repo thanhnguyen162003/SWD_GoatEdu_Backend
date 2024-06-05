@@ -1,4 +1,4 @@
-namespace GoatEdu.Core.DTOs.AdminDto;
+namespace GoatEdu.API.Response;
 
 public class CreateUserResponse
 {

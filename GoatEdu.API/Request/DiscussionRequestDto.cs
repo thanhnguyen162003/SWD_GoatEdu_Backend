@@ -1,10 +1,15 @@
 using GoatEdu.Core.DTOs.TagDto;
 using Microsoft.AspNetCore.Http;
 
-namespace GoatEdu.Core.DTOs;
+namespace GoatEdu.API.Request;
 
 public class DiscussionRequestDto
 {
+    public DiscussionRequestDto(List<TagRequestDto> tags)
+    {
+        Tags = tags;
+    }
+
     public string? DiscussionName { get; set; }
     public string? DiscussionBody { get; set; }
     public IFormFile? DiscussionImage { get; set; }

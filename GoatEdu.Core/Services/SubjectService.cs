@@ -31,7 +31,7 @@ public class SubjectService : ISubjectService
         _cloudinaryService = cloudinaryService;
     }
 
-    public async Task<IEnumerable<SubjectResponseDto>> GetAllSubjects(SubjectQueryFilter queryFilter)
+    public async Task<IEnumerable<SubjectDto>> GetAllSubjects(SubjectQueryFilter queryFilter)
     {
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
@@ -40,21 +40,21 @@ public class SubjectService : ISubjectService
         
         if (!listSubject.Any())
         {
-            return new PagedList<SubjectResponseDto>(new List<SubjectResponseDto>(), 0, 0, 0);
+            return new PagedList<SubjectDto>(new List<SubjectDto>(), 0, 0, 0);
         }
-        var mapperList = _mapper.Map<List<SubjectResponseDto>>(listSubject);
-        return PagedList<SubjectResponseDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
+        var mapperList = _mapper.Map<List<SubjectDto>>(listSubject);
+        return PagedList<SubjectDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
 
-    public async Task<SubjectResponseDto> GetSubjectBySubjectId(Guid id)
+    public async Task<SubjectDto> GetSubjectBySubjectId(Guid id)
     {
         return await _unitOfWork.SubjectRepository.GetSubjectBySubjectId(id);
     }
 
-    public async Task<ICollection<ChapterResponseDto>> GetChaptersBySubject(Guid subjectId)
+    public async Task<ICollection<SubjectDto>> GetChaptersBySubject(Guid subjectId)
     {
         ICollection<Chapter> chapters = await _unitOfWork.ChapterRepository.GetChaptersBySubject(subjectId);
-        var mapperList = _mapper.Map<ICollection<ChapterResponseDto>>(chapters);
+        var mapperList = _mapper.Map<ICollection<SubjectDto>>(chapters);
         return mapperList;
     }
 
@@ -65,13 +65,13 @@ public class SubjectService : ISubjectService
     
     //process image
 
-    public async Task<ResponseDto> UpdateSubject(SubjectCreateDto dto)
+    public async Task<ResponseDto> UpdateSubject(SubjectDto dto, Guid id)
     {
         string imageUrl = null;
 
-        if (dto.image != null)
+        if (dto.Image != null)
         {
-            var uploadResult = await _cloudinaryService.UploadAsync(dto.image);
+            var uploadResult = await _cloudinaryService.UploadAsync(dto.ImageConvert);
             if (uploadResult.Error != null)
             {
                 return new ResponseDto(HttpStatusCode.BadRequest, uploadResult.Error.Message);
@@ -81,7 +81,7 @@ public class SubjectService : ISubjectService
         
         var updateSubject = new Subject()
         {
-            Id = dto.Id,
+            Id = id,
             SubjectName = dto.SubjectName,
             SubjectCode = dto.SubjectCode,
             Information = dto.Information,
@@ -94,7 +94,7 @@ public class SubjectService : ISubjectService
     //process image
     public async Task<ResponseDto> CreateSubject(SubjectDto dto)
     {
-        var uploadResult = await _cloudinaryService.UploadAsync(dto.image);
+        var uploadResult = await _cloudinaryService.UploadAsync(dto.ImageConvert);
         if (uploadResult.Error != null)
         {
             return new ResponseDto(HttpStatusCode.BadRequest, uploadResult.Error.Message);
@@ -115,7 +115,7 @@ public class SubjectService : ISubjectService
         return new ResponseDto(HttpStatusCode.Created, "Subject created successfully.", newSubject.Id);
     }
 
-    public Task<SubjectResponseDto> GetSubjectBySubjectName(string subjectName)
+    public Task<SubjectDto> GetSubjectBySubjectName(string subjectName)
     {
         return _unitOfWork.SubjectRepository.GetSubjectBySubjectName(subjectName);
     }

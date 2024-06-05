@@ -35,17 +35,17 @@ public class DiscussionService : IDiscussionService
         _cloudinaryService = cloudinaryService;
     }
 
-    public async Task<PagedList<DiscussionDetailResponseDto>> GetDiscussionByFilter(DiscussionQueryFilter queryFilter)
+    public async Task<PagedList<DiscussionDto>> GetDiscussionByFilter(DiscussionQueryFilter queryFilter)
     {
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
         
         var list = await _unitOfWork.DiscussionRepository.GetDiscussionByFilters(null, queryFilter);
        
-        if (!list.Any()) return new PagedList<DiscussionDetailResponseDto>(new List<DiscussionDetailResponseDto>(), 0, 0, 0);
+        if (!list.Any()) return new PagedList<DiscussionDto>(new List<DiscussionDto>(), 0, 0, 0);
         
-        var mapper = _mapper.Map<List<DiscussionDetailResponseDto>>(list);
-        return PagedList<DiscussionDetailResponseDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
+        var mapper = _mapper.Map<List<DiscussionDto>>(list);
+        return PagedList<DiscussionDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
     }
 
     public async Task<ResponseDto> GetDiscussionById(Guid guid)
@@ -54,25 +54,25 @@ public class DiscussionService : IDiscussionService
         
         if (result == null) return new ResponseDto(HttpStatusCode.NotFound, "Kiếm thấy đâu");
         
-        var mapper = _mapper.Map<DiscussionDetailResponseDto>(result);
+        var mapper = _mapper.Map<DiscussionDto>(result);
         return new ResponseDto(HttpStatusCode.OK, "", mapper);
     }
 
-    public async Task<PagedList<DiscussionDetailResponseDto>> GetDiscussionByUserId(DiscussionQueryFilter queryFilter)
+    public async Task<PagedList<DiscussionDto>> GetDiscussionByUserId(DiscussionQueryFilter queryFilter)
     {
         var userId = _claimsService.GetCurrentUserId;
         var list = await _unitOfWork.DiscussionRepository.GetDiscussionByFilters(userId, queryFilter);
         
-        if (!list.Any()) return new PagedList<DiscussionDetailResponseDto>(new List<DiscussionDetailResponseDto>(), 0, 0, 0);
+        if (!list.Any()) return new PagedList<DiscussionDto>(new List<DiscussionDto>(), 0, 0, 0);
         
-        var mapper = _mapper.Map<List<DiscussionDetailResponseDto>>(list);
-        return PagedList<DiscussionDetailResponseDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
+        var mapper = _mapper.Map<List<DiscussionDto>>(list);
+        return PagedList<DiscussionDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
     }
 
 
-    public async Task<ResponseDto> InsertDiscussion(DiscussionRequestDto dto)
+    public async Task<ResponseDto> InsertDiscussion(DiscussionDto dto)
     {
-        var tagNoExist = dto.Tags.Where(x => x.id == null).ToList();
+        var tagNoExist = dto.Tags.Where(x => x.Id == null).ToList();
         
         if (tagNoExist.Any())
         {
@@ -103,7 +103,7 @@ public class DiscussionService : IDiscussionService
 
         if (dto.DiscussionImage != null)
         {
-            var image = await _cloudinaryService.UploadAsync(dto.DiscussionImage);
+            var image = await _cloudinaryService.UploadAsync(dto.DiscussionImageConvert);
             if (image.Error != null)
             {
                 return new ResponseDto(HttpStatusCode.BadRequest, image.Error.Message);
@@ -134,7 +134,7 @@ public class DiscussionService : IDiscussionService
         return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Delete Successfully!") : new ResponseDto(HttpStatusCode.BadRequest, "Delete Failed!");
     }
 
-    public async Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionRequestDto discussionRequestDto)
+    public async Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionDto discussionRequestDto)
     {
         var disscussion = await _unitOfWork.DiscussionRepository.GetByIdAsync(guid);
         if (disscussion == null)

@@ -8,9 +8,9 @@ namespace GoatEdu.Core.Interfaces.SubjectInterfaces;
 public interface ISubjectRepository
 {
     Task<IEnumerable<Subject>> GetAllSubjects(SubjectQueryFilter queryFilter);
-    Task<SubjectResponseDto> GetSubjectBySubjectId(Guid id);
+    Task<SubjectDto> GetSubjectBySubjectId(Guid id);
     Task<ResponseDto> DeleteSubject(Guid id);
     Task<ResponseDto> UpdateSubject(Subject dto);
     Task<ResponseDto> CreateSubject(Subject dto);
-    Task<SubjectResponseDto> GetSubjectBySubjectName(string subjectName);
+    Task<SubjectDto> GetSubjectBySubjectName(string subjectName);
 }

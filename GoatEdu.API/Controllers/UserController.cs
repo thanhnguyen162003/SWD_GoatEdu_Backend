@@ -2,7 +2,6 @@ using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.UserDetailDto;
 using GoatEdu.Core.Interfaces.EnrollmentInterfaces;
 using GoatEdu.Core.Interfaces.UserDetailInterfaces;
-using GoatEdu.Core.Interfaces.UserInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

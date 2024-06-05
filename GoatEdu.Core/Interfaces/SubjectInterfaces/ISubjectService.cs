@@ -9,11 +9,11 @@ namespace GoatEdu.Core.Interfaces.SubjectInterfaces;
 
 public interface ISubjectService
 {
-    Task<IEnumerable<SubjectResponseDto>> GetAllSubjects(SubjectQueryFilter queryFilter);
-    Task<SubjectResponseDto> GetSubjectBySubjectId(Guid id);
-    Task<ICollection<ChapterResponseDto>> GetChaptersBySubject(Guid subjectId);
+    Task<IEnumerable<SubjectDto>> GetAllSubjects(SubjectQueryFilter queryFilter);
+    Task<SubjectDto> GetSubjectBySubjectId(Guid id);
+    Task<ICollection<SubjectDto>> GetChaptersBySubject(Guid subjectId);
     Task<ResponseDto> DeleteSubject(Guid id);
-    Task<ResponseDto> UpdateSubject(SubjectCreateDto dto);
+    Task<ResponseDto> UpdateSubject(SubjectDto dto, Guid id);
     Task<ResponseDto> CreateSubject(SubjectDto dto);
-    Task<SubjectResponseDto> GetSubjectBySubjectName(string subjectName);
+    Task<SubjectDto> GetSubjectBySubjectName(string subjectName);
 }

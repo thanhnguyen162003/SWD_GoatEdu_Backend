@@ -1,4 +1,4 @@
-namespace GoatEdu.Core.DTOs;
+namespace GoatEdu.API.Response;
 
 public class DiscussionResponseDto
 {

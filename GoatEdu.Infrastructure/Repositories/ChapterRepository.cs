@@ -34,11 +34,11 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
             .ToListAsync();
     }
 
-    public async Task<ChapterResponseDto> GetChapterByChapterId(Guid id)
+    public async Task<ChapterDto> GetChapterByChapterId(Guid id)
     {
         return await _entities.AsNoTracking()
             .Where(c => c.Id == id && c.IsDeleted == false)
-            .Select(c => new ChapterResponseDto()
+            .Select(c => new ChapterDto()
             {
                 Id = c.Id,
                 ChapterName = c.ChapterName,
@@ -79,9 +79,9 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
         return false;
     }
 
-    public async Task<ResponseDto> UpdateChapter(ChapterCreateDto dto)
+    public async Task<ResponseDto> UpdateChapter(ChapterDto dto, Guid chapterId)
     {
-        var chapter = await _entities.FirstOrDefaultAsync(c => c.Id == dto.Id);
+        var chapter = await _entities.FirstOrDefaultAsync(c => c.Id == chapterId);
 
         if (chapter == null)
         {
@@ -103,11 +103,11 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
         return new ResponseDto(HttpStatusCode.OK, "Chapter successfully created.");
     }
 
-    public async Task<ChapterResponseDto> GetChapterByChapterName(string chapterName)
+    public async Task<ChapterDto> GetChapterByChapterName(string chapterName)
     {
         return await _entities.AsNoTracking()
             .Where(
-                x => x.ChapterName == chapterName && x.IsDeleted == false).Select(x => new ChapterResponseDto()
+                x => x.ChapterName == chapterName && x.IsDeleted == false).Select(x => new ChapterDto()
             {
                 Id = x.Id,
                 ChapterName = x.ChapterName,

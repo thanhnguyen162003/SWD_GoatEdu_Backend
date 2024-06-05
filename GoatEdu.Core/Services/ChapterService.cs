@@ -24,7 +24,7 @@ public class ChapterService : IChapterService
         _paginationOptions = paginationOptions.Value;
     }
 
-    public async Task<ICollection<ChapterResponseDto>> GetChapters(ChapterQueryFilter queryFilter)
+    public async Task<ICollection<ChapterDto>> GetChapters(ChapterQueryFilter queryFilter)
     {
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
@@ -33,10 +33,10 @@ public class ChapterService : IChapterService
         
         if (!listChapter.Any())
         {
-            return new PagedList<ChapterResponseDto>(new List<ChapterResponseDto>(), 0, 0, 0);
+            return new PagedList<ChapterDto>(new List<ChapterDto>(), 0, 0, 0);
         }
-        var mapperList = _mapper.Map<List<ChapterResponseDto>>(listChapter);
-        return PagedList<ChapterResponseDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
+        var mapperList = _mapper.Map<List<ChapterDto>>(listChapter);
+        return PagedList<ChapterDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
     
     public async Task<ResponseDto> DeleteChapter(Guid id)
@@ -44,9 +44,9 @@ public class ChapterService : IChapterService
         return await _unitOfWork.ChapterRepository.DeleteChapter(id);
     }
 
-    public async Task<ResponseDto> UpdateChapter(ChapterCreateDto dto)
+    public async Task<ResponseDto> UpdateChapter(ChapterDto dto, Guid chapterId)
     {
-        return await _unitOfWork.ChapterRepository.UpdateChapter(dto);
+        return await _unitOfWork.ChapterRepository.UpdateChapter(dto, chapterId);
     }
 
     public async Task<ResponseDto> CreateChapter(ChapterDto dto)
@@ -71,12 +71,12 @@ public class ChapterService : IChapterService
         return new ResponseDto(HttpStatusCode.Created, "Chapter created successfully.", newChapter.Id);
     }
 
-    public async Task<ChapterResponseDto> GetChapterByChapterName(string chapterName)
+    public async Task<ChapterDto> GetChapterByChapterName(string chapterName)
     {
         return await _unitOfWork.ChapterRepository.GetChapterByChapterName(chapterName);
     }
 
-    public async Task<ChapterResponseDto> GetChapterByChapterId(Guid id)
+    public async Task<ChapterDto> GetChapterByChapterId(Guid id)
     {
         return await _unitOfWork.ChapterRepository.GetChapterByChapterId(id);
     }

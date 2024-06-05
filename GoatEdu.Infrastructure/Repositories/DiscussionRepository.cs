@@ -22,6 +22,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
         var discussions = _entities
                 .Include(x => x.User)
                 .Include(x => x.Subject)
+                .Include(x => x.Tags)
                 .AsQueryable();
         discussions = ApplyFilterSortAndSearch(discussions, queryFilter, userId);
         discussions = ApplySorting(discussions, queryFilter);

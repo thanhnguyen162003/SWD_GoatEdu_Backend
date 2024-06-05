@@ -1,3 +1,5 @@
+using AutoMapper;
+using GoatEdu.API.Response;
 using GoatEdu.Core.DTOs.RoleDto;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using Infrastructure;
@@ -11,25 +13,34 @@ namespace GoatEdu.API.Controllers;
 public class RoleController : ControllerBase
 {
     private readonly IRoleService _roleService;
-    public RoleController(IRoleService roleService)
+    private readonly IMapper _mapper;
+
+    public RoleController(IRoleService roleService, IMapper mapper)
     {
         _roleService = roleService;
+        _mapper = mapper;
     }
 
     [HttpGet]
     public async Task<ICollection<RoleResponseDto>> GetAllRoles()
     {
-        return await _roleService.GetAllRole();
+        var listRole =  await _roleService.GetAllRole();
+        var mapper = _mapper.Map<ICollection<RoleResponseDto>>(listRole);
+        return mapper;
     }
     [HttpGet("{id}")]
     public async Task<RoleResponseDto> GetRoleById([FromRoute] Guid id)
     {
-        return await _roleService.GetRoleByRoleId(id);
+        var role = await _roleService.GetRoleByRoleId(id);
+        var mapper = _mapper.Map<RoleResponseDto>(role);
+        return mapper;
     }
     [HttpGet("name")]
     public async Task<RoleResponseDto> GetRoleByName(string name)
     {
-        return await _roleService.GetRoleByRoleName(name);
+        var role = await _roleService.GetRoleByRoleName(name);
+        var mapper = _mapper.Map<RoleResponseDto>(role);
+        return mapper;
     }
     
     //paging later

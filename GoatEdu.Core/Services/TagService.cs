@@ -30,7 +30,7 @@ public class TagService : ITagService
         _paginationOptions = options.Value;
     }
 
-    public async Task<PagedList<TagResponseDto>> GetTagByFilter(TagQueryFilter queryFilter)
+    public async Task<PagedList<TagDto>> GetTagByFilter(TagQueryFilter queryFilter)
     {
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
@@ -39,11 +39,11 @@ public class TagService : ITagService
         
         if (!listTag.Any())
         {
-            return new PagedList<TagResponseDto>(new List<TagResponseDto>(), 0, 0, 0);
+            return new PagedList<TagDto>(new List<TagDto>(), 0, 0, 0);
         }
-        var mapperList = _mapper.Map<List<TagResponseDto>>(listTag);
+        var mapperList = _mapper.Map<List<TagDto>>(listTag);
         
-        return PagedList<TagResponseDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
+        return PagedList<TagDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
 
     public async Task<ResponseDto> getTagByName(List<string> name)
@@ -65,17 +65,17 @@ public class TagService : ITagService
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Kiếm không thấy :))");
         }
-        var mapperNote = _mapper.Map<TagResponseDto>(tagFound);
+        var mapperNote = _mapper.Map<TagDto>(tagFound);
         return new ResponseDto(HttpStatusCode.OK, "", mapperNote);
     }
 
-    public async Task<ResponseDto> InsertTags(List<TagRequestDto> tagRequestDtos)
+    public async Task<ResponseDto> InsertTags(List<TagDto> tagRequestDtos)
     {
         var listName = tagRequestDtos.Select(x => x.TagName).ToList();
         
         var listExistName = await _unitOfWork.TagRepository.GetTagNameByNameAsync(listName);
 
-        var tagIsDuplicated = new List<TagRequestDto>();
+        var tagIsDuplicated = new List<TagDto>();
         
         // Check Dup Name
         if (listExistName.Any())
@@ -137,7 +137,7 @@ public class TagService : ITagService
         return new ResponseDto(HttpStatusCode.OK, "Delete Successfully");
     }
 
-    public async Task<ResponseDto> UpdateTag(Guid id, TagRequestDto tagRequestDto)
+    public async Task<ResponseDto> UpdateTag(Guid id, TagDto tagRequestDto)
     {
         var tagFound = await _unitOfWork.TagRepository.GetByIdAsync(id);
         if (tagFound == null)

@@ -19,14 +19,14 @@ public class CachedRoleRepository : IRoleRepository
         _context = context;
     }
 
-    public async Task<ICollection<RoleResponseDto>> GetAllRole()
+    public async Task<ICollection<RoleDto>> GetAllRole()
     {
         string key = "all-roles";
         string? cachedRoles = await _distributedCache.GetStringAsync(key);
         
         if (!string.IsNullOrEmpty(cachedRoles))
         {
-            return JsonConvert.DeserializeObject<ICollection<RoleResponseDto>>(cachedRoles)!; // Null-forgiving operator
+            return JsonConvert.DeserializeObject<ICollection<RoleDto>>(cachedRoles)!; // Null-forgiving operator
         }
         var cacheOptions = new DistributedCacheEntryOptions
         {
@@ -37,11 +37,11 @@ public class CachedRoleRepository : IRoleRepository
         return roles;
     }
 
-    public async Task<RoleResponseDto> GetRoleByRoleId(Guid id)
+    public async Task<RoleDto> GetRoleByRoleId(Guid id)
     {
         string key = $"role-{id}";
         string? cachedRole = await _distributedCache.GetStringAsync(key);
-        RoleResponseDto role;
+        RoleDto role;
         if (string.IsNullOrEmpty(cachedRole))
         {
              role = await _decorated.GetRoleByRoleId(id);
@@ -57,7 +57,7 @@ public class CachedRoleRepository : IRoleRepository
             return role;
         }
 
-        role = JsonConvert.DeserializeObject<RoleResponseDto>(cachedRole,
+        role = JsonConvert.DeserializeObject<RoleDto>(cachedRole,
             // tell that it need to find constructor that dont have public or private default
             new JsonSerializerSettings
             {
@@ -67,11 +67,11 @@ public class CachedRoleRepository : IRoleRepository
         return role;
     }
 
-    public async Task<RoleResponseDto> GetRoleByRoleName(string roleName)
+    public async Task<RoleDto> GetRoleByRoleName(string roleName)
     {
         string key = $"role-{roleName}";
         string? cachedRole = await _distributedCache.GetStringAsync(key);
-        RoleResponseDto role;
+        RoleDto role;
         if (string.IsNullOrEmpty(cachedRole))
         {
             role = await _decorated.GetRoleByRoleName(roleName);
@@ -87,7 +87,7 @@ public class CachedRoleRepository : IRoleRepository
             return role;
         }
 
-        role = JsonConvert.DeserializeObject<RoleResponseDto>(cachedRole,
+        role = JsonConvert.DeserializeObject<RoleDto>(cachedRole,
             new JsonSerializerSettings
             {
                 ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor

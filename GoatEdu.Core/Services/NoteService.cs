@@ -40,11 +40,11 @@ public class NoteService : INoteService
         var noteFound = await _unitOfWork.NoteRepository.GetByIdAsync(id);
         if (noteFound == null) return new ResponseDto(HttpStatusCode.NotFound, "Kiếm không thấy :))");
         
-        var mapperNote = _mapper.Map<NoteResponseDto>(noteFound);
+        var mapperNote = _mapper.Map<NoteDto>(noteFound);
         return new ResponseDto(HttpStatusCode.OK, "", mapperNote);
     }
 
-    public async Task<PagedList<NoteResponseDto>> GetNoteByFilter(NoteQueryFilter queryFilter)
+    public async Task<PagedList<NoteDto>> GetNoteByFilter(NoteQueryFilter queryFilter)
     {
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
@@ -52,13 +52,13 @@ public class NoteService : INoteService
         var userId = _claimsService.GetCurrentUserId;
         var listNote = await _unitOfWork.NoteRepository.GetNoteByFilters(userId, queryFilter);
         
-        if (!listNote.Any()) return new PagedList<NoteResponseDto>(new List<NoteResponseDto>(), 0, 0, 0);
+        if (!listNote.Any()) return new PagedList<NoteDto>(new List<NoteDto>(), 0, 0, 0);
         
-        var mapperList = _mapper.Map<List<NoteResponseDto>>(listNote);
-        return PagedList<NoteResponseDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
+        var mapperList = _mapper.Map<List<NoteDto>>(listNote);
+        return PagedList<NoteDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
     
-    public async Task<ResponseDto> InsertNote(NoteRequestDto noteRequestDto)
+    public async Task<ResponseDto> InsertNote(NoteDto noteRequestDto)
     {
         var note = _mapper.Map<Note>(noteRequestDto);
         note.CreatedAt = _currentTime.GetCurrentTime();
@@ -78,7 +78,7 @@ public class NoteService : INoteService
         return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Delete Successfully !") : new ResponseDto(HttpStatusCode.BadRequest, "Delete Failed !");
     }
 
-    public async Task<ResponseDto> UpdateNote(Guid guid, NoteRequestDto noteRequestDto)
+    public async Task<ResponseDto> UpdateNote(Guid guid, NoteDto noteRequestDto)
     {
         var note = await _unitOfWork.NoteRepository.GetByIdAsync(guid);
         

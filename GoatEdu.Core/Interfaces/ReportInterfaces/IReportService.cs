@@ -5,5 +5,5 @@ namespace GoatEdu.Core.Interfaces.ReportInterfaces;
 
 public interface IReportService
 {
-    Task<ResponseDto> SendReport(ReportRequestDto dto);
+    Task<ResponseDto> SendReport(ReportDto dto);
 }

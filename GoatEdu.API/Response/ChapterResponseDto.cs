@@ -1,5 +1,5 @@
 
-namespace GoatEdu.Core.DTOs.ChapterDto;
+namespace GoatEdu.API.Response;
 
 public class ChapterResponseDto
 {

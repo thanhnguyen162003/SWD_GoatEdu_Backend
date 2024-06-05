@@ -42,13 +42,13 @@ public class NotificationService : INotificationService
         {
             notiFound.ReadAt ??= _currentTime.GetCurrentTime();
             await _unitOfWork.SaveChangesAsync();
-            var notiMapper = _mapper.Map<NotiDetailResponseDto>(notiFound);
+            var notiMapper = _mapper.Map<NotificationDto>(notiFound);
             return new ResponseDto(HttpStatusCode.OK, "", notiMapper);
         }
         return new ResponseDto(HttpStatusCode.OK, "Kiếm không ra :))");
     }
 
-    public async Task<PagedList<NotiDetailResponseDto>> GetNotificationByCurrentUser(NotificationQueryFilter queryFilter)
+    public async Task<PagedList<NotificationDto>> GetNotificationByCurrentUser(NotificationQueryFilter queryFilter)
     {
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
@@ -57,13 +57,13 @@ public class NotificationService : INotificationService
 
         if (!listNoti.Any())
         {
-            return new PagedList<NotiDetailResponseDto>(new List<NotiDetailResponseDto>(), 0, 0, 0);
+            return new PagedList<NotificationDto>(new List<NotificationDto>(), 0, 0, 0);
         }
-        var mapperList = _mapper.Map<List<NotiDetailResponseDto>>(listNoti);
-        return PagedList<NotiDetailResponseDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
+        var mapperList = _mapper.Map<List<NotificationDto>>(listNoti);
+        return PagedList<NotificationDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
 
-    public async Task<ResponseDto> InsertNotification(NotificationRequestDto notification)
+    public async Task<ResponseDto> InsertNotification(NotificationDto notification)
     {
         var noti = _mapper.Map<Notification>(notification);
         noti.CreatedAt = _currentTime.GetCurrentTime();

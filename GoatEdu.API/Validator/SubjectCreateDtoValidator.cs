@@ -1,11 +1,12 @@
 using FluentValidation;
+using GoatEdu.API.Request;
 using GoatEdu.Core.DTOs.SubjectDto;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace GoatEdu.Core.Validator;
 
-public class SubjectCreateDtoValidator : AbstractValidator<SubjectDto>
+public class SubjectCreateDtoValidator : AbstractValidator<SubjectCreateDto>
 {
     public SubjectCreateDtoValidator(GoatEduContext context) 
     {

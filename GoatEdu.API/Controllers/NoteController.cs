@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using AutoMapper;
 using FluentValidation;
+using GoatEdu.API.Request;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.NoteDto;
@@ -19,11 +21,13 @@ public class NoteController : ControllerBase
 {
     private readonly INoteService _noteService;
     private readonly IValidator<NoteRequestDto> _validator;
+    private readonly IMapper _mapper;
 
-    public NoteController(INoteService noteService, IValidator<NoteRequestDto> validator)
+    public NoteController(INoteService noteService, IValidator<NoteRequestDto> validator, IMapper mapper)
     {
         _noteService = noteService;
         _validator = validator;
+        _mapper = mapper;
     }
 
     [HttpGet("{id}")]
@@ -77,7 +81,9 @@ public class NoteController : ControllerBase
             {
                 return BadRequest(new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}")) ;
             }
-            var result = await _noteService.InsertNote(noteRequestDto);
+
+            var mapper = _mapper.Map<NoteDto>(noteRequestDto);
+            var result = await _noteService.InsertNote(mapper);
             return Ok(result);
         }
         catch (Exception e)

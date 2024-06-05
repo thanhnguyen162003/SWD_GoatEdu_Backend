@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using AutoMapper;
+using GoatEdu.API.Request;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.AdminDto;
 using GoatEdu.Core.DTOs.RoleDto;
@@ -16,10 +18,12 @@ namespace GoatEdu.API.Controllers;
 public class AdminController : ControllerBase
 {
     private readonly IAdminService _adminService;
+    private readonly IMapper _mapper;
 
-    public AdminController(IAdminService adminService)
+    public AdminController(IAdminService adminService,IMapper mapper)
     {
         _adminService = adminService;
+        _mapper = mapper;
     }
     [HttpDelete("user")]
     public async Task<ResponseDto> UpdateSubject(Guid id)
@@ -29,7 +33,8 @@ public class AdminController : ControllerBase
     [HttpPost("user")]
     public async Task<ResponseDto> CreateUser([FromBody] CreateUserRequestDto dto)
     {
-        return await _adminService.CreateUser(dto);
+        var mapper = _mapper.Map<CreateUserDto>(dto);
+        return await _adminService.CreateUser(mapper);
     }
     [HttpGet("authorize/user")]
     public async Task<PaginatedResponse<UserMinimalDto>> GetUserUsed([FromQuery, Required] UserQueryFilter queryFilter)

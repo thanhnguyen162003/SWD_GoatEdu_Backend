@@ -1,4 +1,4 @@
-namespace GoatEdu.Core.DTOs.NoteDto;
+namespace GoatEdu.API.Response;
 
 public class NoteResponseDto
 {

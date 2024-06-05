@@ -12,17 +12,17 @@ public class RoleService : IRoleService
     {
         _unitOfWork = unitOfWork;
     }
-    public async Task<ICollection<RoleResponseDto>> GetAllRole()
+    public async Task<ICollection<RoleDto>> GetAllRole()
     {
         return await _unitOfWork.RoleRepository.GetAllRole();
     }
 
-    public async Task<RoleResponseDto> GetRoleByRoleId(Guid id)
+    public async Task<RoleDto> GetRoleByRoleId(Guid id)
     {
         return await _unitOfWork.RoleRepository.GetRoleByRoleId(id);
     }
 
-    public async Task<RoleResponseDto> GetRoleByRoleName(string roleName)
+    public async Task<RoleDto> GetRoleByRoleName(string roleName)
     {
         return await _unitOfWork.RoleRepository.GetRoleByRoleName(roleName);
     }

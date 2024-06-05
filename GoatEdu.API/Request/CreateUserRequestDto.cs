@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace GoatEdu.Core.DTOs.AdminDto;
+namespace GoatEdu.API.Request;
 
 public class CreateUserRequestDto
 {

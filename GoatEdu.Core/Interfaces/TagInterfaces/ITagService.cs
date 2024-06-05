@@ -7,10 +7,10 @@ namespace GoatEdu.Core.Interfaces.TagInterfaces;
 
 public interface ITagService
 {
-    Task<PagedList<TagResponseDto>> GetTagByFilter(TagQueryFilter queryFilter);
+    Task<PagedList<TagDto>> GetTagByFilter(TagQueryFilter queryFilter);
     Task<ResponseDto> getTagByName(List<string> name);
     Task<ResponseDto> GetTagById(Guid guid);
-    Task<ResponseDto> InsertTags (List<TagRequestDto> tagRequestDtos);
+    Task<ResponseDto> InsertTags (List<TagDto> tagRequestDtos);
     Task<ResponseDto> DeleteTags(List<Guid> guids);
-    Task<ResponseDto> UpdateTag(Guid guid, TagRequestDto tagRequestDto);
+    Task<ResponseDto> UpdateTag(Guid guid, TagDto tagRequestDto);
 }

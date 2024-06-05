@@ -21,7 +21,7 @@ public class ReportService : IReportService
     }
     
     
-    public async Task<ResponseDto> SendReport(ReportRequestDto dto)
+    public async Task<ResponseDto> SendReport(ReportDto dto)
     {
         var userId = _claimsService.GetCurrentUserId;
         var fullname = _claimsService.GetCurrentFullname;

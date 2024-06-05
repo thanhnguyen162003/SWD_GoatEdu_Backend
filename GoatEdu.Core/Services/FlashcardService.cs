@@ -29,7 +29,7 @@ public class FlashcardService : IFlashcardService
         _claimsService = claimsService;
     }
     
-    public async Task<IEnumerable<FlashcardResponseDto>> GetFlashcards(FlashcardQueryFilter queryFilter)
+    public async Task<IEnumerable<FlashcardDto>> GetFlashcards(FlashcardQueryFilter queryFilter)
     {
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
@@ -38,13 +38,13 @@ public class FlashcardService : IFlashcardService
         
         if (!listFlashcard.Any())
         {
-            return new PagedList<FlashcardResponseDto>(new List<FlashcardResponseDto>(), 0, 0, 0);
+            return new PagedList<FlashcardDto>(new List<FlashcardDto>(), 0, 0, 0);
         }
-        var mapperList = _mapper.Map<List<FlashcardResponseDto>>(listFlashcard);
-        return PagedList<FlashcardResponseDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
+        var mapperList = _mapper.Map<List<FlashcardDto>>(listFlashcard);
+        return PagedList<FlashcardDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
 
-    public async Task<IEnumerable<FlashcardResponseDto>> GetFlashcardsBySubject(FlashcardQueryFilter queryFilter, Guid subjectId)
+    public async Task<IEnumerable<FlashcardDto>> GetFlashcardsBySubject(FlashcardQueryFilter queryFilter, Guid subjectId)
     {
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
@@ -53,13 +53,13 @@ public class FlashcardService : IFlashcardService
         
         if (!listFlashcard.Any())
         {
-            return new PagedList<FlashcardResponseDto>(new List<FlashcardResponseDto>(), 0, 0, 0);
+            return new PagedList<FlashcardDto>(new List<FlashcardDto>(), 0, 0, 0);
         }
-        var mapperList = _mapper.Map<List<FlashcardResponseDto>>(listFlashcard);
-        return PagedList<FlashcardResponseDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
+        var mapperList = _mapper.Map<List<FlashcardDto>>(listFlashcard);
+        return PagedList<FlashcardDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
 
-    public async Task<ResponseDto> CreateFlashcard(FlashcardCreateDto flashcard, Guid subjectId)
+    public async Task<ResponseDto> CreateFlashcard(FlashcardDto flashcard, Guid subjectId)
     {
         var userId = _claimsService.GetCurrentUserId;
         var fullname = _claimsService.GetCurrentFullname;
@@ -83,7 +83,7 @@ public class FlashcardService : IFlashcardService
         return new ResponseDto(HttpStatusCode.Created, "Subject created successfully.", newFlashcard.Id);
     }
 
-    public async Task<ResponseDto> UpdateFlashcard(FlashcardUpdateDto flashcard)
+    public async Task<ResponseDto> UpdateFlashcard(FlashcardDto flashcard)
     {
         throw new NotImplementedException();
     }

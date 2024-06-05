@@ -6,10 +6,10 @@ namespace GoatEdu.Core.Interfaces.ChapterInterfaces;
 
 public interface IChapterService
 {
-        Task<ICollection<ChapterResponseDto>> GetChapters(ChapterQueryFilter queryFilter);
+        Task<ICollection<ChapterDto>> GetChapters(ChapterQueryFilter queryFilter);
         Task<ResponseDto> DeleteChapter(Guid id);
-        Task<ResponseDto> UpdateChapter(ChapterCreateDto dto);
+        Task<ResponseDto> UpdateChapter(ChapterDto dto, Guid chapterId);
         Task<ResponseDto> CreateChapter(ChapterDto dto);
-        Task<ChapterResponseDto> GetChapterByChapterName(string chapterName);
-        Task<ChapterResponseDto> GetChapterByChapterId(Guid id);
+        Task<ChapterDto> GetChapterByChapterName(string chapterName);
+        Task<ChapterDto> GetChapterByChapterId(Guid id);
 }

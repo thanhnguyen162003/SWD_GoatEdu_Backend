@@ -1,3 +1,5 @@
+using AutoMapper;
+using GoatEdu.API.Request;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.ReportDto;
 using GoatEdu.Core.Interfaces.ReportInterfaces;
@@ -12,16 +14,19 @@ namespace GoatEdu.API.Controllers;
 public class ReportController : ControllerBase
 {
     private readonly IReportService _reportService;
+    private readonly IMapper _mapper;
 
-    public ReportController(IReportService reportService)
+    public ReportController(IReportService reportService, IMapper mapper)
     {
         _reportService = reportService;
+        _mapper = mapper;
     }
     
     
     [HttpPost]
     public async Task<ResponseDto> CreateUser([FromBody] ReportRequestDto dto)
     {
-        return await _reportService.SendReport(dto);
+        var mapper = _mapper.Map<ReportDto>(dto);
+        return await _reportService.SendReport(mapper);
     }
 }

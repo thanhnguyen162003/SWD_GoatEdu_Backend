@@ -1,4 +1,4 @@
-namespace GoatEdu.Core.DTOs.FlashcardDto;
+namespace GoatEdu.API.Response;
 
 public class FlashcardResponseDto
 {

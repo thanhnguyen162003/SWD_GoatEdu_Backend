@@ -16,51 +16,39 @@ public class MapperConfigProfile : Profile
 {
     public MapperConfigProfile()
     {
-        CreateMap<Notification, NotificationRequestDto>().ReverseMap()
+        CreateMap<Notification, NotificationDto>().ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-        CreateMap<Subject, SubjectResponseDto>().ReverseMap();
-        CreateMap<Subject, SubjectCreateDto>().ReverseMap();
-        CreateMap<Subject, SubjectDto>().ReverseMap();
-        CreateMap<Chapter, ChapterDto>().ReverseMap();
-
-        CreateMap<Chapter, ChapterResponseDto>().ReverseMap();
-
-        CreateMap<Subject, SubjectResponseDto>()
+        CreateMap<Subject, SubjectDto>()
             .ForMember(dest => dest.NumberOfChapters, opt => opt.MapFrom(src => src.Chapters.Count))
             .ForMember(dest => dest.Chapters, opt => opt.MapFrom(src => src.Chapters))
             .ReverseMap();
+            
         
-        CreateMap<Flashcard, FlashcardResponseDto>()
+        CreateMap<Chapter, ChapterSubjectDto>().ReverseMap();
+        
+        CreateMap<Flashcard, FlashcardDto>()
             .ForMember(dest => dest.numberOfFlashcardContent, opt => opt.MapFrom(src => src.FlashcardContents.Count))
             .ForMember(dest => dest.fullName, opt => opt.MapFrom(src => src.User.Fullname))
             .ReverseMap();
 
         // Map Chapter to ChapterSubjectDto
-        CreateMap<Chapter, ChapterSubjectDto>()
+        CreateMap<Chapter, ChapterDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.ChapterName, opt => opt.MapFrom(src => src.ChapterName))
             .ForMember(dest => dest.ChapterLevel, opt => opt.MapFrom(src => src.ChapterLevel))
             .ReverseMap();
         
-        CreateMap<Note, NoteResponseDto>().ReverseMap();
-        CreateMap<Note, NoteRequestDto>().ReverseMap()
+        CreateMap<Note, NoteDto>().ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-        CreateMap<Notification, NotiDetailResponseDto>().ReverseMap();
-        CreateMap<Tag, TagRequestDto>().ReverseMap()
+        CreateMap<Notification, NotificationDto>().ReverseMap();
+        
+        CreateMap<Tag, TagDto>().ReverseMap()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-        CreateMap<Tag, TagResponseDto>().ReverseMap();
-
-
-        CreateMap<Discussion, DiscussionRequestDto>().ReverseMap()
-            .ForMember(dest => dest.Tags, opt => opt.Ignore())
-            .ReverseMap()
-            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-        CreateMap<Discussion, DiscussionResponseDto>().ReverseMap();
-        CreateMap<User, CreateUserResponse>().ReverseMap();
-        CreateMap<Role, RoleResponseDto>().ReverseMap();
-        CreateMap<CreateUserResponse, User>().ReverseMap();
+        
+        CreateMap<User, CreateUserDto>().ReverseMap();
+        CreateMap<Role, RoleDto>().ReverseMap();
         CreateMap<User, UserMinimalDto>()
             .ForMember(dest => dest.IsConfirmMail, opt => opt.MapFrom(src => src.EmailVerify))
             .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.RoleName))
@@ -68,13 +56,16 @@ public class MapperConfigProfile : Profile
             .ForMember(dest => dest.EmailVerify, opt => opt.MapFrom(src => src.IsConfirmMail))
             .ForMember(dest => dest.Role, opt => opt.Ignore());
         
-        CreateMap<Discussion, DiscussionDetailResponseDto>()
+        CreateMap<Discussion, DiscussionDto>()
+            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags))
             .ForPath(dest => dest.UserAndSubject.UserId, opt => opt.MapFrom(src => src.UserId))
             .ForPath(dest => dest.UserAndSubject.UserName, opt => opt.MapFrom(src => src.User.Username))
             .ForPath(dest => dest.UserAndSubject.FullName, opt => opt.MapFrom(src => src.User.Fullname))
             .ForPath(dest => dest.UserAndSubject.UserImage, opt => opt.MapFrom(src => src.User.Image))
             .ForPath(dest => dest.UserAndSubject.SubjectId, opt => opt.MapFrom(src => src.SubjectId))
-            .ForPath(dest => dest.UserAndSubject.SubjectName, opt => opt.MapFrom(src => src.Subject.SubjectName));
+            .ForPath(dest => dest.UserAndSubject.SubjectName, opt => opt.MapFrom(src => src.Subject.SubjectName))
+            .ReverseMap()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         
         
         CreateMap<User, LoginResponseDto>()

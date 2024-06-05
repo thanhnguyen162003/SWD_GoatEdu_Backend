@@ -1,4 +1,5 @@
 using FluentValidation;
+using GoatEdu.API.Request;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.NoteDto;
@@ -92,7 +93,7 @@ public static class DI
         services.AddScoped<ICloudinaryService, CloudinaryService>();
         
         // Add FluentValidation
-        services.AddScoped<IValidator<SubjectDto>, SubjectCreateDtoValidator>();
+        services.AddScoped<IValidator<SubjectCreateDto>, SubjectCreateDtoValidator>();
         services.AddScoped<IValidator<NotificationRequestDto>, NotificationRequestDtoValidator>();
         services.AddScoped<IValidator<NoteRequestDto>, NoteRequestDtoValidator>();
         services.AddScoped<IValidator<ChapterDto>, ChapterRequestDtoValidator>();

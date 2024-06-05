@@ -7,10 +7,10 @@ namespace GoatEdu.Core.Interfaces.FlashcardInterfaces;
 
 public interface IFlashcardService
 {
-    Task<IEnumerable<FlashcardResponseDto>> GetFlashcards(FlashcardQueryFilter queryFilter);
+    Task<IEnumerable<FlashcardDto>> GetFlashcards(FlashcardQueryFilter queryFilter);
 
-    Task<IEnumerable<FlashcardResponseDto>> GetFlashcardsBySubject(FlashcardQueryFilter queryFilter, Guid subjectId);
-    Task<ResponseDto> CreateFlashcard(FlashcardCreateDto flashcard, Guid subjectId);
-    Task<ResponseDto> UpdateFlashcard(FlashcardUpdateDto flashcard);
+    Task<IEnumerable<FlashcardDto>> GetFlashcardsBySubject(FlashcardQueryFilter queryFilter, Guid subjectId);
+    Task<ResponseDto> CreateFlashcard(FlashcardDto flashcard, Guid subjectId);
+    Task<ResponseDto> UpdateFlashcard(FlashcardDto flashcard);
     Task<ResponseDto> DeleteFlashcard(Guid flashcardId);
 }

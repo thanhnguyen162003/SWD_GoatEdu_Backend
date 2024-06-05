@@ -1,6 +1,6 @@
 namespace GoatEdu.Core.DTOs.ProfileDto;
 
-public class UserProfileRequestDto
+public class UserProfileDto
 {
     
 }

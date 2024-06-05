@@ -1,4 +1,5 @@
 using FluentValidation;
+using GoatEdu.API.Request;
 using GoatEdu.Core.DTOs;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

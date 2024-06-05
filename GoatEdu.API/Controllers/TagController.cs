@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using AutoMapper;
 using FluentValidation;
+using GoatEdu.API.Request;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.TagDto;
@@ -18,11 +20,13 @@ public class TagController : ControllerBase
 {
     private readonly ITagService _tagService;
     private readonly IValidator<TagRequestDto> _validator;
+    private readonly IMapper _mapper;
 
-    public TagController(ITagService tagService, IValidator<TagRequestDto> validator)
+    public TagController(ITagService tagService, IValidator<TagRequestDto> validator, IMapper mapper)
     {
         _tagService = tagService;
         _validator = validator;
+        _mapper = mapper;
     }
     
     [HttpGet("{id}")]
@@ -98,8 +102,9 @@ public class TagController : ControllerBase
                     return BadRequest(new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}")) ;
                 }
             }
-            
-            var result = await _tagService.InsertTags(tagRequestDto);
+
+            var mapper = _mapper.Map<List<TagDto>>(tagRequestDto);
+            var result = await _tagService.InsertTags(mapper);
             return Ok(result);
         }
         catch (Exception e)
@@ -134,7 +139,9 @@ public class TagController : ControllerBase
             {
                 return BadRequest(new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}")) ;
             }
-            var result = await _tagService.UpdateTag(id, tagRequestDto);
+
+            var mapper = _mapper.Map<TagDto>(tagRequestDto);
+            var result = await _tagService.UpdateTag(id, mapper);
             return Ok(result);
         }
         catch (Exception e)
