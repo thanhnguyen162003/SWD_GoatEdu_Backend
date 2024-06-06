@@ -17,7 +17,7 @@ public class TagRepository : BaseRepository<Tag>, ITagRepository
 
     public async Task<List<Tag>> GetTagByFilters(TagQueryFilter queryFilter)
     {
-        var tags = _entities.AsQueryable();
+        var tags = _entities.AsNoTracking().AsQueryable();
         tags = ApplyFilterSortAndSearch(tags, queryFilter);
         tags = ApplySorting(tags, queryFilter);
         return await tags.ToListAsync();

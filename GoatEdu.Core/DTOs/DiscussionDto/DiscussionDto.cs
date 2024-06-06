@@ -15,6 +15,6 @@ public class DiscussionDto
     public ICollection<TagDto.TagDto>? Tags { get; set; }
     public Guid? SubjectId { get; set; }
     public bool? IsSolved { get; set; }
-    public DateTime? CreateAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
     public UserAndSubject? UserAndSubject { get; set; }
 }
