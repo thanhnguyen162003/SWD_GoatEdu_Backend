@@ -83,13 +83,17 @@ public class FlashcardService : IFlashcardService
         return new ResponseDto(HttpStatusCode.Created, "Subject created successfully.", newFlashcard.Id);
     }
 
-    public async Task<ResponseDto> UpdateFlashcard(FlashcardDto flashcard)
+    public async Task<ResponseDto> UpdateFlashcard(FlashcardDto flashcard, Guid id)
     {
-        throw new NotImplementedException();
+        var userId = _claimsService.GetCurrentUserId;
+        var mapper = _mapper.Map<Flashcard>(flashcard);
+        mapper.Id = id;
+        return await _unitOfWork.FlashcardRepository.UpdateFlashcard(mapper, userId);
     }
 
     public async Task<ResponseDto> DeleteFlashcard(Guid flashcardId)
     {
-        throw new NotImplementedException();
+        var userId = _claimsService.GetCurrentUserId;
+        return await _unitOfWork.FlashcardRepository.DeleteFlashcard(flashcardId, userId);
     }
 }

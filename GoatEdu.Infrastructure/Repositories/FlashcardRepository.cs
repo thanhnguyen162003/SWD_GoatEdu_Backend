@@ -49,18 +49,32 @@ public class FlashcardRepository : BaseRepository<Flashcard>, IFlashcardReposito
         return new ResponseDto(HttpStatusCode.OK, "Create flashcard success");
     }
 
-    public Task<ResponseDto> UpdateFlashcard(Flashcard flashcard)
+    public async Task<ResponseDto> UpdateFlashcard(Flashcard flashcard, Guid id)
     {
-        throw new NotImplementedException();
+        var flashcardUpdate = await _entities.FirstOrDefaultAsync(x => x.Id == flashcard.Id && x.UserId == id);
+
+        if (flashcardUpdate == null)
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "Flashcard does not exist, maybe you need to own this flashcard");
+        }
+        flashcardUpdate.FlashcardName = flashcard.FlashcardName ?? flashcardUpdate.FlashcardName;
+        flashcardUpdate.FlashcardDescription = flashcard.FlashcardDescription ?? flashcardUpdate.FlashcardDescription;
+        flashcardUpdate.UpdatedAt = DateTime.Now;
+
+        _entities.Update(flashcardUpdate);
+        await _context.SaveChangesAsync();
+        return new ResponseDto(HttpStatusCode.OK, "Flashcard successfully updated.");
     }
 
-    public async Task<ResponseDto> DeleteFlashcard(Guid flashcardId)
+    public async Task<ResponseDto> DeleteFlashcard(Guid flashcardId, Guid userId)
     {
-        var flashcards = await _entities.Where(x => x.Id == flashcardId).FirstOrDefaultAsync();
-        
+        var flashcards = await _entities.Where(x => x.Id == flashcardId && x.UserId == userId).FirstOrDefaultAsync();
+        if (flashcards is null)
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "Cant get any flashcard, make sure you own flashcard");
+        }
         // Set IsDeleted to true
         flashcards.IsDeleted = true;
-
         // Save changes to the database
         await _context.SaveChangesAsync();
 

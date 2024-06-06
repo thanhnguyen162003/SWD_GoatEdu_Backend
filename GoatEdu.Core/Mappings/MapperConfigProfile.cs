@@ -25,6 +25,7 @@ public class MapperConfigProfile : Profile
             
         
         CreateMap<Chapter, ChapterSubjectDto>().ReverseMap();
+        CreateMap<Flashcard, FlashcardDto>().ReverseMap();
         
         CreateMap<Flashcard, FlashcardDto>()
             .ForMember(dest => dest.numberOfFlashcardContent, opt => opt.MapFrom(src => src.FlashcardContents.Count))

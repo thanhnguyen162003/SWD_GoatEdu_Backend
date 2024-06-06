@@ -12,7 +12,7 @@ public interface IFlashcardRepository : IRepository<Flashcard>
     Task<Flashcard> GetFlashcardById(Guid flashcardId);
     Task<IEnumerable<Flashcard>> GetFlashcardsBySubject(FlashcardQueryFilter queryFilter, Guid id);
     Task<ResponseDto> CreateFlashcard(Flashcard flashcard);
-    Task<ResponseDto> UpdateFlashcard(Flashcard flashcard);
-    Task<ResponseDto> DeleteFlashcard(Guid flashcardId);
+    Task<ResponseDto> UpdateFlashcard(Flashcard flashcard, Guid userId);
+    Task<ResponseDto> DeleteFlashcard(Guid flashcardId, Guid userId);
 
 }

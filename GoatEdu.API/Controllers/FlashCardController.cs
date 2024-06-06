@@ -38,6 +38,21 @@ public class FlashCardController : ControllerBase
         var mapper = _mapper.Map<IEnumerable<FlashcardResponseDto>>(flashcards);
         return mapper;
     }
+    [HttpDelete]
+    [Route("{id}")]
+    [Authorize]
+    public async Task<ResponseDto> DeleteFlashcard([FromRoute] Guid id)
+    {
+        return await _flashcardService.DeleteFlashcard(id);
+    }
+    [HttpPut]
+    [Route("{id}")]
+    [Authorize]
+    public async Task<ResponseDto> UpdateFlashcard([FromRoute] Guid id, [FromBody] FlashcardUpdateDto flashcardUpdateDto)
+    {
+        var mapper = _mapper.Map<FlashcardDto>(flashcardUpdateDto);
+        return await _flashcardService.UpdateFlashcard(mapper, id);
+    }
     
     [HttpPost]
     [Authorize]
