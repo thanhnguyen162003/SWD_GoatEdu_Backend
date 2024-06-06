@@ -109,24 +109,25 @@ public class DiscussionService : IDiscussionService
 
     public async Task<ResponseDto> DeleteDiscussions(List<Guid> guids)
     {
-        await _unitOfWork.DiscussionRepository.SoftDelete(guids);
+        var userId = _claimsService.GetCurrentUserId;
+        await _unitOfWork.DiscussionRepository.SoftDelete(guids, userId);
         var result = await _unitOfWork.SaveChangesAsync();
         return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Delete Successfully!") : new ResponseDto(HttpStatusCode.BadRequest, "Delete Failed!");
     }
 
     public async Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionDto discussionRequestDto)
     {
-
+        var userId = _claimsService.GetCurrentUserId;
         var tag = await CheckAndAddTags(discussionRequestDto);
         if (!tag.Any())
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Không có");
         }
         
-        var disscussion = await _unitOfWork.DiscussionRepository.GetByIdAsync(guid);
+        var disscussion = await _unitOfWork.DiscussionRepository.GetByIdAndUserId(guid, userId);
         if (disscussion is null)
         {
-            return new ResponseDto(HttpStatusCode.NotFound, "Không có");
+            return new ResponseDto(HttpStatusCode.NotFound, "Không được cập nhật");
         }
         
         disscussion = _mapper.Map(discussionRequestDto, disscussion);
