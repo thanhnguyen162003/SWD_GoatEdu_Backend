@@ -23,7 +23,7 @@ public class FlashcardRepository : BaseRepository<Flashcard>, IFlashcardReposito
 
     public async Task<IEnumerable<Flashcard>> GetFlashcards(FlashcardQueryFilter queryFilter)
     {
-        var flashcards = _entities.Include(x=>x.User.Fullname).AsQueryable();
+        var flashcards = _entities.Include(x=>x.User).AsQueryable();
         flashcards = ApplyFilterSortAndSearch(flashcards, queryFilter);
         flashcards = ApplySorting(flashcards, queryFilter);
         return await flashcards.ToListAsync();
