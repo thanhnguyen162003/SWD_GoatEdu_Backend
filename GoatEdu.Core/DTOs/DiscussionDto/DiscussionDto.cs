@@ -10,13 +10,11 @@ public class DiscussionDto
     public string? DiscussionBody { get; set; }
     public string? DiscussionImage { get; set; }
     public IFormFile? DiscussionImageConvert { get; set; }
-
     public int? DiscussionVote { get; set; }
     public string? Status { get; set; }
     public ICollection<TagDto.TagDto>? Tags { get; set; }
-    public UserAndSubject? UserAndSubject { get; set; }
     public Guid? SubjectId { get; set; }
     public bool? IsSolved { get; set; }
     public DateTime? CreateAt { get; set; }
-
+    public UserAndSubject? UserAndSubject { get; set; }
 }
