@@ -2,6 +2,7 @@ using System.Net;
 using AutoMapper;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
+using GoatEdu.Core.DTOs.TagDto;
 using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.ClaimInterfaces;
@@ -72,33 +73,12 @@ public class DiscussionService : IDiscussionService
 
     public async Task<ResponseDto> InsertDiscussion(DiscussionDto dto)
     {
-        var tagNoExist = dto.Tags.Where(x => x.Id == null).ToList();
+        var tag = await CheckAndAddTags(dto);
         
-        if (tagNoExist.Any())
+        if (!tag.Any())
         {
-            var tags = tagNoExist.Select(x =>
-            {
-                var tag = new Tag
-                {
-                    TagName = x.TagName,
-                    CreatedAt = _currentTime.GetCurrentTime(),
-                    IsDeleted = false
-                };
-                return tag;
-            }).ToList();
-        
-            await _unitOfWork.TagRepository.AddRangeAsync(tags);
-            
-            var save = await _unitOfWork.SaveChangesAsync();
-            
-            if (save < 1)
-            {
-                return new ResponseDto(HttpStatusCode.BadRequest, "Có lỗi ở chỗ insertDiscussion");
-            }
+            return new ResponseDto(HttpStatusCode.NotFound, "Không có");
         }
-
-        var names = dto.Tags.Select(x => x.TagName).ToList();
-        var tag = await _unitOfWork.TagRepository.GetTagNameByNameAsync(names);
         var mapper = _mapper.Map<Discussion>(dto);
 
         if (dto.DiscussionImage != null)
@@ -136,18 +116,21 @@ public class DiscussionService : IDiscussionService
 
     public async Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionDto discussionRequestDto)
     {
-        var disscussion = await _unitOfWork.DiscussionRepository.GetByIdAsync(guid);
-        if (disscussion == null)
+
+        var tag = await CheckAndAddTags(discussionRequestDto);
+        if (!tag.Any())
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Không có");
         }
-
-        if (disscussion.Status.Equals(DiscussionStatus.Approved))
+        
+        var disscussion = await _unitOfWork.DiscussionRepository.GetByIdAsync(guid);
+        if (disscussion is null)
         {
-            return new ResponseDto(HttpStatusCode.Forbidden, "Update? Too Late :))");
+            return new ResponseDto(HttpStatusCode.NotFound, "Không có");
         }
         
         disscussion = _mapper.Map(discussionRequestDto, disscussion);
+        disscussion.Status = DiscussionStatus.Unapproved.ToString();
         disscussion.UpdatedBy = _claimsService.GetCurrentFullname;
         disscussion.UpdatedAt = _currentTime.GetCurrentTime();
         _unitOfWork.DiscussionRepository.Update(disscussion);
@@ -155,5 +138,29 @@ public class DiscussionService : IDiscussionService
         return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Update Successfully!") : new ResponseDto(HttpStatusCode.BadRequest, "Update Failed!");
     }
 
-    
+    private async Task<IEnumerable<Tag?>> CheckAndAddTags(DiscussionDto dto)
+    {
+            var tagNoExist = dto.Tags.Where(x => x.Id == null).ToList();
+        
+            if (tagNoExist.Any())
+            {
+                var tags = tagNoExist.Select(x =>
+                {
+                    var tag = new Tag
+                    {
+                        TagName = x.TagName,
+                        CreatedAt = _currentTime.GetCurrentTime(),
+                        IsDeleted = false
+                    };
+                    return tag;
+                }).ToList();
+                await _unitOfWork.TagRepository.AddRangeAsync(tags);
+                var save = await _unitOfWork.SaveChangesAsync();
+                if (save < 1) return Enumerable.Empty<Tag>();
+            }
+
+            var names = dto.Tags.Select(x => x.TagName);
+            var tag = await _unitOfWork.TagRepository.GetTagNameByNameAsync(names);
+            return tag.Count() == 4 ? tag : Enumerable.Empty<Tag>();
+    } 
 }

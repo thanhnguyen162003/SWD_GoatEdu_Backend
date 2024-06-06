@@ -23,7 +23,7 @@ public class TagRepository : BaseRepository<Tag>, ITagRepository
         return await tags.ToListAsync();
     }
 
-    public async Task<IEnumerable<Tag?>> GetTagNameByNameAsync(List<string?> tagName)
+    public async Task<IEnumerable<Tag?>> GetTagNameByNameAsync(IEnumerable<string?> tagName)
     {
         return await _entities.Where(x => tagName.Any(name => name.Equals(x.TagName))).ToListAsync();
     }

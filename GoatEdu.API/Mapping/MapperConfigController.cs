@@ -55,16 +55,10 @@ public class MapperConfigController : Profile
             .ForMember(dest => dest.ChapterLevel, opt => opt.MapFrom(src => src.ChapterLevel))
             .ReverseMap();
         
-        CreateMap<DiscussionDto, DiscussionDetailResponseDto>()
-            .ForPath(dest => dest.UserAndSubject.UserId, opt => opt.MapFrom(src => src.UserAndSubject.UserId))
-            .ForPath(dest => dest.UserAndSubject.UserName, opt => opt.MapFrom(src => src.UserAndSubject.UserName))
-            .ForPath(dest => dest.UserAndSubject.FullName, opt => opt.MapFrom(src => src.UserAndSubject.FullName))
-            .ForPath(dest => dest.UserAndSubject.UserImage, opt => opt.MapFrom(src => src.UserAndSubject.UserImage))
-            .ForPath(dest => dest.UserAndSubject.SubjectId, opt => opt.MapFrom(src => src.SubjectId))
-            .ForPath(dest => dest.UserAndSubject.SubjectName, opt => opt.MapFrom(src => src.UserAndSubject.SubjectName))
-            .ReverseMap();
-        
+        CreateMap<DiscussionDto, DiscussionDetailResponseDto>().ReverseMap();
+        CreateMap<DiscussionDto, DiscussionResponseDto>().ReverseMap();
         CreateMap<DiscussionDto, DiscussionRequestDto>()
+            .ForMember(dest => dest.DiscussionImage, opt => opt.MapFrom(src => src.DiscussionImageConvert))
             .ForMember(dest => dest.Tags, opt => opt.Ignore())
             .ReverseMap();
         

@@ -3,6 +3,7 @@ using System.Net;
 using AutoMapper;
 using FluentValidation;
 using GoatEdu.API.Request;
+using GoatEdu.API.Response;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.Enumerations;
@@ -91,7 +92,9 @@ public class DiscussionController : ControllerBase
             
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
             
-            return Ok(result);
+            var mapper = _mapper.Map<DiscussionResponseDto>(result);
+            
+            return Ok(mapper);
         }
         catch (Exception e)
         {
@@ -105,6 +108,9 @@ public class DiscussionController : ControllerBase
     {
         try
         {
+            var tagsJson = Request.Form["Tags"];
+            discussionRequestDto.Tags = JsonConvert.DeserializeObject<List<TagRequestDto>>(tagsJson);
+            
             var validationResult = await _validator.ValidateAsync(discussionRequestDto);
             if (!validationResult.IsValid)
             { 
@@ -143,6 +149,16 @@ public class DiscussionController : ControllerBase
     {
         try
         {
+            var tagsJson = Request.Form["Tags"];
+            discussionRequestDto.Tags = JsonConvert.DeserializeObject<List<TagRequestDto>>(tagsJson);
+            
+            var validationResult = await _validator.ValidateAsync(discussionRequestDto);
+            if (!validationResult.IsValid)
+            { 
+                var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
+                return BadRequest(new { Status = 400, Message = "Validation Errors", Errors = errors });
+            }
+            
             var mapper = _mapper.Map<DiscussionDto>(discussionRequestDto);
             var result = await _discussionService.UpdateDiscussion(id, mapper);
             return Ok(result);

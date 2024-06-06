@@ -20,10 +20,10 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
     public async Task<IEnumerable<Discussion>> GetDiscussionByFilters(Guid? userId, DiscussionQueryFilter queryFilter)
     {
         var discussions = _entities
-                .Include(x => x.User)
-                .Include(x => x.Subject)
-                .Include(x => x.Tags)
-                .AsQueryable();
+            .AsNoTracking()
+            .Include(x => x.User)
+            .Include(x => x.Subject)
+            .AsQueryable();
         discussions = ApplyFilterSortAndSearch(discussions, queryFilter, userId);
         discussions = ApplySorting(discussions, queryFilter);
         return await discussions.ToListAsync(); 
@@ -52,7 +52,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
                 .Include(x => x.User);
         }
         
-        discussions = discussions.Where(x => x.IsDeleted == false);
+        discussions = discussions.Where(x => x.IsDeleted == false && x.Status.Equals(queryFilter.status));
         
         if (queryFilter.tag_names.Any())
         {
