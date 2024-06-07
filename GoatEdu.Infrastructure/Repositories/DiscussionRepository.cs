@@ -38,9 +38,14 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
             .FirstOrDefaultAsync(x => x.Id == guid && x.IsDeleted == false);
     }
 
-    public async Task SoftDelete(List<Guid> guids)
+    public async Task<Discussion?> GetByIdAndUserId(Guid guid, Guid userId)
     {
-        await _entities.Where(x => guids.Any(id => id == x.Id)).ForEachAsync(a => a.IsDeleted = true);
+        return await _entities.FirstOrDefaultAsync(x => x.Id == guid && x.UserId == userId);
+    }
+
+    public async Task SoftDelete(List<Guid> guids, Guid userId)
+    {
+        await _entities.Where(x => guids.Any(id => id == x.Id) && x.UserId == userId).ForEachAsync(a => a.IsDeleted = true);
     }
     
     private IQueryable<Discussion> ApplyFilterSortAndSearch(IQueryable<Discussion> discussions, DiscussionQueryFilter queryFilter, Guid? userId)

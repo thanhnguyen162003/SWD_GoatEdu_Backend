@@ -8,5 +8,6 @@ public interface IDiscussionRepository : IRepository<Discussion>
 {
     Task<IEnumerable<Discussion>> GetDiscussionByFilters(Guid? userId,DiscussionQueryFilter queryFilter); 
     Task<Discussion?> GetById(Guid guid);
-    Task SoftDelete(List<Guid> guids);
+    Task<Discussion?> GetByIdAndUserId(Guid guid, Guid userId);
+    Task SoftDelete(List<Guid> guids, Guid userId);
 }
