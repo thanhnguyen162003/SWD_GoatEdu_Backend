@@ -30,6 +30,13 @@ public class FlashcardController : ControllerBase
         var mapper = _mapper.Map<IEnumerable<FlashcardResponseDto>>(flashcards);
         return mapper;
     }
+    [HttpGet("user")]
+    public async Task<IEnumerable<FlashcardResponseDto>> GetOwnFlashcards([FromQuery, Required] FlashcardQueryFilter queryFilter)
+    {
+        var flashcards =  await _flashcardService.GetOwnFlashcard(queryFilter);
+        var mapper = _mapper.Map<IEnumerable<FlashcardResponseDto>>(flashcards);
+        return mapper;
+    }
     [HttpGet]
     [Route("subject/{subjectId}")]
     public async Task<IEnumerable<FlashcardResponseDto>> GetFlashcardsSubject([FromQuery, Required] FlashcardQueryFilter queryFilter, [FromRoute] Guid subjectId)

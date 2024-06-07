@@ -14,4 +14,5 @@ public interface IFlashcardService
     Task<ResponseDto> UpdateFlashcard(FlashcardDto flashcard, Guid id);
     Task<ResponseDto> DeleteFlashcard(Guid flashcardId);
     Task<FlashcardDto> GetFlashcarDetail(Guid flashcardId);
+    Task<IEnumerable<FlashcardDto>> GetOwnFlashcard(FlashcardQueryFilter queryFilter);
 }

@@ -90,6 +90,22 @@ public class FlashcardService : IFlashcardService
         return mapper;
     }
 
+    public async Task<IEnumerable<FlashcardDto>> GetOwnFlashcard(FlashcardQueryFilter queryFilter)
+    {
+        var userId = _claimsService.GetCurrentUserId;
+        queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
+        queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
+        
+        var listFlashcard = await _unitOfWork.FlashcardRepository.GetOwnFlashcard(queryFilter,userId);
+        
+        if (!listFlashcard.Any())
+        {
+            return new PagedList<FlashcardDto>(new List<FlashcardDto>(), 0, 0, 0);
+        }
+        var mapperList = _mapper.Map<List<FlashcardDto>>(listFlashcard);
+        return PagedList<FlashcardDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
+    }
+
     public async Task<ResponseDto> UpdateFlashcard(FlashcardDto flashcard, Guid id)
     {
         var userId = _claimsService.GetCurrentUserId;
