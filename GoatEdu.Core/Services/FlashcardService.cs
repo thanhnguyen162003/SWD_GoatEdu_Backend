@@ -70,7 +70,7 @@ public class FlashcardService : IFlashcardService
             FlashcardDescription = flashcard.flashcardDescription,
             UserId = userId,
             SubjectId = subjectId,
-            Status = StatusConstraint.HIDDEN,
+            Status = StatusConstraint.OPEN,
             Star = 0,
             CreatedAt = DateTime.Now,
             CreatedBy = fullname,

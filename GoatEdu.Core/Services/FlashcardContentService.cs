@@ -45,7 +45,7 @@ public class FlashcardContentService : IFlashcardContentService
     
     public async Task<ResponseDto> CreateFlashcardContent(List<FlashcardContentDto> listFlashcardContent, Guid flashcardId)
     {
-        var fullname = _claimsService.GetCurrentFullname;
+        
         var userId = _claimsService.GetCurrentUserId;
         var flashcard = await _unitOfWork.FlashcardRepository.GetFlashcardById(flashcardId);
         if (flashcard == null)
@@ -56,7 +56,7 @@ public class FlashcardContentService : IFlashcardContentService
         {
             return new ResponseDto(HttpStatusCode.BadRequest, "This flashcard not own by you !!!.");
         }
-
+        var fullname = _claimsService.GetCurrentFullname;
         var newFlashcardContents = listFlashcardContent.Select(contentDto => new FlashcardContent
         {
             FlashcardContentQuestion = contentDto.flashcardContentQuestion,
