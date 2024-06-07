@@ -7,6 +7,8 @@ public class FlashcardResponseDto
     public string flashcardDescription { get; set; }
     public int star { get; set; }
     public string fullName { get; set; }
+    public string subjectName { get; set; }
+    public string subjectId { get; set; }
     public int numberOfFlashcardContent { get; set; }
 
 }

@@ -23,14 +23,21 @@ public class FlashcardRepository : BaseRepository<Flashcard>, IFlashcardReposito
 
     public async Task<IEnumerable<Flashcard>> GetFlashcards(FlashcardQueryFilter queryFilter)
     {
-        var flashcards = _entities.Include(x=>x.User).AsQueryable();
+        var flashcards = _entities.Include(x=>x.User)
+            .Include(y=> y.Subject)
+            .Include(y=> y.FlashcardContents)
+            .AsQueryable();
         flashcards = ApplyFilterSortAndSearch(flashcards, queryFilter);
         flashcards = ApplySorting(flashcards, queryFilter);
         return await flashcards.ToListAsync();
     }
     public async Task<IEnumerable<Flashcard>> GetOwnFlashcard(FlashcardQueryFilter queryFilter, Guid userId)
     {
-        var flashcards = _entities.AsNoTracking().Where(x=>x.UserId == userId).Include(x=>x.User).AsQueryable();
+        var flashcards = _entities.AsNoTracking().Where(x=>x.UserId == userId)
+            .Include(x=>x.User)
+            .Include(y=> y.Subject)
+            .Include(y=> y.FlashcardContents)
+            .AsQueryable();
         flashcards = ApplyFilterSortAndSearch(flashcards, queryFilter);
         flashcards = ApplySorting(flashcards, queryFilter);
         return await flashcards.ToListAsync();

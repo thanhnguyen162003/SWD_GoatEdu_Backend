@@ -10,6 +10,8 @@ public class FlashcardDto
     public DateTime createdAt { get; set; }
     public DateTime updatedAt { get; set; }
     public string userImage { get; set; }
+    public string subjectName { get; set; }
+    public string subjectId { get; set; }
     public int numberOfFlashcardContent { get; set; }
     
 }
