@@ -136,4 +136,26 @@ public class CacheSubjectRepository : ISubjectRepository
         );
         return subject;
     }
+
+    public async Task<IEnumerable<Subject>> GetSubjectByClass(string classes, SubjectQueryFilter queryFilter)
+    {
+        string key = $"subject-classes-{classes}-{queryFilter.page_size}-{queryFilter.page_number}-{queryFilter.search}-{queryFilter.sort}-{queryFilter.sort_direction}";
+        string? cachedSubjects = await _distributedCache.GetStringAsync(key);
+        
+        if (!string.IsNullOrEmpty(cachedSubjects))
+        {
+            return JsonConvert.DeserializeObject<ICollection<Subject>>(cachedSubjects)!; // Because of redis store data in object. so we need to deserialize to get data
+        }
+        var cacheOptions = new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1000) //near 1 day expire cache
+        };
+        var loopHandling = new JsonSerializerSettings 
+        { 
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        };
+        var subjects = await _decorated.GetSubjectByClass(classes, queryFilter);
+        await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(subjects,loopHandling),cacheOptions);
+        return subjects;
+    }
 }

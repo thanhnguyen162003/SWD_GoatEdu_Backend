@@ -97,6 +97,13 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
         await _context.SaveChangesAsync();
         return new ResponseDto(HttpStatusCode.OK, "Create Success");
     }
+    public async Task<IEnumerable<Subject>> GetSubjectByClass(string classes,SubjectQueryFilter queryFilter)
+    {
+        var subjects = _entities.AsNoTracking().Where(x=>x.Class.ToLower().Equals(classes.ToLower())).Include(x => x.Chapters).AsQueryable();
+        subjects = ApplyFilterSortAndSearch(subjects, queryFilter);
+        subjects = ApplySorting(subjects, queryFilter);
+        return await subjects.ToListAsync();
+    }
 
     public async Task<SubjectDto> GetSubjectBySubjectName(string subjectName)
     {

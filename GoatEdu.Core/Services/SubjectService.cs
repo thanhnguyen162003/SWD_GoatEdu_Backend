@@ -3,14 +3,12 @@ using System.Net;
 using AutoMapper;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
-using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.CloudinaryInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
 namespace GoatEdu.Core.Services;
@@ -37,6 +35,21 @@ public class SubjectService : ISubjectService
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
         
         var listSubject = await _unitOfWork.SubjectRepository.GetAllSubjects(queryFilter);
+        
+        if (!listSubject.Any())
+        {
+            return new PagedList<SubjectDto>(new List<SubjectDto>(), 0, 0, 0);
+        }
+        var mapperList = _mapper.Map<List<SubjectDto>>(listSubject);
+        return PagedList<SubjectDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
+    }
+
+    public async Task<IEnumerable<SubjectDto>> GetSubjectByClass(SubjectQueryFilter queryFilter, string classes)
+    {
+        queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
+        queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
+        
+        var listSubject = await _unitOfWork.SubjectRepository.GetSubjectByClass(classes, queryFilter);
         
         if (!listSubject.Any())
         {

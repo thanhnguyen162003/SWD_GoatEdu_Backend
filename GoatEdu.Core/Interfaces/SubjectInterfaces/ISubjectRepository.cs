@@ -13,4 +13,5 @@ public interface ISubjectRepository
     Task<ResponseDto> UpdateSubject(Subject dto);
     Task<ResponseDto> CreateSubject(Subject dto);
     Task<SubjectDto> GetSubjectBySubjectName(string subjectName);
+    Task<IEnumerable<Subject>> GetSubjectByClass(string classes, SubjectQueryFilter queryFilter);
 }

@@ -10,16 +10,16 @@ namespace GoatEdu.API.Controllers;
 [ApiController]
 public class OpenAIController : ControllerBase
 {
-    [HttpGet]
+    [HttpPost]
     [Route("/OpenAI")]
     public async Task<IActionResult> UseChatGPT(string query)
     {
         string outputResult = "";
-        var openai = new OpenAIAPI("OpenAI:APIKey");
+        var openai = new OpenAIAPI("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");
         CompletionRequest completionRequest = new CompletionRequest();
         completionRequest.Prompt = query;
         //no money just use davinciText model pls
-        completionRequest.Model = OpenAI_API.Models.Model.DavinciText;
+        completionRequest.Model = "gpt-3.5-turbo";
         completionRequest.MaxTokens = 1024;
 
         var completions = await openai.Completions.CreateCompletionAsync(completionRequest);

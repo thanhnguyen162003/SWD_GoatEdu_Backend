@@ -38,6 +38,13 @@ public class SubjectController : ControllerBase
         var mapper = _mapper.Map<IEnumerable<SubjectResponseDto>>(listSubject);
         return mapper;
     }
+    [HttpGet("class")]
+    public async Task<IEnumerable<SubjectResponseDto>> GetAllSubject([FromQuery, Required] SubjectQueryFilter queryFilter, [FromQuery,Required] string classes)
+    {
+        var listSubject = await _subjectService.GetSubjectByClass(queryFilter, classes);
+        var mapper = _mapper.Map<IEnumerable<SubjectResponseDto>>(listSubject);
+        return mapper;
+    }
     
     [HttpGet("{id}")]
     public async Task<SubjectResponseDto> GetSubjectById(Guid id)
