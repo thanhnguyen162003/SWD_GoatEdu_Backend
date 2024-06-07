@@ -13,6 +13,7 @@ using GoatEdu.Core.Interfaces.ClaimInterfaces;
 using GoatEdu.Core.Interfaces.CloudinaryInterfaces;
 using GoatEdu.Core.Interfaces.DiscussionInterfaces;
 using GoatEdu.Core.Interfaces.EnrollmentInterfaces;
+using GoatEdu.Core.Interfaces.FlashcardContentInterfaces;
 using GoatEdu.Core.Interfaces.FlashcardInterfaces;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
 using GoatEdu.Core.Interfaces.LessonInterfaces;
@@ -55,6 +56,7 @@ public static class DI
         services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
         services.AddScoped<IModeratorRepository, ModeratorRepository>();
         services.AddScoped<IFlashcardRepository, FlashcardRepository>();
+        services.AddScoped<IFlashcardContentRepository, FlashcardContentRepository>();
 
 
         
@@ -76,6 +78,7 @@ public static class DI
         services.AddScoped<IEnrollmentService, EnrollmentService>();
         services.AddScoped<IModeratorService, ModeratorService>();
         services.AddScoped<IFlashcardService, FlashcardService>();
+        services.AddScoped<IFlashcardContentService, FlashcardContentService>();
 
 
         
