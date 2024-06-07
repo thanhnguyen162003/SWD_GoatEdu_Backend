@@ -29,7 +29,7 @@ public class AuthenTools
         if (identity != null)
         {
             var userClaims = identity.Claims;
-            return userClaims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            return userClaims.FirstOrDefault(x => x.Type == "Fullname")?.Value;
         }
         return null;
     }

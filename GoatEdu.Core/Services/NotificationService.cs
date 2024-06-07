@@ -69,18 +69,16 @@ public class NotificationService : INotificationService
         noti.CreatedAt = _currentTime.GetCurrentTime();
         await _unitOfWork.NotificationRepository.AddAsync(noti);
         var result = await _unitOfWork.SaveChangesAsync();
-        
-        if (result > 0)
-        {
-            await _hubContext.Clients.All.SendNotification(new {notification.UserId, notification.NotificationName});
-            return new ResponseDto(HttpStatusCode.OK, "Add Successfully !");
-        }
-        return new ResponseDto(HttpStatusCode.OK, "Add Failed !");
+
+        if (result <= 0) return new ResponseDto(HttpStatusCode.OK, "Add Failed !");
+        await _hubContext.Clients.All.SendNotification(new {notification.UserId, notification.NotificationName});
+        return new ResponseDto(HttpStatusCode.OK, "Add Successfully !");
     }
 
     public async Task<ResponseDto> DeleteNotifications(List<Guid> ids)
     {
-        var notiFound = await _unitOfWork.NotificationRepository.GetNotificationByIds(ids);
+        var userId = _claimsService.GetCurrentUserId;
+        var notiFound = await _unitOfWork.NotificationRepository.GetNotificationByIds(ids, userId);
         _unitOfWork.NotificationRepository.DeleteAsync(notiFound);
         var result = await _unitOfWork.SaveChangesAsync();
         

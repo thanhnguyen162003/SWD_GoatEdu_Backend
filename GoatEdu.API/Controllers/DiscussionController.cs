@@ -130,7 +130,7 @@ public class DiscussionController : ControllerBase
     
     [HttpDelete]
     [Authorize (Roles = $"{UserEnum.MODERATOR},{UserEnum.STUDENT},{UserEnum.TEACHER}")]
-    public async Task<IActionResult> DeleteDiscussions(List<Guid> ids)
+    public async Task<IActionResult> DeleteDiscussions([FromQuery, Required] List<Guid> ids)
     {
         try
         {

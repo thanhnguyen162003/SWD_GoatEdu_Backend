@@ -115,10 +115,10 @@ public class DiscussionService : IDiscussionService
         return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Delete Successfully!") : new ResponseDto(HttpStatusCode.BadRequest, "Delete Failed!");
     }
 
-    public async Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionDto discussionRequestDto)
+    public async Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionDto dto)
     {
         var userId = _claimsService.GetCurrentUserId;
-        var tag = await CheckAndAddTags(discussionRequestDto);
+        var tag = await CheckAndAddTags(dto);
         if (!tag.Any())
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Không có");
@@ -130,7 +130,19 @@ public class DiscussionService : IDiscussionService
             return new ResponseDto(HttpStatusCode.NotFound, "Không được cập nhật");
         }
         
-        disscussion = _mapper.Map(discussionRequestDto, disscussion);
+        disscussion = _mapper.Map(dto, disscussion);
+        
+        if (dto.DiscussionImage != null)
+        {
+            var image = await _cloudinaryService.UploadAsync(dto.DiscussionImageConvert);
+            if (image.Error != null)
+            {
+                return new ResponseDto(HttpStatusCode.BadRequest, image.Error.Message);
+            }
+        
+            disscussion.DiscussionImage = image.Url.ToString();
+        }
+        
         disscussion.Status = DiscussionStatus.Unapproved.ToString();
         disscussion.UpdatedBy = _claimsService.GetCurrentFullname;
         disscussion.UpdatedAt = _currentTime.GetCurrentTime();

@@ -1,4 +1,5 @@
 using GoatEdu.Core.Interfaces.AdminInterfaces;
+using GoatEdu.Core.Interfaces.AnswerInterfaces;
 using GoatEdu.Core.Interfaces.ChapterInterfaces;
 using GoatEdu.Core.Interfaces.DiscussionInterfaces;
 using GoatEdu.Core.Interfaces.EnrollmentInterfaces;
@@ -38,7 +39,7 @@ namespace GoatEdu.Core.Interfaces
         IEnrollmentProcessRepository EnrollmentProcessRepository { get; }
         IModeratorRepository ModeratorRepository { get; }
         IFlashcardContentRepository FlashcardContentRepository { get; }
-
+        IAnswerRepository AnswerRepository { get; }
         
         
         void SaveChanges();
