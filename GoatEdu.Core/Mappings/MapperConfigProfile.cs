@@ -71,7 +71,11 @@ public class MapperConfigProfile : Profile
             .ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         
-        
+        CreateMap<Discussion, DiscussionUpdateDto>()
+            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags))
+            .ReverseMap()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+      
         CreateMap<User, LoginResponseDto>()
             .ForMember(dest => dest.userId, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.username, opt => opt.MapFrom(src => src.Username))

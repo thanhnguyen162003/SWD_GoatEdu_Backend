@@ -1,5 +1,6 @@
 using System.Net;
 using AutoMapper;
+using FluentValidation;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.NoteDto;
@@ -22,22 +23,25 @@ public class NoteService : INoteService
     private readonly ICurrentTime _currentTime;
     private readonly IClaimsService _claimsService;
     private readonly PaginationOptions _paginationOptions;
+    private readonly IValidator<NoteDto> _validator;
 
 
-    public NoteService(IUnitOfWork unitOfWork, IMapper mapper, ICurrentTime currentTime, IClaimsService claimsService, IOptions<PaginationOptions> options)
+
+    public NoteService(IUnitOfWork unitOfWork, IMapper mapper, ICurrentTime currentTime, IClaimsService claimsService, IValidator<NoteDto> validator, IOptions<PaginationOptions> options)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _currentTime = currentTime;
         _claimsService = claimsService;
         _paginationOptions = options.Value;
+        _validator = validator;
     }
 
 
     public async Task<ResponseDto> GetNoteById(Guid id)
     {
-        
-        var noteFound = await _unitOfWork.NoteRepository.GetByIdAsync(id);
+        var userId = _claimsService.GetCurrentUserId;
+        var noteFound = await _unitOfWork.NoteRepository.GetNoteByUserId(id, userId);
         if (noteFound == null) return new ResponseDto(HttpStatusCode.NotFound, "Kiếm không thấy :))");
         
         var mapperNote = _mapper.Map<NoteDto>(noteFound);
@@ -60,6 +64,13 @@ public class NoteService : INoteService
     
     public async Task<ResponseDto> InsertNote(NoteDto noteRequestDto)
     {
+        var validationResult = await _validator.ValidateAsync(noteRequestDto);
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
+            return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
+        }
+        
         var note = _mapper.Map<Note>(noteRequestDto);
         note.CreatedAt = _currentTime.GetCurrentTime();
         note.CreatedBy = _claimsService.GetCurrentFullname;
@@ -79,10 +90,15 @@ public class NoteService : INoteService
         return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Delete Successfully !") : new ResponseDto(HttpStatusCode.BadRequest, "Delete Failed !");
     }
 
-    public async Task<ResponseDto> UpdateNote(Guid guid, NoteDto noteRequestDto)
+    public async Task<ResponseDto> UpdateNote(NoteDto noteRequestDto)
     {
+        if (string.IsNullOrWhiteSpace(noteRequestDto.NoteName))
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "Note name is required!");
+        }
+        
         var userId = _claimsService.GetCurrentUserId;
-        var note = await _unitOfWork.NoteRepository.GetNoteByUserId(guid, userId);
+        var note = await _unitOfWork.NoteRepository.GetNoteByUserId(userId, userId);
         
         if (note == null) return new ResponseDto(HttpStatusCode.NotFound, "");
         

@@ -21,50 +21,48 @@ namespace GoatEdu.API.Controllers;
 public class SubjectController : ControllerBase
 {
     private readonly ISubjectService _subjectService;
-    private readonly IValidator<SubjectCreateDto> _validator;
     private readonly IMapper _mapper;
 
 
-    public SubjectController(ISubjectService subjectService, IValidator<SubjectCreateDto> validator, IMapper mapper)
+    public SubjectController(ISubjectService subjectService, IMapper mapper)
     {
         _subjectService = subjectService;
-        _validator = validator;
         _mapper = mapper;
     }
     [HttpGet]
-    public async Task<IEnumerable<SubjectResponseDto>> GetAllSubject([FromQuery, Required] SubjectQueryFilter queryFilter)
+    public async Task<IEnumerable<SubjectResponseModel>> GetAllSubject([FromQuery, Required] SubjectQueryFilter queryFilter)
     {
         var listSubject = await _subjectService.GetAllSubjects(queryFilter);
-        var mapper = _mapper.Map<IEnumerable<SubjectResponseDto>>(listSubject);
+        var mapper = _mapper.Map<IEnumerable<SubjectResponseModel>>(listSubject);
         return mapper;
     }
     [HttpGet("class")]
-    public async Task<IEnumerable<SubjectResponseDto>> GetAllSubject([FromQuery, Required] SubjectQueryFilter queryFilter, [FromQuery,Required] string classes)
+    public async Task<IEnumerable<SubjectResponseModel>> GetAllSubject([FromQuery, Required] SubjectQueryFilter queryFilter, [FromQuery,Required] string classes)
     {
         var listSubject = await _subjectService.GetSubjectByClass(queryFilter, classes);
-        var mapper = _mapper.Map<IEnumerable<SubjectResponseDto>>(listSubject);
+        var mapper = _mapper.Map<IEnumerable<SubjectResponseModel>>(listSubject);
         return mapper;
     }
     
     [HttpGet("{id}")]
-    public async Task<SubjectResponseDto> GetSubjectById(Guid id)
+    public async Task<SubjectResponseModel> GetSubjectById(Guid id)
     {
         var subject = await _subjectService.GetSubjectBySubjectId(id);
-        var mapper = _mapper.Map<SubjectResponseDto>(subject);
+        var mapper = _mapper.Map<SubjectResponseModel>(subject);
         return mapper;
     }
     [HttpGet("name")]
-    public async Task<SubjectResponseDto> GetSubjectByName([FromQuery] string subjectName)
+    public async Task<SubjectResponseModel> GetSubjectByName([FromQuery] string subjectName)
     {
         var subject = await _subjectService.GetSubjectBySubjectName(subjectName);
-        var mapper = _mapper.Map<SubjectResponseDto>(subject);
+        var mapper = _mapper.Map<SubjectResponseModel>(subject);
         return mapper;
     }
     [HttpGet("{id}/chapters")]
-    public async Task<ICollection<ChapterResponseDto>> GetChapterBySubject([FromRoute] Guid id)
+    public async Task<ICollection<ChapterResponseModel>> GetChapterBySubject([FromRoute] Guid id)
     {
         var list = await _subjectService.GetChaptersBySubject(id);
-        var mapper = _mapper.Map<ICollection<ChapterResponseDto>>(list);
+        var mapper = _mapper.Map<ICollection<ChapterResponseModel>>(list);
         return mapper;
     }
     [HttpDelete("{id}")]
@@ -75,32 +73,18 @@ public class SubjectController : ControllerBase
     }
     [HttpPost]
     [Authorize (Roles = UserEnum.MODERATOR)]
-    public async Task<IActionResult> CreateSubject([FromForm] SubjectCreateDto dto)
+    public async Task<IActionResult> CreateSubject([FromForm] SubjectCreateModel model)
     {
-        var validationResult = await _validator.ValidateAsync(dto);
-        if (!validationResult.IsValid)
-        {
-            var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
-            return BadRequest(new { Status = 400, Message = "Validation Errors", Errors = errors });
-        }
-
-        var mapper = _mapper.Map<SubjectDto>(dto);
+        var mapper = _mapper.Map<SubjectDto>(model);
         var result = await _subjectService.CreateSubject(mapper);
         return Ok(result);
     }
 
     [HttpPut("{id}")]
     [Authorize(Roles = UserEnum.MODERATOR)]
-    public async Task<IActionResult> UpdateSubject([FromForm] SubjectCreateDto dto, Guid id)
+    public async Task<IActionResult> UpdateSubject([FromForm] SubjectCreateModel model, Guid id)
     {
-        var validationResult = await _validator.ValidateAsync(dto);
-        if (!validationResult.IsValid)
-        {
-            var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
-            return BadRequest(new { Status = 400, Message = "Validation Errors", Errors = errors });
-        }
-
-        var mapper = _mapper.Map<SubjectDto>(dto);
+        var mapper = _mapper.Map<SubjectDto>(model);
         var result = await _subjectService.UpdateSubject(mapper, id);
         return Ok(result);
     }

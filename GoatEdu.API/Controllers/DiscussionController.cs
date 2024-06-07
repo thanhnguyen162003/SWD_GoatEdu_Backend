@@ -20,13 +20,11 @@ namespace GoatEdu.API.Controllers;
 public class DiscussionController : ControllerBase
 {
     private readonly IDiscussionService _discussionService;
-    private readonly IValidator<DiscussionRequestDto> _validator;
     private readonly IMapper _mapper;
 
-    public DiscussionController(IDiscussionService discussionService, IValidator<DiscussionRequestDto> validator, IMapper mapper)
+    public DiscussionController(IDiscussionService discussionService, IMapper mapper)
     {
         _discussionService = discussionService;
-        _validator = validator;
         _mapper = mapper;
     }
     
@@ -92,7 +90,7 @@ public class DiscussionController : ControllerBase
             
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
             
-            var mapper = _mapper.Map<DiscussionResponseDto>(result);
+            var mapper = _mapper.Map<DiscussionResponseModel>(result);
             
             return Ok(mapper);
         }
@@ -103,22 +101,20 @@ public class DiscussionController : ControllerBase
     }
     
     [HttpPost]
-    [Authorize (Roles = "Student, Teacher")]
-    public async Task<IActionResult> AddDiscussion([FromForm]DiscussionRequestDto discussionRequestDto)
+    [Authorize (Roles = $"{UserEnum.STUDENT}, {UserEnum.TEACHER}")]
+    public async Task<IActionResult> AddDiscussion([FromForm]DiscussionRequestModel discussionRequestModel)
     {
         try
         {
             var tagsJson = Request.Form["Tags"];
-            discussionRequestDto.Tags = JsonConvert.DeserializeObject<List<TagRequestDto>>(tagsJson);
+            discussionRequestModel.Tags = JsonConvert.DeserializeObject<List<TagRequestModel>>(tagsJson);
             
-            var validationResult = await _validator.ValidateAsync(discussionRequestDto);
-            if (!validationResult.IsValid)
-            { 
-                var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
-                return BadRequest(new { Status = 400, Message = "Validation Errors", Errors = errors });
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
 
-            var mapper = _mapper.Map<DiscussionDto>(discussionRequestDto);
+            var mapper = _mapper.Map<DiscussionDto>(discussionRequestModel);
             var result = await _discussionService.InsertDiscussion(mapper);
             return Ok(result);
         }
@@ -144,22 +140,15 @@ public class DiscussionController : ControllerBase
     }
     
     [HttpPut ("{id}")]
-    [Authorize (Roles = "Student, Teacher")]
-    public async Task<IActionResult> UpdateDiscussion(Guid id, DiscussionRequestDto discussionRequestDto)
+    [Authorize (Roles = $"{UserEnum.STUDENT}, {UserEnum.TEACHER}")]
+    public async Task<IActionResult> UpdateDiscussion(Guid id, DiscussionRequestModel discussionRequestModel)
     {
         try
         {
             var tagsJson = Request.Form["Tags"];
-            discussionRequestDto.Tags = JsonConvert.DeserializeObject<List<TagRequestDto>>(tagsJson);
+            discussionRequestModel.Tags = JsonConvert.DeserializeObject<List<TagRequestModel>>(tagsJson);
             
-            var validationResult = await _validator.ValidateAsync(discussionRequestDto);
-            if (!validationResult.IsValid)
-            { 
-                var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
-                return BadRequest(new { Status = 400, Message = "Validation Errors", Errors = errors });
-            }
-            
-            var mapper = _mapper.Map<DiscussionDto>(discussionRequestDto);
+            var mapper = _mapper.Map<DiscussionUpdateDto>(discussionRequestModel);
             var result = await _discussionService.UpdateDiscussion(id, mapper);
             return Ok(result);
         }

@@ -24,33 +24,33 @@ public class FlashcardController : ControllerBase
         _mapper = mapper;
     }
     [HttpGet]
-    public async Task<IEnumerable<FlashcardResponseDto>> GetFlashcards([FromQuery, Required] FlashcardQueryFilter queryFilter)
+    public async Task<IEnumerable<FlashcardResponseModel>> GetFlashcards([FromQuery, Required] FlashcardQueryFilter queryFilter)
     {
         var flashcards =  await _flashcardService.GetFlashcards(queryFilter);
-        var mapper = _mapper.Map<IEnumerable<FlashcardResponseDto>>(flashcards);
+        var mapper = _mapper.Map<IEnumerable<FlashcardResponseModel>>(flashcards);
         return mapper;
     }
     [HttpGet("user")]
-    public async Task<IEnumerable<FlashcardResponseDto>> GetOwnFlashcards([FromQuery, Required] FlashcardQueryFilter queryFilter)
+    public async Task<IEnumerable<FlashcardResponseModel>> GetOwnFlashcards([FromQuery, Required] FlashcardQueryFilter queryFilter)
     {
         var flashcards =  await _flashcardService.GetOwnFlashcard(queryFilter);
-        var mapper = _mapper.Map<IEnumerable<FlashcardResponseDto>>(flashcards);
+        var mapper = _mapper.Map<IEnumerable<FlashcardResponseModel>>(flashcards);
         return mapper;
     }
     [HttpGet]
     [Route("subject/{subjectId}")]
-    public async Task<IEnumerable<FlashcardResponseDto>> GetFlashcardsSubject([FromQuery, Required] FlashcardQueryFilter queryFilter, [FromRoute] Guid subjectId)
+    public async Task<IEnumerable<FlashcardResponseModel>> GetFlashcardsSubject([FromQuery, Required] FlashcardQueryFilter queryFilter, [FromRoute] Guid subjectId)
     {
         var flashcards =  await _flashcardService.GetFlashcardsBySubject(queryFilter,subjectId);
-        var mapper = _mapper.Map<IEnumerable<FlashcardResponseDto>>(flashcards);
+        var mapper = _mapper.Map<IEnumerable<FlashcardResponseModel>>(flashcards);
         return mapper;
     }
     [HttpGet]
     [Route("{flashcardId}")]
-    public async Task<FlashcardDetailResponse> GetFlashcardsSubject([FromRoute] Guid flashcardId)
+    public async Task<FlashcardDetailResponseModel> GetFlashcardsSubject([FromRoute] Guid flashcardId)
     {
         var flashcards =  await _flashcardService.GetFlashcarDetail(flashcardId);
-        var mapper = _mapper.Map<FlashcardDetailResponse>(flashcards);
+        var mapper = _mapper.Map<FlashcardDetailResponseModel>(flashcards);
         return mapper;
     }
     [HttpDelete]
@@ -63,18 +63,18 @@ public class FlashcardController : ControllerBase
     [HttpPut]
     [Route("{id}")]
     [Authorize]
-    public async Task<ResponseDto> UpdateFlashcard([FromRoute] Guid id, [FromBody] FlashcardUpdateDto flashcardUpdateDto)
+    public async Task<ResponseDto> UpdateFlashcard([FromRoute] Guid id, [FromBody] FlashcardUpdateModel flashcardUpdateModel)
     {
-        var mapper = _mapper.Map<FlashcardDto>(flashcardUpdateDto);
+        var mapper = _mapper.Map<FlashcardDto>(flashcardUpdateModel);
         return await _flashcardService.UpdateFlashcard(mapper, id);
     }
     
     [HttpPost]
     [Authorize]
     [Route("subject/{subjectId}")]
-    public async Task<ResponseDto> CreateFlashcard([FromBody] FlashcardCreateDto dto, [FromRoute] Guid subjectId)
+    public async Task<ResponseDto> CreateFlashcard([FromBody] FlashcardCreateModel model, [FromRoute] Guid subjectId)
     {
-        var mapper = _mapper.Map<FlashcardDto>(dto);
+        var mapper = _mapper.Map<FlashcardDto>(model);
         return await _flashcardService.CreateFlashcard(mapper,subjectId);
     }
 }

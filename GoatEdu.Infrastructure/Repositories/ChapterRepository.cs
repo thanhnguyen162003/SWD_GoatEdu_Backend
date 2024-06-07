@@ -68,17 +68,6 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
         return new ResponseDto(HttpStatusCode.OK, "Chapter successfully deleted.");
     }
 
-    public async Task<bool> GetAllChapterCheck(string name)
-    {
-        var exitsChapter =  await _entities.Where(x => x.ChapterName == name).FirstOrDefaultAsync();
-        if (exitsChapter == null)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
     public async Task<ResponseDto> UpdateChapter(ChapterDto dto, Guid chapterId)
     {
         var chapter = await _entities.FirstOrDefaultAsync(c => c.Id == chapterId);
@@ -146,5 +135,15 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
                 : chapters.OrderBy(c => c.CreatedAt).ThenBy(c => c.ChapterName),
         };
         return chapters;
+    }
+    
+    public async Task<bool> ChapterNameExistsAsync(string name)
+    {
+        return await _entities.AnyAsync(s => s.ChapterName.ToLower() == name.ToLower());
+    }
+
+    public async Task<bool> ChapterLevelExistsAsync(int? code)
+    {
+        return await _entities.AnyAsync(s => s.ChapterLevel == code);
     }
 }

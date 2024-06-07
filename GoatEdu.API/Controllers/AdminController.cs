@@ -31,9 +31,9 @@ public class AdminController : ControllerBase
         return await _adminService.SuppenseUser(id);
     }
     [HttpPost("user")]
-    public async Task<ResponseDto> CreateUser([FromBody] CreateUserRequestDto dto)
+    public async Task<ResponseDto> CreateUser([FromBody] CreateUserRequestModel model)
     {
-        var mapper = _mapper.Map<CreateUserDto>(dto);
+        var mapper = _mapper.Map<CreateUserDto>(model);
         return await _adminService.CreateUser(mapper);
     }
     [HttpGet("authorize/user")]

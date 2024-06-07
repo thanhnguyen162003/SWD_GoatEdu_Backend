@@ -5,7 +5,7 @@ using Infrastructure.Data;
 
 namespace GoatEdu.Core.Validator;
 
-public class NotificationRequestDtoValidator : AbstractValidator<NotificationRequestDto>
+public class NotificationRequestDtoValidator : AbstractValidator<NotificationRequestModel>
 {
     public NotificationRequestDtoValidator()
     {

@@ -11,11 +11,12 @@ public interface IChapterRepository : IRepository<Chapter>
 {
     Task<ICollection<Chapter>> GetChapters(ChapterQueryFilter queryFilter);
     Task<ICollection<Chapter>> GetChaptersBySubject(Guid subjectId);
-
     Task<ChapterDto> GetChapterByChapterId(Guid id);
     Task<ResponseDto> DeleteChapter(Guid id);
     Task<ResponseDto> UpdateChapter(ChapterDto dto, Guid chapterId);
     Task<ResponseDto> CreateChapter(Chapter dto);
     Task<ChapterDto> GetChapterByChapterName(string chapterName);
-    Task<bool> GetAllChapterCheck(string name);
+    // Validation
+    Task<bool> ChapterNameExistsAsync(string name);
+    Task<bool> ChapterLevelExistsAsync(int? code);
 }

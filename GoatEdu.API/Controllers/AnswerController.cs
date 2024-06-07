@@ -30,7 +30,7 @@ public class AnswerController : ControllerBase
         try
         {
             var result = await _answerService.GetByDiscussionId(id, queryFilter);
-            var mapper = _mapper.Map<PagedList<AnswerResponseDto>>(result);
+            var mapper = _mapper.Map<PagedList<AnswerResponseModel>>(result);
             
             var metadata = new Metadata
             {
@@ -54,7 +54,7 @@ public class AnswerController : ControllerBase
     
     [HttpPost]
     
-    public async Task<IActionResult> InsertAnswer([FromForm, Required] AnswerRequestDto model)
+    public async Task<IActionResult> InsertAnswer([FromForm, Required] AnswerRequestModel model)
     {
         try
         {
@@ -75,7 +75,7 @@ public class AnswerController : ControllerBase
     }
     
     [HttpPut]
-    public async Task<IActionResult> DeleteNotifications(Guid id, AnswerRequestDto model)
+    public async Task<IActionResult> DeleteNotifications(Guid id, AnswerRequestModel model)
     {
         try
         {

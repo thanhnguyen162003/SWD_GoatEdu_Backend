@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Net;
 using AutoMapper;
+using FluentValidation;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.SubjectDto;
@@ -19,14 +20,17 @@ public class SubjectService : ISubjectService
     private readonly IMapper _mapper;
     private readonly PaginationOptions _paginationOptions;
     private readonly ICloudinaryService _cloudinaryService;
+    private readonly IValidator<SubjectDto> _validator;
+
 
     public SubjectService(
-        IUnitOfWork unitOfWork, IMapper mapper, IOptions<PaginationOptions> paginationOptions,ICloudinaryService cloudinaryService)
+        IUnitOfWork unitOfWork, IMapper mapper, IOptions<PaginationOptions> paginationOptions,ICloudinaryService cloudinaryService, IValidator<SubjectDto> validator)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _paginationOptions = paginationOptions.Value;
         _cloudinaryService = cloudinaryService;
+        _validator = validator;
     }
 
     public async Task<IEnumerable<SubjectDto>> GetAllSubjects(SubjectQueryFilter queryFilter)
@@ -80,6 +84,13 @@ public class SubjectService : ISubjectService
 
     public async Task<ResponseDto> UpdateSubject(SubjectDto dto, Guid id)
     {
+        var validationResult = await _validator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
+            return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
+        }
+        
         string imageUrl = null;
 
         if (dto.Image != null)
@@ -107,6 +118,13 @@ public class SubjectService : ISubjectService
     //process image
     public async Task<ResponseDto> CreateSubject(SubjectDto dto)
     {
+        var validationResult = await _validator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
+            return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
+        }
+        
         var uploadResult = await _cloudinaryService.UploadAsync(dto.ImageConvert);
         if (uploadResult.Error != null)
         {

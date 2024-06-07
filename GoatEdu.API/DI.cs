@@ -99,12 +99,13 @@ public static class DI
         services.AddScoped<ICloudinaryService, CloudinaryService>();
         
         // Add FluentValidation
-        services.AddScoped<IValidator<SubjectCreateDto>, SubjectCreateDtoValidator>();
-        services.AddScoped<IValidator<NotificationRequestDto>, NotificationRequestDtoValidator>();
-        services.AddScoped<IValidator<NoteRequestDto>, NoteRequestDtoValidator>();
-        services.AddScoped<IValidator<ChapterDto>, ChapterRequestDtoValidator>();
-        services.AddScoped<IValidator<TagRequestDto>, TagRequestDtoValidator>();
-        services.AddScoped<IValidator<DiscussionRequestDto>, DisscussionRequestDtoValidator>();
+        services.AddScoped<IValidator<SubjectDto>, SubjectDtoValidator>();
+        services.AddScoped<IValidator<NotificationRequestModel>, NotificationRequestDtoValidator>();
+        services.AddScoped<IValidator<NoteDto>, NoteDtoValidator>();
+        services.AddScoped<IValidator<ChapterDto>, ChapterDtoValidator>();
+        services.AddScoped<IValidator<TagDto>, TagDtoValidator>();
+        services.AddScoped<IValidator<DiscussionDto>, CreateDiscussionDtoValidator>();
+        services.AddScoped<IValidator<DiscussionUpdateDto>, UpdateDiscussionDtoValidator>();
         
         return services;
     }

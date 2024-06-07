@@ -51,7 +51,8 @@ public class AnswerService : IAnswerService
         
             mapper.AnswerImage = image.Url.ToString();
         }
-        
+
+        mapper.AnswerVote = 0;
         mapper.AnswerName = _claimsService.GetCurrentFullname;
         mapper.CreatedAt = _currentTime.GetCurrentTime();
         mapper.CreatedBy = _claimsService.GetCurrentFullname;

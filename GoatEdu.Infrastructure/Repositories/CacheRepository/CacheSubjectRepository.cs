@@ -158,4 +158,26 @@ public class CacheSubjectRepository : ISubjectRepository
         await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(subjects,loopHandling),cacheOptions);
         return subjects;
     }
+
+    public async Task<bool> SubjectIdExistAsync(Guid? guid)
+    {
+        // No need to cache create operations
+        var response = await _decorated.SubjectIdExistAsync(guid);
+        return response;
+    }
+
+    public async Task<bool> SubjectNameExistAsync(string name)
+    {
+        // No need to cache create operations
+
+        var response = await _decorated.SubjectNameExistAsync(name);
+        return response;
+    }
+
+    public async Task<bool> SubjectCodeExistAsync(string code)
+    {
+        // No need to cache create operations
+        var response = await _decorated.SubjectCodeExistAsync(code);
+        return response;
+    }
 }

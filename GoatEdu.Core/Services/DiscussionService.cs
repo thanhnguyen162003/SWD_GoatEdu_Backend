@@ -1,5 +1,6 @@
 using System.Net;
 using AutoMapper;
+using FluentValidation;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.TagDto;
@@ -23,10 +24,13 @@ public class DiscussionService : IDiscussionService
     private readonly IClaimsService _claimsService;
     private readonly PaginationOptions _paginationOptions;
     private readonly ICloudinaryService _cloudinaryService;
+    private readonly IValidator<DiscussionDto> _validator;
+    private readonly IValidator<DiscussionUpdateDto> _validatorUpdate;
 
 
     public DiscussionService(IUnitOfWork unitOfWork, IMapper mapper, ICurrentTime currentTime,
-        IClaimsService claimsService, IOptions<PaginationOptions> options, ICloudinaryService cloudinaryService)
+        IClaimsService claimsService, IOptions<PaginationOptions> options, ICloudinaryService cloudinaryService,
+        IValidator<DiscussionDto> validator, IValidator<DiscussionUpdateDto> validatorUpdate)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -34,6 +38,8 @@ public class DiscussionService : IDiscussionService
         _claimsService = claimsService;
         _paginationOptions = options.Value;
         _cloudinaryService = cloudinaryService;
+        _validator = validator;
+        _validatorUpdate = validatorUpdate;
     }
 
     public async Task<PagedList<DiscussionDto>> GetDiscussionByFilter(DiscussionQueryFilter queryFilter)
@@ -70,18 +76,23 @@ public class DiscussionService : IDiscussionService
         return PagedList<DiscussionDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
     }
 
-
     public async Task<ResponseDto> InsertDiscussion(DiscussionDto dto)
     {
-        var tag = await CheckAndAddTags(dto);
         
-        if (!tag.Any())
+        var validationResult = await _validator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
         {
-            return new ResponseDto(HttpStatusCode.NotFound, "Không có");
+            var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
+            return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
         }
+        
+        var tagNoExist = dto.Tags.Where(x => x.Id == null).ToList();
+        var tag = await CheckAndAddTags(tagNoExist);
+        if (!tag.Any()) return new ResponseDto(HttpStatusCode.NotFound, "Không có");
+        
         var mapper = _mapper.Map<Discussion>(dto);
 
-        if (dto.DiscussionImage != null)
+        if (dto.DiscussionImageConvert != null)
         {
             var image = await _cloudinaryService.UploadAsync(dto.DiscussionImageConvert);
             if (image.Error != null)
@@ -115,46 +126,46 @@ public class DiscussionService : IDiscussionService
         return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Delete Successfully!") : new ResponseDto(HttpStatusCode.BadRequest, "Delete Failed!");
     }
 
-    public async Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionDto dto)
+    public async Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionUpdateDto dto)
     {
-        var userId = _claimsService.GetCurrentUserId;
-        var tag = await CheckAndAddTags(dto);
-        if (!tag.Any())
+        var validationResult = await _validatorUpdate.ValidateAsync(dto);
+        if (!validationResult.IsValid)
         {
-            return new ResponseDto(HttpStatusCode.NotFound, "Không có");
+            var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
+            return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
         }
         
+        var tagNoExist = dto.Tags.Where(x => x.Id == null).ToList();
+        var tag = await CheckAndAddTags(tagNoExist);
+        if (!tag.Any()) return new ResponseDto(HttpStatusCode.NotFound, "Không có");
+        
+        var userId = _claimsService.GetCurrentUserId;
         var disscussion = await _unitOfWork.DiscussionRepository.GetByIdAndUserId(guid, userId);
-        if (disscussion is null)
-        {
-            return new ResponseDto(HttpStatusCode.NotFound, "Không được cập nhật");
-        }
+        if (disscussion is null) return new ResponseDto(HttpStatusCode.NotFound, "Không được cập nhật");
         
         disscussion = _mapper.Map(dto, disscussion);
         
-        if (dto.DiscussionImage != null)
+        if (dto.DiscussionImageConvert != null)
         {
             var image = await _cloudinaryService.UploadAsync(dto.DiscussionImageConvert);
             if (image.Error != null)
             {
                 return new ResponseDto(HttpStatusCode.BadRequest, image.Error.Message);
             }
-        
             disscussion.DiscussionImage = image.Url.ToString();
         }
         
         disscussion.Status = DiscussionStatus.Unapproved.ToString();
         disscussion.UpdatedBy = _claimsService.GetCurrentFullname;
         disscussion.UpdatedAt = _currentTime.GetCurrentTime();
+        
         _unitOfWork.DiscussionRepository.Update(disscussion);
         var result = await _unitOfWork.SaveChangesAsync();
         return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Update Successfully!") : new ResponseDto(HttpStatusCode.BadRequest, "Update Failed!");
     }
 
-    private async Task<IEnumerable<Tag?>> CheckAndAddTags(DiscussionDto dto)
+    private async Task<IEnumerable<Tag?>> CheckAndAddTags(List<TagDto> tagNoExist)
     {
-            var tagNoExist = dto.Tags.Where(x => x.Id == null).ToList();
-        
             if (tagNoExist.Any())
             {
                 var tags = tagNoExist.Select(x =>
@@ -172,7 +183,7 @@ public class DiscussionService : IDiscussionService
                 if (save < 1) return Enumerable.Empty<Tag>();
             }
 
-            var names = dto.Tags.Select(x => x.TagName);
+            var names = tagNoExist.Select(x => x.TagName);
             var tag = await _unitOfWork.TagRepository.GetTagNameByNameAsync(names);
             return tag.Count() == 4 ? tag : Enumerable.Empty<Tag>();
     } 

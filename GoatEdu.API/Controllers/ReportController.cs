@@ -24,9 +24,9 @@ public class ReportController : ControllerBase
     
     
     [HttpPost]
-    public async Task<ResponseDto> CreateUser([FromBody] ReportRequestDto dto)
+    public async Task<ResponseDto> CreateUser([FromBody] ReportRequestModel model)
     {
-        var mapper = _mapper.Map<ReportDto>(dto);
+        var mapper = _mapper.Map<ReportDto>(model);
         return await _reportService.SendReport(mapper);
     }
 }

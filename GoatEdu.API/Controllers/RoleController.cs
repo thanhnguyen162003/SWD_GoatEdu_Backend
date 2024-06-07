@@ -22,24 +22,24 @@ public class RoleController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ICollection<RoleResponseDto>> GetAllRoles()
+    public async Task<ICollection<RoleResponseModel>> GetAllRoles()
     {
         var listRole =  await _roleService.GetAllRole();
-        var mapper = _mapper.Map<ICollection<RoleResponseDto>>(listRole);
+        var mapper = _mapper.Map<ICollection<RoleResponseModel>>(listRole);
         return mapper;
     }
     [HttpGet("{id}")]
-    public async Task<RoleResponseDto> GetRoleById([FromRoute] Guid id)
+    public async Task<RoleResponseModel> GetRoleById([FromRoute] Guid id)
     {
         var role = await _roleService.GetRoleByRoleId(id);
-        var mapper = _mapper.Map<RoleResponseDto>(role);
+        var mapper = _mapper.Map<RoleResponseModel>(role);
         return mapper;
     }
     [HttpGet("name")]
-    public async Task<RoleResponseDto> GetRoleByName(string name)
+    public async Task<RoleResponseModel> GetRoleByName(string name)
     {
         var role = await _roleService.GetRoleByRoleName(name);
-        var mapper = _mapper.Map<RoleResponseDto>(role);
+        var mapper = _mapper.Map<RoleResponseModel>(role);
         return mapper;
     }
     

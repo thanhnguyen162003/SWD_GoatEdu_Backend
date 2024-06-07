@@ -14,4 +14,9 @@ public interface ISubjectRepository
     Task<ResponseDto> CreateSubject(Subject dto);
     Task<SubjectDto> GetSubjectBySubjectName(string subjectName);
     Task<IEnumerable<Subject>> GetSubjectByClass(string classes, SubjectQueryFilter queryFilter);
+    
+    //Check Validation
+    Task<bool> SubjectIdExistAsync(Guid? guid);
+    Task<bool> SubjectNameExistAsync(string name);
+    Task<bool> SubjectCodeExistAsync(string code);
 }

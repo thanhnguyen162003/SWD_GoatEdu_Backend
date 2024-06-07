@@ -19,37 +19,35 @@ namespace GoatEdu.API.Controllers;
 public class ChapterController : ControllerBase
 {
     private readonly IChapterService _chapterService;
-    private readonly IValidator<ChapterDto> _validator;
     private readonly IMapper _mapper;
 
 
-    public ChapterController(IChapterService chapterService, IValidator<ChapterDto> validator, IMapper mapper)
+    public ChapterController(IChapterService chapterService, IMapper mapper)
     {
         _chapterService = chapterService;
-        _validator = validator;
         _mapper = mapper;
     }
     [HttpGet]
-    public async Task<ICollection<ChapterResponseDto>> GetAllChapter([FromQuery, Required] ChapterQueryFilter queryFilter)
+    public async Task<ICollection<ChapterResponseModel>> GetAllChapter([FromQuery, Required] ChapterQueryFilter queryFilter)
     {
         var listChapter =  await _chapterService.GetChapters(queryFilter);
-        var mapper = _mapper.Map<ICollection<ChapterResponseDto>>(listChapter);
+        var mapper = _mapper.Map<ICollection<ChapterResponseModel>>(listChapter);
         return mapper;
 
     }
     
     [HttpGet("{id}")]
-    public async Task<ChapterResponseDto> GetChapterById(Guid id)
+    public async Task<ChapterResponseModel> GetChapterById(Guid id)
     {
         var chapter = await _chapterService.GetChapterByChapterId(id);
-        var mapper = _mapper.Map<ChapterResponseDto>(chapter);
+        var mapper = _mapper.Map<ChapterResponseModel>(chapter);
         return mapper;
     }
     [HttpGet("name")]
-    public async Task<ChapterResponseDto> GetChapterByName([FromQuery] string chapterName)
+    public async Task<ChapterResponseModel> GetChapterByName([FromQuery] string chapterName)
     {
         var chapter = await _chapterService.GetChapterByChapterName(chapterName);
-        var mapper = _mapper.Map<ChapterResponseDto>(chapter);
+        var mapper = _mapper.Map<ChapterResponseModel>(chapter);
         return mapper;
     }
     [HttpDelete("{id}")]
@@ -62,18 +60,17 @@ public class ChapterController : ControllerBase
     [Authorize (Roles = UserEnum.MODERATOR)]
     public async Task<ResponseDto> CreateChapter([FromBody] ChapterDto dto)
     {
-        var validationResult = await _validator.ValidateAsync(dto);
-        if (!validationResult.IsValid)
+        if (!ModelState.IsValid)
         {
-            return new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}");
+            return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", ModelState);
         }
         return await _chapterService.CreateChapter(dto);
     }
     [HttpPut("{id}")]
     [Authorize (Roles = UserEnum.MODERATOR)]
-    public async Task<ResponseDto> UpdateChapter([FromBody] ChapterCreateDto dto, [FromRoute]Guid id)
+    public async Task<ResponseDto> UpdateChapter([FromBody] ChapterCreateModel model, [FromRoute]Guid id)
     {
-        var mapper = _mapper.Map<ChapterDto>(dto);
+        var mapper = _mapper.Map<ChapterDto>(model);
         return await _chapterService.UpdateChapter(mapper, id);
     }
 }

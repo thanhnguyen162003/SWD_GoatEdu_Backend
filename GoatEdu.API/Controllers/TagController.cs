@@ -6,6 +6,7 @@ using GoatEdu.API.Request;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.TagDto;
+using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces.TagInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using Microsoft.AspNetCore.Authorization;
@@ -19,13 +20,11 @@ namespace GoatEdu.API.Controllers;
 public class TagController : ControllerBase
 {
     private readonly ITagService _tagService;
-    private readonly IValidator<TagRequestDto> _validator;
     private readonly IMapper _mapper;
 
-    public TagController(ITagService tagService, IValidator<TagRequestDto> validator, IMapper mapper)
+    public TagController(ITagService tagService, IMapper mapper)
     {
         _tagService = tagService;
-        _validator = validator;
         _mapper = mapper;
     }
     
@@ -86,23 +85,12 @@ public class TagController : ControllerBase
         }
     }
     
-    
-    
     [HttpPost]
-    [Authorize]
-    public async Task<IActionResult> AddTag(List<TagRequestDto> tagRequestDto)
+    [Authorize(Roles = UserEnum.MODERATOR)]
+    public async Task<IActionResult> AddTag(List<TagRequestModel> tagRequestDto)
     {
         try
         {
-            foreach (var data in tagRequestDto)
-            {
-                var validationResult = await _validator.ValidateAsync(data);
-                if (!validationResult.IsValid)
-                {
-                    return BadRequest(new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}")) ;
-                }
-            }
-
             var mapper = _mapper.Map<List<TagDto>>(tagRequestDto);
             var result = await _tagService.InsertTags(mapper);
             return Ok(result);
@@ -114,7 +102,7 @@ public class TagController : ControllerBase
     }
     
     [HttpDelete]
-    [Authorize (Roles = "Admin")]
+    [Authorize (Roles = UserEnum.ADMIN)]
     public async Task<IActionResult> DeleteTags(List<Guid> ids)
     {
         try
@@ -129,18 +117,12 @@ public class TagController : ControllerBase
     }
     
     [HttpPut("{id}")]
-    [Authorize (Roles = "Admin")]
-    public async Task<IActionResult> UpdateTag(Guid id, TagRequestDto tagRequestDto)
+    [Authorize (Roles = UserEnum.ADMIN)]
+    public async Task<IActionResult> UpdateTag(Guid id, TagRequestModel tagRequestModel)
     {
         try
         {
-            var validationResult = await _validator.ValidateAsync(tagRequestDto);
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}")) ;
-            }
-
-            var mapper = _mapper.Map<TagDto>(tagRequestDto);
+            var mapper = _mapper.Map<TagDto>(tagRequestModel);
             var result = await _tagService.UpdateTag(id, mapper);
             return Ok(result);
         }

@@ -105,6 +105,21 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
         return await subjects.ToListAsync();
     }
 
+    public async Task<bool> SubjectIdExistAsync(Guid? guid)
+    {
+        return await _entities.AnyAsync(x => x.Id == guid);
+    }
+
+    public async Task<bool> SubjectNameExistAsync(string name)
+    {
+        return await _entities.AnyAsync(x => x.SubjectName.Equals(name, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public async Task<bool> SubjectCodeExistAsync(string code)
+    {
+        return await _entities.AnyAsync(x => x.SubjectCode.Equals(code, StringComparison.OrdinalIgnoreCase));
+    }
+
     public async Task<SubjectDto> GetSubjectBySubjectName(string subjectName)
     {
         return await _entities.AsNoTracking()

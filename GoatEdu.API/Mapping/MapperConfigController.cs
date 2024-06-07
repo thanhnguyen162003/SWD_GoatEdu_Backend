@@ -12,7 +12,6 @@ using GoatEdu.Core.DTOs.RoleDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.DTOs.TagDto;
 using Infrastructure;
-using DiscussionResponseDto = GoatEdu.API.Response.DiscussionResponseDto;
 using LoginResponseDto = GoatEdu.Core.DTOs.LoginResponseDto;
 
 namespace GoatEdu.API.Mapping;
@@ -21,34 +20,34 @@ public class MapperConfigController : Profile
 {
     public MapperConfigController()
     {
-        CreateMap<SubjectDto, SubjectCreateDto>()
+        CreateMap<SubjectDto, SubjectCreateModel>()
             .ForMember(dest => dest.image, opt => opt.MapFrom(src => src.ImageConvert))
             .ReverseMap();
-        CreateMap<ChapterDto, ChapterCreateDto>().ReverseMap();
-        CreateMap<ChapterDto, ChapterResponseDto>().ReverseMap();
-        CreateMap<CreateUserDto, CreateUserRequestDto>().ReverseMap();
-        CreateMap<CreateUserDto, CreateUserResponse>().ReverseMap();
-        CreateMap<DiscussionDto, DiscussionRequestDto>().ReverseMap();
-        CreateMap<DiscussionDto, DiscussionResponseDto>().ReverseMap();
-        CreateMap<NoteDto, NoteRequestDto>().ReverseMap();
-        CreateMap<NoteDto, NoteResponseDto>().ReverseMap();
-        CreateMap<NotificationDto, NotificationRequestDto>().ReverseMap();
-        CreateMap<NotificationDto, NotiDetailResponseDto>().ReverseMap();
-        CreateMap<FlashcardDto, FlashcardCreateDto>().ReverseMap();
-        CreateMap<FlashcardDto, FlashcardUpdateDto>().ReverseMap();
-        CreateMap<ReportDto, ReportRequestDto>().ReverseMap();
-        CreateMap<TagDto, TagRequestDto>().ReverseMap();
-        CreateMap<TagDto, TagResponseDto>().ReverseMap();
-        CreateMap<UserUpdateDto, UserUpdateDto>().ReverseMap();
-        CreateMap<RoleDto, RoleResponseDto>().ReverseMap();
-        CreateMap<UserUpdateDto, UserUpdateDto>().ReverseMap();
-        CreateMap<ReportDto, SubjectResponseDto>().ReverseMap();
-        CreateMap<SubjectDto, SubjectResponseDto>().ReverseMap();
-        CreateMap<FlashcardDto, FlashcardResponseDto>()
+        CreateMap<ChapterDto, ChapterCreateModel>().ReverseMap();
+        CreateMap<ChapterDto, ChapterResponseModel>().ReverseMap();
+        CreateMap<CreateUserDto, CreateUserRequestModel>().ReverseMap();
+        CreateMap<CreateUserDto, CreateUserResponseModel>().ReverseMap();
+        CreateMap<DiscussionDto, DiscussionRequestModel>().ReverseMap();
+        CreateMap<DiscussionDto, DiscussionResponseModel>().ReverseMap();
+        CreateMap<NoteDto, NoteRequestModel>().ReverseMap();
+        CreateMap<NoteDto, NoteResponseModel>().ReverseMap();
+        CreateMap<NotificationDto, NotificationRequestModel>().ReverseMap();
+        CreateMap<NotificationDto, NotiDetailResponseModel>().ReverseMap();
+        CreateMap<FlashcardDto, FlashcardCreateModel>().ReverseMap();
+        CreateMap<FlashcardDto, FlashcardUpdateModel>().ReverseMap();
+        CreateMap<ReportDto, ReportRequestModel>().ReverseMap();
+        CreateMap<TagDto, TagRequestModel>().ReverseMap();
+        CreateMap<TagDto, TagResponseModel>().ReverseMap();
+        CreateMap<UserUpdateModel, UserUpdateModel>().ReverseMap();
+        CreateMap<RoleDto, RoleResponseModel>().ReverseMap();
+        CreateMap<UserUpdateModel, UserUpdateModel>().ReverseMap();
+        CreateMap<ReportDto, SubjectResponseModel>().ReverseMap();
+        CreateMap<SubjectDto, SubjectResponseModel>().ReverseMap();
+        CreateMap<FlashcardDto, FlashcardResponseModel>()
             .ForMember(dest => dest.numberOfFlashcardContent, opt => opt.MapFrom(src => src.numberOfFlashcardContent))
             .ForMember(dest => dest.fullName, opt => opt.MapFrom(src => src.fullName))
             .ReverseMap();
-        CreateMap<FlashcardDto, FlashcardDetailResponse>()
+        CreateMap<FlashcardDto, FlashcardDetailResponseModel>()
             .ReverseMap();
 
         CreateMap<ChapterDto, ChapterSubjectDto>()
@@ -56,12 +55,14 @@ public class MapperConfigController : Profile
             .ForMember(dest => dest.ChapterName, opt => opt.MapFrom(src => src.ChapterName))
             .ForMember(dest => dest.ChapterLevel, opt => opt.MapFrom(src => src.ChapterLevel))
             .ReverseMap();
-        
-        CreateMap<DiscussionDto, DiscussionDetailResponseDto>().ReverseMap();
-        CreateMap<DiscussionDto, DiscussionResponseDto>().ReverseMap();
-        CreateMap<DiscussionDto, DiscussionRequestDto>()
+
+        CreateMap<DiscussionUpdateDto, DiscussionRequestModel>()
             .ForMember(dest => dest.DiscussionImage, opt => opt.MapFrom(src => src.DiscussionImageConvert))
-            .ForMember(dest => dest.Tags, opt => opt.Ignore())
+            .ReverseMap();
+        CreateMap<DiscussionDto, DiscussionDetailResponseModel>().ReverseMap();
+        CreateMap<DiscussionDto, DiscussionResponseModel>().ReverseMap();
+        CreateMap<DiscussionDto, DiscussionRequestModel>()
+            .ForMember(dest => dest.DiscussionImage, opt => opt.MapFrom(src => src.DiscussionImageConvert))
             .ReverseMap();
         
         CreateMap<User, LoginResponseDto>()
@@ -73,10 +74,10 @@ public class MapperConfigController : Profile
             .ForMember(dest => dest.emailVerify, opt => opt.MapFrom(src => src.EmailVerify))
             .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role));
 
-        CreateMap<AnswerDto, AnswerRequestDto>()
+        CreateMap<AnswerDto, AnswerRequestModel>()
             .ForMember(dest => dest.AnswerImage, opt => opt.MapFrom(src => src.AnswerImageConvert))
             .ReverseMap();
 
-        CreateMap<AnswerDto, AnswerResponseDto>().ReverseMap();
+        CreateMap<AnswerDto, AnswerResponseModel>().ReverseMap();
     }
 }

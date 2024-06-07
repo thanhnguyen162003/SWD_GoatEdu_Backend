@@ -1,5 +1,7 @@
 using System.Net;
 using AutoMapper;
+using CloudinaryDotNet.Actions;
+using FluentValidation;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.ChapterDto;
@@ -16,12 +18,14 @@ public class ChapterService : IChapterService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly PaginationOptions _paginationOptions;
+    private readonly IValidator<ChapterDto> _validator;
 
-    public ChapterService(IUnitOfWork unitOfWork, IMapper mapper, IOptions<PaginationOptions> paginationOptions)
+    public ChapterService(IUnitOfWork unitOfWork, IMapper mapper, IOptions<PaginationOptions> paginationOptions, IValidator<ChapterDto> validator)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _paginationOptions = paginationOptions.Value;
+        _validator = validator;
     }
 
     public async Task<ICollection<ChapterDto>> GetChapters(ChapterQueryFilter queryFilter)
@@ -51,11 +55,13 @@ public class ChapterService : IChapterService
 
     public async Task<ResponseDto> CreateChapter(ChapterDto dto)
     {
-        var isValidName = await _unitOfWork.ChapterRepository.GetAllChapterCheck(dto.ChapterName);
-        if (isValidName == false)
+        var validationResult = await _validator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
         {
-            return new ResponseDto(HttpStatusCode.BadRequest, "Chapter name is already Exits.");
+            var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
+            return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
         }
+        
         var newChapter = new Chapter
         {
             ChapterName = dto.ChapterName,

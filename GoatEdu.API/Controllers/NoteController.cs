@@ -6,10 +6,13 @@ using GoatEdu.API.Request;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.NoteDto;
+using GoatEdu.Core.Interfaces.ClaimInterfaces;
+using GoatEdu.Core.Interfaces.GenericInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using GoatEdu.Core.Validator;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -20,17 +23,16 @@ namespace GoatEdu.API.Controllers;
 public class NoteController : ControllerBase
 {
     private readonly INoteService _noteService;
-    private readonly IValidator<NoteRequestDto> _validator;
     private readonly IMapper _mapper;
 
-    public NoteController(INoteService noteService, IValidator<NoteRequestDto> validator, IMapper mapper)
+    public NoteController(INoteService noteService, IMapper mapper)
     {
         _noteService = noteService;
-        _validator = validator;
         _mapper = mapper;
     }
 
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<IActionResult> GetDetailsNoteById([Required] Guid id)
     {
         try
@@ -45,6 +47,7 @@ public class NoteController : ControllerBase
     }
 
     [HttpGet("user")]
+    [Authorize]
     public async Task<IActionResult> GetNoteByFilter([FromQuery, Required] NoteQueryFilter queryFilter)
     {
         try
@@ -72,17 +75,12 @@ public class NoteController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<IActionResult> AddNote([Required] NoteRequestDto noteRequestDto)
+    [Authorize]
+    public async Task<IActionResult> AddNote([Required] NoteRequestModel noteRequestModel)
     {
         try
         {
-            var validationResult = await _validator.ValidateAsync(noteRequestDto);
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}")) ;
-            }
-
-            var mapper = _mapper.Map<NoteDto>(noteRequestDto);
+            var mapper = _mapper.Map<NoteDto>(noteRequestModel);
             var result = await _noteService.InsertNote(mapper);
             return Ok(result);
         }
@@ -93,6 +91,7 @@ public class NoteController : ControllerBase
     }
     
     [HttpDelete]
+    [Authorize]
     public async Task<IActionResult> DeleteNotes([FromQuery, Required] List<Guid> ids)
     {
         try
@@ -105,4 +104,21 @@ public class NoteController : ControllerBase
             return BadRequest(e.Message);
         }
     } 
+    
+    [HttpPut("{id}")]
+    [Authorize]
+    public async Task<IActionResult> UpdateNote([FromRoute, Required] Guid id, [FromQuery, Required] NoteRequestModel noteRequestModel)
+    {
+        try
+        {
+            var mapper = _mapper.Map<NoteDto>(noteRequestModel);
+            var result = await _noteService.UpdateNote(mapper);
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    } 
+    
 }

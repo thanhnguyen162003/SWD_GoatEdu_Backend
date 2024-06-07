@@ -24,11 +24,11 @@ namespace GoatEdu.API.Controllers;
 public class NotificationController : ControllerBase
 {
     private readonly INotificationService _notificationService;
-    private readonly IValidator<NotificationRequestDto> _validator;
+    private readonly IValidator<NotificationRequestModel> _validator;
     private readonly IMapper _mapper;
 
     public NotificationController(INotificationService notificationService,
-        IValidator<NotificationRequestDto> validator, IMapper mapper)
+        IValidator<NotificationRequestModel> validator, IMapper mapper)
     {
         _notificationService = notificationService;
         _validator = validator;
@@ -57,7 +57,7 @@ public class NotificationController : ControllerBase
         try
         {
             var result = await _notificationService.GetNotificationByCurrentUser(queryFilter);
-            var mapper = _mapper.Map<PagedList<NotiDetailResponseDto>>(result);
+            var mapper = _mapper.Map<PagedList<NotiDetailResponseModel>>(result);
             
             var metadata = new Metadata
             {
@@ -80,7 +80,7 @@ public class NotificationController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddNotifications([Required] NotificationRequestDto requestDto)
+    public async Task<IActionResult> AddNotifications([Required] NotificationRequestModel requestModel)
     {
         try
         {
@@ -90,7 +90,7 @@ public class NotificationController : ControllerBase
             //     return BadRequest(new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}"));
             // }
 
-            var mapper = _mapper.Map<NotificationDto>(requestDto);
+            var mapper = _mapper.Map<NotificationDto>(requestModel);
             var result = await _notificationService.InsertNotification(mapper);
             return Ok(result);
         }
