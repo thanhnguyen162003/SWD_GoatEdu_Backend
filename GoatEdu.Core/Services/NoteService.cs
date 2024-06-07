@@ -73,16 +73,18 @@ public class NoteService : INoteService
 
     public async Task<ResponseDto> DeleteNotes(List<Guid> guids)
     {
-        await _unitOfWork.NoteRepository.SoftDelete(guids);
+        var userId = _claimsService.GetCurrentUserId;
+        await _unitOfWork.NoteRepository.SoftDelete(guids, userId);
         var result = await _unitOfWork.SaveChangesAsync();
         return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Delete Successfully !") : new ResponseDto(HttpStatusCode.BadRequest, "Delete Failed !");
     }
 
     public async Task<ResponseDto> UpdateNote(Guid guid, NoteDto noteRequestDto)
     {
-        var note = await _unitOfWork.NoteRepository.GetByIdAsync(guid);
+        var userId = _claimsService.GetCurrentUserId;
+        var note = await _unitOfWork.NoteRepository.GetNoteByUserId(guid, userId);
         
-        if (note == null) return new ResponseDto(HttpStatusCode.NotFound, "Kiếm không có thấy");
+        if (note == null) return new ResponseDto(HttpStatusCode.NotFound, "");
         
         note = _mapper.Map(noteRequestDto, note);
         note.UpdatedBy = _claimsService.GetCurrentFullname;

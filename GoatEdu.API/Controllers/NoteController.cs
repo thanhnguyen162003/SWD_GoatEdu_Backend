@@ -72,7 +72,7 @@ public class NoteController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<IActionResult> AddNote(NoteRequestDto noteRequestDto)
+    public async Task<IActionResult> AddNote([Required] NoteRequestDto noteRequestDto)
     {
         try
         {
@@ -93,7 +93,7 @@ public class NoteController : ControllerBase
     }
     
     [HttpDelete]
-    public async Task<IActionResult> DeleteNotes(List<Guid> ids)
+    public async Task<IActionResult> DeleteNotes([FromQuery, Required] List<Guid> ids)
     {
         try
         {

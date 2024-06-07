@@ -3,6 +3,7 @@ using System.Net;
 using AutoMapper;
 using FluentValidation;
 using GoatEdu.API.Request;
+using GoatEdu.API.Response;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.NotificationDto;
@@ -56,7 +57,8 @@ public class NotificationController : ControllerBase
         try
         {
             var result = await _notificationService.GetNotificationByCurrentUser(queryFilter);
-
+            var mapper = _mapper.Map<PagedList<NotiDetailResponseDto>>(result);
+            
             var metadata = new Metadata
             {
                 TotalCount = result.TotalCount,
@@ -69,7 +71,7 @@ public class NotificationController : ControllerBase
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 
-            return Ok(result);
+            return Ok(mapper);
         }
         catch (Exception e)
         {
@@ -78,15 +80,15 @@ public class NotificationController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddNotifications(NotificationRequestDto requestDto)
+    public async Task<IActionResult> AddNotifications([Required] NotificationRequestDto requestDto)
     {
         try
         {
-            var validationResult = await _validator.ValidateAsync(requestDto);
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}"));
-            }
+            // var validationResult = await _validator.ValidateAsync(requestDto);
+            // if (!validationResult.IsValid)
+            // {
+            //     return BadRequest(new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}"));
+            // }
 
             var mapper = _mapper.Map<NotificationDto>(requestDto);
             var result = await _notificationService.InsertNotification(mapper);
@@ -100,7 +102,7 @@ public class NotificationController : ControllerBase
 
     [HttpDelete]
     [Authorize (Roles = "Student, Teacher")]
-    public async Task<IActionResult> DeleteNotifications(List<Guid> ids)
+    public async Task<IActionResult> DeleteNotifications([FromQuery, Required] List<Guid> ids)
     {
         try
         {
@@ -112,4 +114,6 @@ public class NotificationController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+    
+    
 }

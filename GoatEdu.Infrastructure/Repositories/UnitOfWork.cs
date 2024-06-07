@@ -1,5 +1,6 @@
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.AdminInterfaces;
+using GoatEdu.Core.Interfaces.AnswerInterfaces;
 using GoatEdu.Core.Interfaces.ChapterInterfaces;
 using GoatEdu.Core.Interfaces.DiscussionInterfaces;
 using GoatEdu.Core.Interfaces.EnrollmentInterfaces;
@@ -44,7 +45,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly IEnrollmentProcessRepository _enrollmentProcessRepository;
     private readonly IModeratorRepository _moderatorRepository;
     private readonly IFlashcardContentRepository _flashcardContentRepository;
-
+    private readonly IAnswerRepository _answerRepository;
 
 
     public UnitOfWork(GoatEduContext context, IDistributedCache distributedCache)
@@ -72,7 +73,7 @@ public class UnitOfWork : IUnitOfWork
     public IEnrollmentProcessRepository EnrollmentProcessRepository => _enrollmentProcessRepository ?? new EnrollmentProcessRepository(_context);
     public IModeratorRepository ModeratorRepository => _moderatorRepository ?? new ModeratorRepository(_context);
     public IFlashcardContentRepository FlashcardContentRepository => _flashcardContentRepository ?? new FlashcardContentRepository(_context);
-
+    public IAnswerRepository AnswerRepository => _answerRepository ?? new AnswerRepository(_context);
 
 
     public void SaveChanges()

@@ -18,14 +18,16 @@ public class MapperConfigProfile : Profile
     {
         CreateMap<Notification, NotificationDto>().ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+        
         CreateMap<Subject, SubjectDto>()
             .ForMember(dest => dest.NumberOfChapters, opt => opt.MapFrom(src => src.Chapters.Count))
             .ForMember(dest => dest.Chapters, opt => opt.MapFrom(src => src.Chapters))
             .ReverseMap();
-            
-        
+
         CreateMap<Chapter, ChapterSubjectDto>().ReverseMap();
+       
         CreateMap<FlashcardContent, FlashcardContentDto>().ReverseMap();
+        
         CreateMap<Flashcard, FlashcardDto>()
             .ForMember(dest => dest.numberOfFlashcardContent, opt => opt.MapFrom(src => src.FlashcardContents.Count))
             .ForMember(dest => dest.fullName, opt => opt.MapFrom(src => src.User.Fullname))
@@ -41,12 +43,12 @@ public class MapperConfigProfile : Profile
         
         CreateMap<Note, NoteDto>().ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+        
         CreateMap<Notification, NotificationDto>().ReverseMap();
         
         CreateMap<Tag, TagDto>().ReverseMap()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
         
         CreateMap<User, CreateUserDto>().ReverseMap();
         CreateMap<Role, RoleDto>().ReverseMap();
@@ -77,5 +79,9 @@ public class MapperConfigProfile : Profile
             .ForMember(dest => dest.image, opt => opt.MapFrom(src => src.Image))
             .ForMember(dest => dest.emailVerify, opt => opt.MapFrom(src => src.EmailVerify))
             .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role));
+
+        CreateMap<Answer, AnswerDto>()
+            .ReverseMap()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
     }
 }
