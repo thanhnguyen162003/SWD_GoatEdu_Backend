@@ -13,4 +13,5 @@ public interface IFlashcardService
     Task<ResponseDto> CreateFlashcard(FlashcardDto flashcard, Guid subjectId);
     Task<ResponseDto> UpdateFlashcard(FlashcardDto flashcard, Guid id);
     Task<ResponseDto> DeleteFlashcard(Guid flashcardId);
+    Task<FlashcardDto> GetFlashcarDetail(Guid flashcardId);
 }

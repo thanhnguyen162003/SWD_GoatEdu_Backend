@@ -2,6 +2,7 @@ namespace GoatEdu.API.Response;
 
 public class CreateUserResponse
 {
+    //fix vali
     public string? Username { get; set; }
     
     public string? Email { get; set; }

@@ -14,5 +14,6 @@ public interface IFlashcardRepository : IRepository<Flashcard>
     Task<ResponseDto> CreateFlashcard(Flashcard flashcard);
     Task<ResponseDto> UpdateFlashcard(Flashcard flashcard, Guid userId);
     Task<ResponseDto> DeleteFlashcard(Guid flashcardId, Guid userId);
+    Task<Flashcard> GetFlashcarDetail(Guid flashcardId);
 
 }

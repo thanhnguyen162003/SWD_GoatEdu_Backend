@@ -6,6 +6,10 @@ public class FlashcardDto
     public string? flashcardName { get; set; }
     public string? flashcardDescription { get; set; }
     public int? star { get; set; }
-    public string? fullName { get; set; }
-    public int? numberOfFlashcardContent { get; set; }
+    public string fullName { get; set; }
+    public DateTime createdAt { get; set; }
+    public DateTime updatedAt { get; set; }
+    public string userImage { get; set; }
+    public int numberOfFlashcardContent { get; set; }
+    
 }

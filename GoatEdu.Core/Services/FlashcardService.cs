@@ -82,6 +82,13 @@ public class FlashcardService : IFlashcardService
         //need implement flashcard content later
         return new ResponseDto(HttpStatusCode.Created, "Subject created successfully.", newFlashcard.Id);
     }
+    
+    public async Task<FlashcardDto> GetFlashcarDetail(Guid flashcardId)
+    {
+        var listFlashcard = await _unitOfWork.FlashcardRepository.GetFlashcarDetail(flashcardId);
+        var mapper = _mapper.Map<FlashcardDto>(listFlashcard);
+        return mapper;
+    }
 
     public async Task<ResponseDto> UpdateFlashcard(FlashcardDto flashcard, Guid id)
     {

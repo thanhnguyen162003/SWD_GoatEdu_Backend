@@ -38,6 +38,14 @@ public class FlashCardController : ControllerBase
         var mapper = _mapper.Map<IEnumerable<FlashcardResponseDto>>(flashcards);
         return mapper;
     }
+    [HttpGet]
+    [Route("{flashcardId}")]
+    public async Task<FlashcardDetailResponse> GetFlashcardsSubject([FromRoute] Guid flashcardId)
+    {
+        var flashcards =  await _flashcardService.GetFlashcarDetail(flashcardId);
+        var mapper = _mapper.Map<FlashcardDetailResponse>(flashcards);
+        return mapper;
+    }
     [HttpDelete]
     [Route("{id}")]
     [Authorize]
