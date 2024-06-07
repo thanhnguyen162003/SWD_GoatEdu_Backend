@@ -12,13 +12,13 @@ namespace GoatEdu.API.Controllers;
 
 [Route("api/flashcard")]
 [ApiController]
-public class FlashCardController : ControllerBase
+public class FlashcardController : ControllerBase
 {
 
     private readonly IFlashcardService _flashcardService;
     private readonly IMapper _mapper;
 
-    public FlashCardController(IFlashcardService flashcardService, IMapper mapper)
+    public FlashcardController(IFlashcardService flashcardService, IMapper mapper)
     {
         _flashcardService = flashcardService;
         _mapper = mapper;

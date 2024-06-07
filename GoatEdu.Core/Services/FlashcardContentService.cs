@@ -1,11 +1,15 @@
+using System.Net;
 using AutoMapper;
 using GoatEdu.Core.CustomEntities;
+using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.FlashcardDto;
+using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.ClaimInterfaces;
 using GoatEdu.Core.Interfaces.FlashcardContentInterfaces;
 using GoatEdu.Core.Interfaces.FlashcardInterfaces;
 using GoatEdu.Core.QueriesFilter;
+using Infrastructure;
 using Microsoft.Extensions.Options;
 
 namespace GoatEdu.Core.Services;
@@ -37,5 +41,34 @@ public class FlashcardContentService : IFlashcardContentService
         }
         var mapperList = _mapper.Map<List<FlashcardContentDto>>(listFlashcard);
         return PagedList<FlashcardContentDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
+    }
+    
+    public async Task<ResponseDto> CreateFlashcardContent(List<FlashcardContentDto> listFlashcardContent, Guid flashcardId)
+    {
+        var fullname = _claimsService.GetCurrentFullname;
+        var userId = _claimsService.GetCurrentUserId;
+        var flashcard = await _unitOfWork.FlashcardRepository.GetFlashcardById(flashcardId);
+        if (flashcard == null)
+        {
+            return new ResponseDto(HttpStatusCode.NotFound, "Flashcard not found.");
+        }
+        if (flashcard.UserId != userId)
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "This flashcard not own by you !!!.");
+        }
+
+        var newFlashcardContents = listFlashcardContent.Select(contentDto => new FlashcardContent
+        {
+            FlashcardContentQuestion = contentDto.flashcardContentQuestion,
+            FlashcardContentAnswer = contentDto.flashcardContentAnswer,
+            CreatedBy = fullname,
+            Status = StatusConstraint.OPEN,
+            IsDeleted = false,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now,
+            FlashcardId = flashcardId
+        }).ToList();
+
+        return await _unitOfWork.FlashcardContentRepository.CreateFlashcardContent(newFlashcardContents);
     }
 }

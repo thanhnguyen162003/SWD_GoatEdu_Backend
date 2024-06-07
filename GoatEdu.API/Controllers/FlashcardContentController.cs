@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using GoatEdu.API.Response;
+using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.FlashcardDto;
 using GoatEdu.Core.Interfaces.FlashcardContentInterfaces;
 using GoatEdu.Core.QueriesFilter;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoatEdu.API.Controllers;
@@ -27,5 +29,11 @@ public class FlashcardContentController : ControllerBase
     {
         return await _flashcardContentService.GetFlashcards(queryFilter,flashcardId);
         
+    }
+    [HttpPost("{flashcardId}")]
+    [Authorize]
+    public async Task<ResponseDto> CreateFlashcardContents(Guid flashcardId, [FromBody] List<FlashcardContentDto> listFlashcardContent)
+    {
+        return await _flashcardContentService.CreateFlashcardContent(listFlashcardContent, flashcardId);
     }
 }

@@ -1,3 +1,6 @@
+using System.Net;
+using GoatEdu.Core.DTOs;
+using GoatEdu.Core.DTOs.FlashcardDto;
 using GoatEdu.Core.Interfaces.FlashcardContentInterfaces;
 using GoatEdu.Core.Interfaces.FlashcardInterfaces;
 using GoatEdu.Core.QueriesFilter;
@@ -21,6 +24,22 @@ public class FlashcardContentRepository : BaseRepository<FlashcardContent>, IFla
         flashcardContents = ApplySorting(flashcardContents, queryFilter);
         return await flashcardContents.ToListAsync();
     }
+
+    public async Task<ResponseDto> CreateFlashcardContent(List<FlashcardContent> flashcardContents)
+    {
+        try
+        {
+            await _context.FlashcardContents.AddRangeAsync(flashcardContents);
+            await _context.SaveChangesAsync();
+            return new ResponseDto(HttpStatusCode.OK, "Create FlashcardContentSuccess");
+        }
+        catch
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "Create FlashcardContentFail");
+        }
+        
+    }
+
     private IQueryable<FlashcardContent> ApplyFilterSortAndSearch(IQueryable<FlashcardContent> flashcards, FlashcardQueryFilter queryFilter)
     {
         flashcards = flashcards.Where(x => x.IsDeleted == false);
@@ -31,6 +50,8 @@ public class FlashcardContentRepository : BaseRepository<FlashcardContent>, IFla
         }
         return flashcards;
     }
+
+   
     
     private IQueryable<FlashcardContent> ApplySorting(IQueryable<FlashcardContent> flashcards, FlashcardQueryFilter queryFilter)
     {
