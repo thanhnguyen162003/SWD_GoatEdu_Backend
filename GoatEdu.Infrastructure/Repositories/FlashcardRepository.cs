@@ -117,11 +117,11 @@ public class FlashcardRepository : BaseRepository<Flashcard>, IFlashcardReposito
         flashcards = queryFilter.sort.ToLower() switch
         {
             "name" => queryFilter.sort_direction.ToLower() == "desc"
-                ? flashcards.OrderByDescending(x => x.CreatedAt)
-                : flashcards.OrderBy(x => x.CreatedAt),
+                ? flashcards.OrderByDescending(x => x.Star)
+                : flashcards.OrderBy(x => x.Star),
             _ => queryFilter.sort_direction.ToLower() == "desc"
-                ? flashcards.OrderByDescending(x => x.CreatedAt).ThenBy(x => x.CreatedAt)
-                : flashcards.OrderBy(x => x.CreatedAt).ThenBy(x => x.CreatedAt),
+                ? flashcards.OrderByDescending(x => x.Star).ThenBy(x => x.Star)
+                : flashcards.OrderBy(x => x.Star).ThenBy(x => x.Star),
         };
         return flashcards;
     }
