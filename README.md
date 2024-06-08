@@ -1,5 +1,5 @@
 <img align="left" width="116" height="116" src="https://raw.githubusercontent.com/marlonajgayle/Net6WebApiTemplate/develop/src/Content/.template.config/icon.png" />
-
+...
 # .NET 6 GoatEdu
 [![Build](https://github.com/marlonajgayle/Net6WebApiTemplate/actions/workflows/dotnet.yml/badge.svg?branch=develop)](https://github.com/marlonajgayle/Net6WebApiTemplate/actions/workflows/dotnet.yml)
 [![CodeQL](https://github.com/marlonajgayle/Net6WebApiTemplate/actions/workflows/codeql-analysis.yml/badge.svg?branch=develop)](https://github.com/marlonajgayle/Net6WebApiTemplate/actions/workflows/codeql-analysis.yml)
