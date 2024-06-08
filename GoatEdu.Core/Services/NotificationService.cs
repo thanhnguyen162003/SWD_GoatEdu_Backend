@@ -1,5 +1,6 @@
 using System.Net;
 using AutoMapper;
+using FluentValidation;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.NotificationDto;
@@ -24,8 +25,9 @@ public class NotificationService : INotificationService
     private readonly PaginationOptions _paginationOptions;
     private readonly IClaimsService _claimsService;
     private readonly IHubContext<HubService, IHubService> _hubContext;
+    private readonly IValidator<NotificationDto> _validator;
 
-    public NotificationService(IUnitOfWork unitOfWork,IClaimsService claimsService, ICurrentTime currentTime, IMapper mapper, IOptions<PaginationOptions> options, IHubContext<HubService, IHubService> hubContext)
+    public NotificationService(IUnitOfWork unitOfWork,IClaimsService claimsService, ICurrentTime currentTime, IMapper mapper, IOptions<PaginationOptions> options, IHubContext<HubService, IHubService> hubContext, IValidator<NotificationDto> validator)
     {
         _unitOfWork = unitOfWork;
         _currentTime = currentTime;
@@ -33,6 +35,7 @@ public class NotificationService : INotificationService
         _paginationOptions = options.Value;
         _claimsService = claimsService;
         _hubContext = hubContext;
+        _validator = validator;
     }
     
     public async Task<ResponseDto> GetNotificationById(Guid id)
@@ -65,6 +68,13 @@ public class NotificationService : INotificationService
 
     public async Task<ResponseDto> InsertNotification(NotificationDto notification)
     {
+        var validationResult = await _validator.ValidateAsync(notification);
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
+            return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
+        }
+        
         var noti = _mapper.Map<Notification>(notification);
         noti.CreatedAt = _currentTime.GetCurrentTime();
         await _unitOfWork.NotificationRepository.AddAsync(noti);

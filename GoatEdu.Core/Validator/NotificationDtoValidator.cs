@@ -1,13 +1,11 @@
 using FluentValidation;
-using GoatEdu.API.Request;
 using GoatEdu.Core.DTOs.NotificationDto;
-using Infrastructure.Data;
 
 namespace GoatEdu.Core.Validator;
 
-public class NotificationRequestDtoValidator : AbstractValidator<NotificationRequestModel>
+public class NotificationDtoValidator : AbstractValidator<NotificationDto>
 {
-    public NotificationRequestDtoValidator()
+    public NotificationDtoValidator()
     {
         RuleFor(dto => dto.NotificationName)
             .NotEmpty().WithMessage("Notification name is required!")

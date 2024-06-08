@@ -100,7 +100,7 @@ public static class DI
         
         // Add FluentValidation
         services.AddScoped<IValidator<SubjectDto>, SubjectDtoValidator>();
-        services.AddScoped<IValidator<NotificationRequestModel>, NotificationRequestDtoValidator>();
+        services.AddScoped<IValidator<NotificationDto>, NotificationDtoValidator>();
         services.AddScoped<IValidator<NoteDto>, NoteDtoValidator>();
         services.AddScoped<IValidator<ChapterDto>, ChapterDtoValidator>();
         services.AddScoped<IValidator<TagDto>, TagDtoValidator>();
