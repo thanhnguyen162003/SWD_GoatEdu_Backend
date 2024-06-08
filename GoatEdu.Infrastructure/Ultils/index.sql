@@ -23,3 +23,5 @@ FROM "Subject" AS s
          LEFT JOIN "Chapter" AS c ON s.id = c."subjectId"
 WHERE s."isDeleted" = FALSE
 ORDER BY s."createdAt" DESC, s."subjectName", s.id;
+
+.
