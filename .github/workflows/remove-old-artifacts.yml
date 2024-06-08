@@ -1,9 +1,10 @@
 name: Remove old artifacts
 
 on:
-  schedule:
-    # Every day at 1am
-    - cron: '0 1 * * *'
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   remove-old-artifacts:
