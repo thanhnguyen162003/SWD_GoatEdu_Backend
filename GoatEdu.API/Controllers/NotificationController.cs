@@ -24,14 +24,11 @@ namespace GoatEdu.API.Controllers;
 public class NotificationController : ControllerBase
 {
     private readonly INotificationService _notificationService;
-    private readonly IValidator<NotificationRequestModel> _validator;
     private readonly IMapper _mapper;
 
-    public NotificationController(INotificationService notificationService,
-        IValidator<NotificationRequestModel> validator, IMapper mapper)
+    public NotificationController(INotificationService notificationService, IMapper mapper)
     {
         _notificationService = notificationService;
-        _validator = validator;
         _mapper = mapper;
     }
 
