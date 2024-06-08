@@ -22,12 +22,12 @@ public class TagService : ITagService
     private readonly PaginationOptions _paginationOptions;
     private readonly IValidator<TagDto> _validator;
     
-    public TagService(IUnitOfWork unitOfWork, IMapper mapper, ICurrentTime currentTime, PaginationOptions paginationOptions, IValidator<TagDto> validator)
+    public TagService(IUnitOfWork unitOfWork, IMapper mapper, ICurrentTime currentTime, IOptions<PaginationOptions> paginationOptions, IValidator<TagDto> validator)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _currentTime = currentTime;
-        _paginationOptions = paginationOptions;
+        _paginationOptions = paginationOptions.Value;
         _validator = validator;
     }
 
