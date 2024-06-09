@@ -1,6 +1,7 @@
 using AutoMapper;
 using GoatEdu.API.Request;
 using GoatEdu.API.Response;
+using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.AdminDto;
 using GoatEdu.Core.DTOs.ChapterDto;
@@ -79,5 +80,8 @@ public class MapperConfigController : Profile
             .ReverseMap();
 
         CreateMap<AnswerDto, AnswerResponseModel>().ReverseMap();
+        
+        CreateMap(typeof(PagedList<>), typeof(PagedList<>))
+            .ConvertUsing(typeof(PagedListTypeConverter<,>));
     }
 }
