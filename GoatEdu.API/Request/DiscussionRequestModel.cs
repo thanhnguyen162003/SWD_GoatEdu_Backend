@@ -5,11 +5,6 @@ namespace GoatEdu.API.Request;
 
 public class DiscussionRequestModel
 {
-    public DiscussionRequestModel(List<TagRequestModel> tags)
-    {
-        Tags = tags;
-    }
-    
     public string? DiscussionName { get; set; }
     public string? DiscussionBody { get; set; }
     public IFormFile? DiscussionImage { get; set; }
