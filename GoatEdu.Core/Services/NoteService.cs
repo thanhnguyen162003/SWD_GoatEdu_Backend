@@ -103,7 +103,7 @@ public class NoteService : INoteService
         }
         
         var userId = _claimsService.GetCurrentUserId;
-        var note = await _unitOfWork.NoteRepository.GetNoteByUserId(dto.Id, userId);
+        var note = await _unitOfWork.NoteRepository.GetNoteByUserId(guid, userId);
         if (note == null)
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Không có quyền update note!");
