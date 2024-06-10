@@ -74,6 +74,7 @@ public class NoteService : INoteService
         var note = _mapper.Map<Note>(noteRequestDto);
         note.CreatedAt = _currentTime.GetCurrentTime();
         note.CreatedBy = _claimsService.GetCurrentFullname;
+        note.UserId = _claimsService.GetCurrentUserId;
         note.IsDeleted = false;
         
         await _unitOfWork.NoteRepository.AddAsync(note);

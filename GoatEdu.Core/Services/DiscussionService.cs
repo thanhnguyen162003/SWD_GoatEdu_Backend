@@ -135,7 +135,10 @@ public class DiscussionService : IDiscussionService
         }
         
         var tag = await CheckAndAddTags(dto.Tags);
-        if (!tag.Any()) return new ResponseDto(HttpStatusCode.NotFound, "Có lỗi lúc add tag mới rồi!");
+        if (!tag.Any())
+        {
+            return new ResponseDto(HttpStatusCode.NotFound, "Có lỗi lúc add tag mới rồi!");
+        }
         
         var userId = _claimsService.GetCurrentUserId;
         var disscussion = await _unitOfWork.DiscussionRepository.GetByIdAndUserId(guid, userId);
