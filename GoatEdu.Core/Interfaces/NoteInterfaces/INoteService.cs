@@ -10,7 +10,7 @@ public interface INoteService
 {
     Task<ResponseDto> GetNoteById(Guid id);
     Task<PagedList<NoteDto>> GetNoteByFilter(NoteQueryFilter queryFilter);
-    Task<ResponseDto> InsertNote(NoteDto noteRequestDto);
+    Task<ResponseDto> CreateNote(NoteDto noteRequestDto);
     Task<ResponseDto> DeleteNotes(List<Guid> guids);
-    Task<ResponseDto> UpdateNote(NoteDto noteRequestDto);
+    Task<ResponseDto> UpdateNote(Guid guid, NoteDto dto);
 }

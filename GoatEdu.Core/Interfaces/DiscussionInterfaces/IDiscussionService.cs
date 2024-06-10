@@ -13,5 +13,5 @@ public interface IDiscussionService
     Task<PagedList<DiscussionDto>> GetDiscussionByUserId(DiscussionQueryFilter queryFilter);
     Task<ResponseDto> InsertDiscussion (DiscussionDto dto);
     Task<ResponseDto> DeleteDiscussions(List<Guid> guids);
-    Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionUpdateDto dto);
+    Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionDto dto);
 }

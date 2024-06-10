@@ -45,8 +45,6 @@ public class MapperConfigProfile : Profile
         CreateMap<Note, NoteDto>().ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         
-        CreateMap<Notification, NotificationDto>().ReverseMap();
-        
         CreateMap<Tag, TagDto>().ReverseMap()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

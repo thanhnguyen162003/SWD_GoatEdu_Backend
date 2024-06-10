@@ -4,9 +4,9 @@ using GoatEdu.Core.Interfaces.SubjectInterfaces;
 
 namespace GoatEdu.Core.Validator;
 
-public class UpdateDiscussionDtoValidator : AbstractValidator<DiscussionUpdateDto>
+public class UpdateDiscussionDtoValidator : AbstractValidator<DiscussionDto>
 {
-    public UpdateDiscussionDtoValidator(ISubjectRepository subjectRepository)
+    public UpdateDiscussionDtoValidator()
     {
         RuleFor(x => x.DiscussionName)
             .NotEmpty().WithMessage("Discussion name is required!")
@@ -17,6 +17,6 @@ public class UpdateDiscussionDtoValidator : AbstractValidator<DiscussionUpdateDt
             .NotEmpty().WithMessage("Tags is required!")
             .Must(list => list.Count == 4).WithMessage("Tags must have only 4 tags!")
             .Must(list => list.Count == list.Distinct().Count()).WithMessage("Tags must not duplicate!")
-            .Unless(x => x.Tags.Count >= 0);
+            .Unless(x => x.Tags.Count > 0);
     }
 }

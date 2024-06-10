@@ -102,19 +102,22 @@ public class DiscussionController : ControllerBase
     
     [HttpPost]
     [Authorize (Roles = $"{UserEnum.STUDENT}, {UserEnum.TEACHER}")]
-    public async Task<IActionResult> AddDiscussion([FromForm]DiscussionRequestModel discussionRequestModel)
+    public async Task<IActionResult> CreateDiscussion([FromForm]DiscussionRequestModel model)
     {
         try
         {
             var tagsJson = Request.Form["Tags"];
-            discussionRequestModel.Tags = JsonConvert.DeserializeObject<List<TagRequestModel>>(tagsJson);
+            if (!string.IsNullOrEmpty(tagsJson))
+            {
+                model.Tags = JsonConvert.DeserializeObject<List<string>>(tagsJson);
+            }
             
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var mapper = _mapper.Map<DiscussionDto>(discussionRequestModel);
+            var mapper = _mapper.Map<DiscussionDto>(model);
             var result = await _discussionService.InsertDiscussion(mapper);
             return Ok(result);
         }
@@ -139,16 +142,13 @@ public class DiscussionController : ControllerBase
         }
     }
     
-    [HttpPut ("{id}")]
+    [HttpPatch ("{id}")]
     [Authorize (Roles = $"{UserEnum.STUDENT}, {UserEnum.TEACHER}")]
-    public async Task<IActionResult> UpdateDiscussion(Guid id, DiscussionRequestModel discussionRequestModel)
+    public async Task<IActionResult> UpdateDiscussion(Guid id,[FromForm] DiscussionUpdateModel model)
     {
         try
         {
-            var tagsJson = Request.Form["Tags"];
-            discussionRequestModel.Tags = JsonConvert.DeserializeObject<List<TagRequestModel>>(tagsJson);
-            
-            var mapper = _mapper.Map<DiscussionUpdateDto>(discussionRequestModel);
+            var mapper = _mapper.Map<DiscussionDto>(model);
             var result = await _discussionService.UpdateDiscussion(id, mapper);
             return Ok(result);
         }

@@ -62,7 +62,7 @@ public class NoteService : INoteService
         return PagedList<NoteDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
     
-    public async Task<ResponseDto> InsertNote(NoteDto noteRequestDto)
+    public async Task<ResponseDto> CreateNote(NoteDto noteRequestDto)
     {
         var validationResult = await _validator.ValidateAsync(noteRequestDto);
         if (!validationResult.IsValid)
@@ -87,22 +87,28 @@ public class NoteService : INoteService
         var userId = _claimsService.GetCurrentUserId;
         await _unitOfWork.NoteRepository.SoftDelete(guids, userId);
         var result = await _unitOfWork.SaveChangesAsync();
+        
         return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Delete Successfully !") : new ResponseDto(HttpStatusCode.BadRequest, "Delete Failed !");
     }
 
-    public async Task<ResponseDto> UpdateNote(NoteDto noteRequestDto)
+    public async Task<ResponseDto> UpdateNote(Guid guid, NoteDto dto)
     {
-        if (string.IsNullOrWhiteSpace(noteRequestDto.NoteName))
+        
+        var validationResult = await _validator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
         {
-            return new ResponseDto(HttpStatusCode.BadRequest, "Note name is required!");
+            var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
+            return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
         }
         
         var userId = _claimsService.GetCurrentUserId;
-        var note = await _unitOfWork.NoteRepository.GetNoteByUserId(userId, userId);
+        var note = await _unitOfWork.NoteRepository.GetNoteByUserId(dto.Id, userId);
+        if (note == null)
+        {
+            return new ResponseDto(HttpStatusCode.NotFound, "Không có quyền update note!");
+        }
         
-        if (note == null) return new ResponseDto(HttpStatusCode.NotFound, "");
-        
-        note = _mapper.Map(noteRequestDto, note);
+        note = _mapper.Map(dto, note);
         note.UpdatedBy = _claimsService.GetCurrentFullname;
         note.UpdatedAt = _currentTime.GetCurrentTime();
         

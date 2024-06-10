@@ -24,13 +24,13 @@ public class DiscussionService : IDiscussionService
     private readonly IClaimsService _claimsService;
     private readonly PaginationOptions _paginationOptions;
     private readonly ICloudinaryService _cloudinaryService;
-    private readonly IValidator<DiscussionDto> _validator;
-    private readonly IValidator<DiscussionUpdateDto> _validatorUpdate;
+    private readonly IValidator<DiscussionDto> _validatorCreate;
+    private readonly IValidator<DiscussionDto> _validatorUpdate;
 
 
     public DiscussionService(IUnitOfWork unitOfWork, IMapper mapper, ICurrentTime currentTime,
         IClaimsService claimsService, IOptions<PaginationOptions> options, ICloudinaryService cloudinaryService,
-        IValidator<DiscussionDto> validator, IValidator<DiscussionUpdateDto> validatorUpdate)
+        IValidator<DiscussionDto> validatorCreate, IValidator<DiscussionDto> validatorUpdate)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -38,7 +38,7 @@ public class DiscussionService : IDiscussionService
         _claimsService = claimsService;
         _paginationOptions = options.Value;
         _cloudinaryService = cloudinaryService;
-        _validator = validator;
+        _validatorCreate = validatorCreate;
         _validatorUpdate = validatorUpdate;
     }
 
@@ -79,16 +79,15 @@ public class DiscussionService : IDiscussionService
     public async Task<ResponseDto> InsertDiscussion(DiscussionDto dto)
     {
         
-        var validationResult = await _validator.ValidateAsync(dto);
+        var validationResult = await _validatorCreate.ValidateAsync(dto);
         if (!validationResult.IsValid)
         {
             var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
             return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
         }
         
-        var tagNoExist = dto.Tags.Where(x => x.Id == null).ToList();
-        var tag = await CheckAndAddTags(tagNoExist);
-        if (!tag.Any()) return new ResponseDto(HttpStatusCode.NotFound, "Không có");
+        var tag = await CheckAndAddTags(dto.Tags);
+        if (!tag.Any()) return new ResponseDto(HttpStatusCode.NotFound, "Có lỗi lúc add tag mới rồi!");
         
         var mapper = _mapper.Map<Discussion>(dto);
 
@@ -126,7 +125,7 @@ public class DiscussionService : IDiscussionService
         return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Delete Successfully!") : new ResponseDto(HttpStatusCode.BadRequest, "Delete Failed!");
     }
 
-    public async Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionUpdateDto dto)
+    public async Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionDto dto)
     {
         var validationResult = await _validatorUpdate.ValidateAsync(dto);
         if (!validationResult.IsValid)
@@ -135,9 +134,8 @@ public class DiscussionService : IDiscussionService
             return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
         }
         
-        var tagNoExist = dto.Tags.Where(x => x.Id == null).ToList();
-        var tag = await CheckAndAddTags(tagNoExist);
-        if (!tag.Any()) return new ResponseDto(HttpStatusCode.NotFound, "Không có");
+        var tag = await CheckAndAddTags(dto.Tags);
+        if (!tag.Any()) return new ResponseDto(HttpStatusCode.NotFound, "Có lỗi lúc add tag mới rồi!");
         
         var userId = _claimsService.GetCurrentUserId;
         var disscussion = await _unitOfWork.DiscussionRepository.GetByIdAndUserId(guid, userId);
@@ -164,11 +162,15 @@ public class DiscussionService : IDiscussionService
         return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Update Successfully!") : new ResponseDto(HttpStatusCode.BadRequest, "Update Failed!");
     }
 
-    private async Task<IEnumerable<Tag?>> CheckAndAddTags(List<TagDto> tagNoExist)
+    private async Task<IEnumerable<Tag?>> CheckAndAddTags(IEnumerable<TagDto> tagDtos)
     {
-            if (tagNoExist.Any())
+        var tagCheck = await _unitOfWork.TagRepository.GetTagNameByNameAsync(tagDtos.Select(x => x.TagName));
+        
+        var tagNameNoExist = tagDtos.ExceptBy(tagCheck.Select(x => x.TagName).ToList(), x => x.TagName);
+        
+            if (tagNameNoExist.Any())
             {
-                var tags = tagNoExist.Select(x =>
+                var tags = tagNameNoExist.Select(x =>
                 {
                     var tag = new Tag
                     {
@@ -183,7 +185,7 @@ public class DiscussionService : IDiscussionService
                 if (save < 1) return Enumerable.Empty<Tag>();
             }
 
-            var names = tagNoExist.Select(x => x.TagName);
+            var names = tagDtos.Select(x => x.TagName);
             var tag = await _unitOfWork.TagRepository.GetTagNameByNameAsync(names);
             return tag.Count() == 4 ? tag : Enumerable.Empty<Tag>();
     } 

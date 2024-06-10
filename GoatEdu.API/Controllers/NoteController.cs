@@ -76,12 +76,17 @@ public class NoteController : ControllerBase
     
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> AddNote([Required] NoteRequestModel noteRequestModel)
+    public async Task<IActionResult> CreateNote([Required] NoteRequestModel model)
     {
         try
         {
-            var mapper = _mapper.Map<NoteDto>(noteRequestModel);
-            var result = await _noteService.InsertNote(mapper);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            var mapper = _mapper.Map<NoteDto>(model);
+            var result = await _noteService.CreateNote(mapper);
             return Ok(result);
         }
         catch (Exception e)
@@ -105,14 +110,19 @@ public class NoteController : ControllerBase
         }
     } 
     
-    [HttpPut("{id}")]
+    [HttpPatch("{id}")]
     [Authorize]
-    public async Task<IActionResult> UpdateNote([FromRoute, Required] Guid id, [FromQuery, Required] NoteRequestModel noteRequestModel)
+    public async Task<IActionResult> UpdateNote([FromRoute, Required] Guid id, [Required] NoteUpdateModel model)
     {
         try
         {
-            var mapper = _mapper.Map<NoteDto>(noteRequestModel);
-            var result = await _noteService.UpdateNote(mapper);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            var mapper = _mapper.Map<NoteDto>(model);
+            var result = await _noteService.UpdateNote(id, mapper);
             return Ok(result);
         }
         catch (Exception e)

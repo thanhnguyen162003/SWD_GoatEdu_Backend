@@ -1,13 +1,10 @@
-using Microsoft.AspNetCore.Http;
+namespace GoatEdu.API.Request;
 
-namespace GoatEdu.Core.DTOs;
-
-public class DiscussionUpdateDto
+public class DiscussionUpdateModel
 {
     public string? DiscussionName { get; set; }
     public string? DiscussionBody { get; set; }
-    public IFormFile? DiscussionImageConvert { get; set; }
+    public IFormFile? DiscussionImage { get; set; }
     public List<string>? Tags { get; set; }
     public bool? IsSolved { get; set; }
-
 }
