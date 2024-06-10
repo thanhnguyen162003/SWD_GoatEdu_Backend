@@ -9,6 +9,7 @@ public class FlashcardResponseModel
     public string fullName { get; set; }
     public string subjectName { get; set; }
     public string subjectId { get; set; }
+    public DateTime updatedAt { get; set; }
     public int numberOfFlashcardContent { get; set; }
 
 }
