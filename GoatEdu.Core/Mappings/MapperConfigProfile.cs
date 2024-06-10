@@ -42,9 +42,11 @@ public class MapperConfigProfile : Profile
             .ForMember(dest => dest.ChapterLevel, opt => opt.MapFrom(src => src.ChapterLevel))
             .ReverseMap();
         
-        CreateMap<Note, NoteDto>().ReverseMap()
+        CreateMap<Note, NoteDto>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-        
+        CreateMap<NoteDto, Note>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ReverseMap();
         CreateMap<Tag, TagDto>().ReverseMap()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
