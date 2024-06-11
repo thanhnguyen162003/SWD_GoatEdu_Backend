@@ -104,8 +104,7 @@ public static class DI
         services.AddScoped<IValidator<NoteDto>, NoteDtoValidator>();
         services.AddScoped<IValidator<ChapterDto>, ChapterDtoValidator>();
         services.AddScoped<IValidator<TagDto>, TagDtoValidator>();
-        services.AddScoped<IValidator<DiscussionDto>, CreateDiscussionDtoValidator>();
-        services.AddScoped<IValidator<DiscussionDto>, UpdateDiscussionDtoValidator>();
+        services.AddScoped<IValidator<DiscussionDto>, DiscussionDtoValidator>();
         
         
         return services;

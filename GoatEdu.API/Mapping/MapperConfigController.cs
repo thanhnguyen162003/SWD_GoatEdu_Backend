@@ -72,22 +72,13 @@ public class MapperConfigController : Profile
         // Discussion
         CreateMap<DiscussionDto, DiscussionRequestModel>()
             .ForMember(dest => dest.DiscussionImage, opt => opt.MapFrom(src => src.DiscussionImageConvert))
-            .ForMember(dest => dest.Tags, opt => opt.Ignore())
-            .ReverseMap()
-            .ForMember(dest => dest.Tags, opt => opt.Ignore());
+            .ReverseMap();
         CreateMap<DiscussionDto, DiscussionUpdateModel>()
             .ForMember(dest => dest.DiscussionImage, opt => opt.MapFrom(src => src.DiscussionImageConvert))
-            .ForMember(dest => dest.Tags, opt => opt.Ignore())
-            .ReverseMap()
-            .ForMember(dest => dest.Tags, opt => opt.Ignore());
+            .ReverseMap();
+        
         CreateMap<DiscussionDto, DiscussionResponseModel>().ReverseMap();
         CreateMap<DiscussionDto, DiscussionDetailResponseModel>().ReverseMap();
-        // CreateMap<DiscussionUpdateDto, DiscussionRequestModel>()
-        //     .ForMember(dest => dest.DiscussionImage, opt => opt.MapFrom(src => src.DiscussionImageConvert))
-        //     .ReverseMap();
-        
-        
-        
         
         // Login
         CreateMap<User, LoginResponseDto>()

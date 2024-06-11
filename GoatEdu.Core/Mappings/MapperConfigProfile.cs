@@ -41,12 +41,10 @@ public class MapperConfigProfile : Profile
             .ForMember(dest => dest.ChapterName, opt => opt.MapFrom(src => src.ChapterName))
             .ForMember(dest => dest.ChapterLevel, opt => opt.MapFrom(src => src.ChapterLevel))
             .ReverseMap();
-        
+
         CreateMap<Note, NoteDto>()
-            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-        CreateMap<NoteDto, Note>()
-            .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ReverseMap();
+        
         CreateMap<Tag, TagDto>().ReverseMap()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -68,11 +66,6 @@ public class MapperConfigProfile : Profile
             .ForPath(dest => dest.UserAndSubject.UserImage, opt => opt.MapFrom(src => src.User.Image))
             .ForPath(dest => dest.UserAndSubject.SubjectId, opt => opt.MapFrom(src => src.SubjectId))
             .ForPath(dest => dest.UserAndSubject.SubjectName, opt => opt.MapFrom(src => src.Subject.SubjectName))
-            .ReverseMap()
-            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-        
-        CreateMap<Discussion, DiscussionUpdateDto>()
-            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags))
             .ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
       

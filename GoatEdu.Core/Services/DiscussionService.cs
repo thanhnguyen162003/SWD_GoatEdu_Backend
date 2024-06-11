@@ -24,13 +24,12 @@ public class DiscussionService : IDiscussionService
     private readonly IClaimsService _claimsService;
     private readonly PaginationOptions _paginationOptions;
     private readonly ICloudinaryService _cloudinaryService;
-    private readonly IValidator<DiscussionDto> _validatorCreate;
-    private readonly IValidator<DiscussionDto> _validatorUpdate;
+    private readonly IValidator<DiscussionDto> _validator;
 
 
     public DiscussionService(IUnitOfWork unitOfWork, IMapper mapper, ICurrentTime currentTime,
         IClaimsService claimsService, IOptions<PaginationOptions> options, ICloudinaryService cloudinaryService,
-        IValidator<DiscussionDto> validatorCreate, IValidator<DiscussionDto> validatorUpdate)
+        IValidator<DiscussionDto> validator)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -38,8 +37,7 @@ public class DiscussionService : IDiscussionService
         _claimsService = claimsService;
         _paginationOptions = options.Value;
         _cloudinaryService = cloudinaryService;
-        _validatorCreate = validatorCreate;
-        _validatorUpdate = validatorUpdate;
+        _validator = validator;
     }
 
     public async Task<PagedList<DiscussionDto>> GetDiscussionByFilter(DiscussionQueryFilter queryFilter)
@@ -78,8 +76,7 @@ public class DiscussionService : IDiscussionService
 
     public async Task<ResponseDto> InsertDiscussion(DiscussionDto dto)
     {
-        
-        var validationResult = await _validatorCreate.ValidateAsync(dto);
+        var validationResult = await _validator.ValidateAsync(dto);
         if (!validationResult.IsValid)
         {
             var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
@@ -102,7 +99,7 @@ public class DiscussionService : IDiscussionService
             mapper.DiscussionImage = image.Url.ToString();
         }
         
-        mapper.Tags = tag.ToList();
+        mapper.Tags = (ICollection<Tag>)tag;
         mapper.IsSolved = false;
         mapper.DiscussionVote = 0;
         mapper.Status = DiscussionStatus.Unapproved.ToString();
@@ -127,24 +124,16 @@ public class DiscussionService : IDiscussionService
 
     public async Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionDto dto)
     {
-        var validationResult = await _validatorUpdate.ValidateAsync(dto);
+        var validationResult = await _validator.ValidateAsync(dto);
         if (!validationResult.IsValid)
         {
             var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
             return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
         }
         
-        var tag = await CheckAndAddTags(dto.Tags);
-        if (!tag.Any())
-        {
-            return new ResponseDto(HttpStatusCode.NotFound, "Có lỗi lúc add tag mới rồi!");
-        }
-        
         var userId = _claimsService.GetCurrentUserId;
         var disscussion = await _unitOfWork.DiscussionRepository.GetByIdAndUserId(guid, userId);
-        if (disscussion is null) return new ResponseDto(HttpStatusCode.NotFound, "Không được cập nhật");
-        
-        disscussion = _mapper.Map(dto, disscussion);
+        if (disscussion is null) return new ResponseDto(HttpStatusCode.NotFound, "Không có quyền cập nhật");
         
         if (dto.DiscussionImageConvert != null)
         {
@@ -155,11 +144,25 @@ public class DiscussionService : IDiscussionService
             }
             disscussion.DiscussionImage = image.Url.ToString();
         }
+
+        if (dto.Tags != null)
+        {
+            var tag = await CheckAndAddTags(dto.Tags);
+            if (!tag.Any())
+            {
+                return new ResponseDto(HttpStatusCode.NotFound, "Có lỗi lúc add tag mới rồi!");
+            }
+
+            disscussion.Tags = (ICollection<Tag>)tag;
+        }
         
-        disscussion.Status = DiscussionStatus.Unapproved.ToString();
+        disscussion.DiscussionName = dto.DiscussionName ?? disscussion.DiscussionName;
+        disscussion.DiscussionBody = dto.DiscussionBody ?? disscussion.DiscussionBody;
+        disscussion.IsSolved = dto.IsSolved ?? disscussion.IsSolved;
         disscussion.UpdatedBy = _claimsService.GetCurrentFullname;
         disscussion.UpdatedAt = _currentTime.GetCurrentTime();
-        
+        disscussion.Status = DiscussionStatus.Unapproved.ToString();
+
         _unitOfWork.DiscussionRepository.Update(disscussion);
         var result = await _unitOfWork.SaveChangesAsync();
         return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Update Successfully!") : new ResponseDto(HttpStatusCode.BadRequest, "Update Failed!");
