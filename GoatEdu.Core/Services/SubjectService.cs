@@ -4,6 +4,7 @@ using AutoMapper;
 using FluentValidation;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
+using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.CloudinaryInterfaces;
@@ -68,10 +69,10 @@ public class SubjectService : ISubjectService
         return await _unitOfWork.SubjectRepository.GetSubjectBySubjectId(id);
     }
 
-    public async Task<ICollection<SubjectDto>> GetChaptersBySubject(Guid subjectId)
+    public async Task<ICollection<ChapterSubjectDto>> GetChaptersBySubject(Guid subjectId)
     {
         ICollection<Chapter> chapters = await _unitOfWork.ChapterRepository.GetChaptersBySubject(subjectId);
-        var mapperList = _mapper.Map<ICollection<SubjectDto>>(chapters);
+        var mapperList = _mapper.Map<ICollection<ChapterSubjectDto>>(chapters);
         return mapperList;
     }
 

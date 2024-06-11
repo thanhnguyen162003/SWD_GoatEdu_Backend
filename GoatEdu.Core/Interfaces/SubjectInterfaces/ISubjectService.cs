@@ -12,7 +12,7 @@ public interface ISubjectService
     Task<IEnumerable<SubjectDto>> GetAllSubjects(SubjectQueryFilter queryFilter);
     Task<IEnumerable<SubjectDto>> GetSubjectByClass(SubjectQueryFilter queryFilter, string classes);
     Task<SubjectDto> GetSubjectBySubjectId(Guid id);
-    Task<ICollection<SubjectDto>> GetChaptersBySubject(Guid subjectId);
+    Task<ICollection<ChapterSubjectDto>> GetChaptersBySubject(Guid subjectId);
     Task<ResponseDto> DeleteSubject(Guid id);
     Task<ResponseDto> UpdateSubject(SubjectDto dto, Guid id);
     Task<ResponseDto> CreateSubject(SubjectDto dto);
