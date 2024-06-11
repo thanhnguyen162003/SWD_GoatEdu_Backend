@@ -1,7 +1,9 @@
+using Dapper;
 using GoatEdu.Core.Interfaces.TagInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Infrastructure.Repositories;
 
@@ -23,11 +25,23 @@ public class TagRepository : BaseRepository<Tag>, ITagRepository
         return await tags.ToListAsync();
     }
 
-    public async Task<IEnumerable<Tag?>> GetTagNameByNameAsync(IEnumerable<string?> tagName)
+    public async Task<IEnumerable<Tag?>> GetTagByNameAsync(string tagName)
     {
-        return await _entities.Where(x => tagName.Any(name => name.Equals(x.TagName))).ToListAsync();
+        var query = "SELECT * FROM \"Tag\" WHERE \"tagName\" LIKE '%' || @TagName || '%'";
+        var connectionString = _context.Database.GetConnectionString();
+        await using var connection = new NpgsqlConnection(connectionString);
+        var result = await connection.QueryAsync<Tag>(query, new {TagName = tagName});
+        return result;
     }
-    
+
+    public async Task<IEnumerable<Tag?>> GetTagByNamesAsync(List<string?> tagNames)
+    {
+        var query = "SELECT * FROM \"Tag\" WHERE LOWER(\"tagName\") =  ANY@TagNames";
+        var connectionString = _context.Database.GetConnectionString();
+        await using var connection = new NpgsqlConnection(connectionString);
+        var result = await connection.QueryAsync<Tag>(query, new {TagNames = tagNames});
+        return result;
+    }
     public async Task SoftDelete(List<Guid> guids)
     {
         await _entities.Where(x => guids.Any(id => id == x.Id)).ForEachAsync(a => a.IsDeleted = true);

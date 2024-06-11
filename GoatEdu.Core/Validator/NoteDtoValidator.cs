@@ -10,6 +10,6 @@ public class NoteDtoValidator : AbstractValidator<NoteDto>
         RuleFor(dto => dto.NoteName)
         .NotEmpty().WithMessage("Notification name is required!")
         .MaximumLength(100).WithMessage("Notifitcation name cannot exceed 100 characters.")
-        .Unless(dto => string.IsNullOrWhiteSpace(dto.NoteName));
+        .Unless(dto => dto.NoteName is null);
     }
 }

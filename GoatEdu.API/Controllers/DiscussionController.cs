@@ -109,7 +109,7 @@ public class DiscussionController : ControllerBase
             var tagsJson = Request.Form["Tags"];
             if (!string.IsNullOrEmpty(tagsJson))
             {
-                model.Tags = JsonConvert.DeserializeObject<List<TagRequestModel>>(tagsJson);
+                model.Tags = JsonConvert.DeserializeObject<List<TagUpdateModel>>(tagsJson);
             }
             
             if (!ModelState.IsValid)
@@ -151,7 +151,7 @@ public class DiscussionController : ControllerBase
             var tagsJson = Request.Form["Tags"];
             if (!string.IsNullOrEmpty(tagsJson))
             {
-                model.Tags = JsonConvert.DeserializeObject<List<TagRequestModel>>(tagsJson);
+                model.Tags = JsonConvert.DeserializeObject<List<TagUpdateModel>>(tagsJson);
             }
             
             var mapper = _mapper.Map<DiscussionDto>(model);

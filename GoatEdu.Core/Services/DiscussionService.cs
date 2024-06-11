@@ -42,13 +42,14 @@ public class DiscussionService : IDiscussionService
 
     public async Task<PagedList<DiscussionDto>> GetDiscussionByFilter(DiscussionQueryFilter queryFilter)
     {
-        queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
+        queryFilter.page_number =
+            queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
-        
+
         var list = await _unitOfWork.DiscussionRepository.GetDiscussionByFilters(null, queryFilter);
-       
+
         if (!list.Any()) return new PagedList<DiscussionDto>(new List<DiscussionDto>(), 0, 0, 0);
-        
+
         var mapper = _mapper.Map<List<DiscussionDto>>(list);
         return PagedList<DiscussionDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
     }
@@ -56,9 +57,9 @@ public class DiscussionService : IDiscussionService
     public async Task<ResponseDto> GetDiscussionById(Guid guid)
     {
         var result = await _unitOfWork.DiscussionRepository.GetById(guid);
-        
+
         if (result == null) return new ResponseDto(HttpStatusCode.NotFound, "Kiếm thấy đâu");
-        
+
         var mapper = _mapper.Map<DiscussionDto>(result);
         return new ResponseDto(HttpStatusCode.OK, "", mapper);
     }
@@ -67,9 +68,9 @@ public class DiscussionService : IDiscussionService
     {
         var userId = _claimsService.GetCurrentUserId;
         var list = await _unitOfWork.DiscussionRepository.GetDiscussionByFilters(userId, queryFilter);
-        
+
         if (!list.Any()) return new PagedList<DiscussionDto>(new List<DiscussionDto>(), 0, 0, 0);
-        
+
         var mapper = _mapper.Map<List<DiscussionDto>>(list);
         return PagedList<DiscussionDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
     }
@@ -82,10 +83,10 @@ public class DiscussionService : IDiscussionService
             var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
             return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
         }
-        
+
         var tag = await CheckAndAddTags(dto.Tags);
         if (!tag.Any()) return new ResponseDto(HttpStatusCode.NotFound, "Có lỗi lúc add tag mới rồi!");
-        
+
         var mapper = _mapper.Map<Discussion>(dto);
 
         if (dto.DiscussionImageConvert != null)
@@ -95,10 +96,10 @@ public class DiscussionService : IDiscussionService
             {
                 return new ResponseDto(HttpStatusCode.BadRequest, image.Error.Message);
             }
-        
+
             mapper.DiscussionImage = image.Url.ToString();
         }
-        
+
         mapper.Tags = (ICollection<Tag>)tag;
         mapper.IsSolved = false;
         mapper.DiscussionVote = 0;
@@ -107,11 +108,13 @@ public class DiscussionService : IDiscussionService
         mapper.CreatedBy = _claimsService.GetCurrentFullname;
         mapper.CreatedAt = _currentTime.GetCurrentTime();
         mapper.IsDeleted = false;
-        
+
         await _unitOfWork.DiscussionRepository.AddAsync(mapper);
         var result = await _unitOfWork.SaveChangesAsync();
-        
-        return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Add Successfully!") : new ResponseDto(HttpStatusCode.BadRequest, "Add Failed!");
+
+        return result > 0
+            ? new ResponseDto(HttpStatusCode.OK, "Add Successfully!")
+            : new ResponseDto(HttpStatusCode.BadRequest, "Add Failed!");
     }
 
     public async Task<ResponseDto> DeleteDiscussions(List<Guid> guids)
@@ -119,7 +122,9 @@ public class DiscussionService : IDiscussionService
         var userId = _claimsService.GetCurrentUserId;
         await _unitOfWork.DiscussionRepository.SoftDelete(guids, userId);
         var result = await _unitOfWork.SaveChangesAsync();
-        return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Delete Successfully!") : new ResponseDto(HttpStatusCode.BadRequest, "Delete Failed!");
+        return result > 0
+            ? new ResponseDto(HttpStatusCode.OK, "Delete Successfully!")
+            : new ResponseDto(HttpStatusCode.BadRequest, "Delete Failed!");
     }
 
     public async Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionDto dto)
@@ -130,11 +135,14 @@ public class DiscussionService : IDiscussionService
             var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
             return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
         }
-        
+
         var userId = _claimsService.GetCurrentUserId;
         var disscussion = await _unitOfWork.DiscussionRepository.GetByIdAndUserId(guid, userId);
-        if (disscussion is null) return new ResponseDto(HttpStatusCode.NotFound, "Không có quyền cập nhật");
-        
+        if (disscussion is null)
+        {
+            return new ResponseDto(HttpStatusCode.NotFound, "Không có quyền cập nhật");
+        }
+
         if (dto.DiscussionImageConvert != null)
         {
             var image = await _cloudinaryService.UploadAsync(dto.DiscussionImageConvert);
@@ -142,6 +150,7 @@ public class DiscussionService : IDiscussionService
             {
                 return new ResponseDto(HttpStatusCode.BadRequest, image.Error.Message);
             }
+
             disscussion.DiscussionImage = image.Url.ToString();
         }
 
@@ -155,7 +164,7 @@ public class DiscussionService : IDiscussionService
 
             disscussion.Tags = (ICollection<Tag>)tag;
         }
-        
+
         disscussion.DiscussionName = dto.DiscussionName ?? disscussion.DiscussionName;
         disscussion.DiscussionBody = dto.DiscussionBody ?? disscussion.DiscussionBody;
         disscussion.IsSolved = dto.IsSolved ?? disscussion.IsSolved;
@@ -165,34 +174,35 @@ public class DiscussionService : IDiscussionService
 
         _unitOfWork.DiscussionRepository.Update(disscussion);
         var result = await _unitOfWork.SaveChangesAsync();
-        return result > 0 ? new ResponseDto(HttpStatusCode.OK, "Update Successfully!") : new ResponseDto(HttpStatusCode.BadRequest, "Update Failed!");
+        return result > 0
+            ? new ResponseDto(HttpStatusCode.OK, "Update Successfully!")
+            : new ResponseDto(HttpStatusCode.BadRequest, "Update Failed!");
     }
 
     private async Task<IEnumerable<Tag?>> CheckAndAddTags(IEnumerable<TagDto> tagDtos)
     {
-        var tagCheck = await _unitOfWork.TagRepository.GetTagNameByNameAsync(tagDtos.Select(x => x.TagName));
-        
-        var tagNameNoExist = tagDtos.ExceptBy(tagCheck.Select(x => x.TagName).ToList(), x => x.TagName);
-        
-            if (tagNameNoExist.Any())
-            {
-                var tags = tagNameNoExist.Select(x =>
-                {
-                    var tag = new Tag
-                    {
-                        TagName = x.TagName,
-                        CreatedAt = _currentTime.GetCurrentTime(),
-                        IsDeleted = false
-                    };
-                    return tag;
-                }).ToList();
-                await _unitOfWork.TagRepository.AddRangeAsync(tags);
-                var save = await _unitOfWork.SaveChangesAsync();
-                if (save < 1) return Enumerable.Empty<Tag>();
-            }
+        var tagNames = tagDtos.Select(x => x.TagName.ToLower()).ToList();
+        var tagCheck = await _unitOfWork.TagRepository.GetTagByNamesAsync(tagNames);
+        var tagNameNoExist = tagNames.ExceptBy(tagCheck.Select(x => x.TagName).ToList(), x => x);
 
-            var names = tagDtos.Select(x => x.TagName);
-            var tag = await _unitOfWork.TagRepository.GetTagNameByNameAsync(names);
-            return tag.Count() == 4 ? tag : Enumerable.Empty<Tag>();
-    } 
+        if (tagNameNoExist.Any())
+        {
+            var tags = tagNameNoExist.Select(x =>
+            {
+                var tag = new Tag
+                {
+                    TagName = x,
+                    CreatedAt = _currentTime.GetCurrentTime(),
+                    IsDeleted = false
+                };
+                return tag;
+            }).ToList();
+            await _unitOfWork.TagRepository.AddRangeAsync(tags);
+            var save = await _unitOfWork.SaveChangesAsync();
+            if (save < 1) return Enumerable.Empty<Tag>();
+        }
+        
+        var tag = await _unitOfWork.TagRepository.GetTagByNamesAsync(tagNames);
+        return tag.Count() == 4 ? tag : Enumerable.Empty<Tag>();
+    }
 }

@@ -12,7 +12,7 @@ public class DiscussionRequestModel
     public string? DiscussionBody { get; set; }
     public IFormFile? DiscussionImage { get; set; }
     [Required(ErrorMessage = "Tags is required!")]
-    public List<TagRequestModel>? Tags { get; set; }
+    public List<TagUpdateModel>? Tags { get; set; }
     [Required(ErrorMessage = "Subject id is required!")]
     public Guid? SubjectId { get; set; }
 }

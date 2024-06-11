@@ -48,6 +48,7 @@ public class MapperConfigController : Profile
         
         // Tag
         CreateMap<TagDto, TagRequestModel>().ReverseMap();
+        CreateMap<TagDto, TagUpdateModel>().ReverseMap();
         CreateMap<TagDto, TagResponseModel>().ReverseMap();
         
         //

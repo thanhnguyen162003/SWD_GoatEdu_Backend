@@ -6,8 +6,8 @@ namespace GoatEdu.Core.Interfaces.TagInterfaces;
 
 public interface ITagRepository : IRepository<Tag>
 {
-    Task<List<Tag>> GetTagByFilters(TagQueryFilter queryFilter); 
-
-    Task<IEnumerable<Tag?>> GetTagNameByNameAsync(IEnumerable<string?> tagName);
+    Task<List<Tag>> GetTagByFilters(TagQueryFilter queryFilter);
+    Task<IEnumerable<Tag?>> GetTagByNameAsync(string tagName);
+    Task<IEnumerable<Tag?>> GetTagByNamesAsync(List<string?> tagNames);
     Task SoftDelete(List<Guid> guids);
 }

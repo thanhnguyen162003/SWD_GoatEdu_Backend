@@ -9,6 +9,7 @@ public class TagDtoValidator : AbstractValidator<TagDto>
     {
         RuleFor(x => x.TagName)
             .NotEmpty().WithMessage("Tag name is required!")
-            .MaximumLength(100).WithMessage("Tag name cannot exceed 100 characters.");
+            .MaximumLength(100).WithMessage("Tag name cannot exceed 100 characters.")
+            .Unless(x => x.TagName is null);
     }
 }

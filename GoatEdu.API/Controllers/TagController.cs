@@ -45,11 +45,11 @@ public class TagController : ControllerBase
     
     [HttpGet("name")]
     [Authorize]
-    public async Task<IActionResult> GetTagByName([FromQuery, Required] List<string> name)
+    public async Task<IActionResult> GetTagByName([FromQuery, Required] string name)
     {
         try
         {
-            var result = await _tagService.getTagByName(name);
+            var result = await _tagService.GetTagByName(name);
             return Ok(result);
         }
         catch (Exception e)
@@ -87,11 +87,16 @@ public class TagController : ControllerBase
     
     [HttpPost]
     [Authorize(Roles = UserEnum.MODERATOR)]
-    public async Task<IActionResult> AddTag(List<TagRequestModel> tagRequestDto)
+    public async Task<IActionResult> AddTag(List<TagRequestModel> models)
     {
         try
         {
-            var mapper = _mapper.Map<List<TagDto>>(tagRequestDto);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            var mapper = _mapper.Map<List<TagDto>>(models);
             var result = await _tagService.InsertTags(mapper);
             return Ok(result);
         }
@@ -102,7 +107,7 @@ public class TagController : ControllerBase
     }
     
     [HttpDelete]
-    [Authorize (Roles = UserEnum.ADMIN)]
+    [Authorize (Roles = UserEnum.MODERATOR)]
     public async Task<IActionResult> DeleteTags(List<Guid> ids)
     {
         try
@@ -116,13 +121,13 @@ public class TagController : ControllerBase
         }
     }
     
-    [HttpPut("{id}")]
-    [Authorize (Roles = UserEnum.ADMIN)]
-    public async Task<IActionResult> UpdateTag(Guid id, TagRequestModel tagRequestModel)
+    [HttpPatch("{id}")]
+    [Authorize (Roles = UserEnum.MODERATOR)]
+    public async Task<IActionResult> UpdateTag(Guid id, TagUpdateModel model)
     {
         try
         {
-            var mapper = _mapper.Map<TagDto>(tagRequestModel);
+            var mapper = _mapper.Map<TagDto>(model);
             var result = await _tagService.UpdateTag(id, mapper);
             return Ok(result);
         }

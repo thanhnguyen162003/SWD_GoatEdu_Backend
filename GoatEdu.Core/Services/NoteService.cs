@@ -109,8 +109,8 @@ public class NoteService : INoteService
             return new ResponseDto(HttpStatusCode.NotFound, "Không có quyền update note!");
         }
 
-        note.NoteName = string.IsNullOrWhiteSpace(dto.NoteName) ? note.NoteName : dto.NoteName;
-        note.NoteBody = string.IsNullOrWhiteSpace(dto.NoteBody) ? note.NoteBody : dto.NoteBody;
+        note.NoteName =  dto.NoteName ?? note.NoteName ;
+        note.NoteBody =  dto.NoteBody ?? note.NoteBody;
         note.UpdatedBy = _claimsService.GetCurrentFullname;
         note.UpdatedAt = _currentTime.GetCurrentTime();
         

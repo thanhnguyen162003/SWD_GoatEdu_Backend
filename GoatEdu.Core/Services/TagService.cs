@@ -47,9 +47,9 @@ public class TagService : ITagService
         return PagedList<TagDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
 
-    public async Task<ResponseDto> getTagByName(List<string> name)
+    public async Task<ResponseDto> GetTagByName(string name)
     {
-        var tagFound = await _unitOfWork.TagRepository.GetTagNameByNameAsync(name);
+        var tagFound = await _unitOfWork.TagRepository.GetTagByNameAsync(name);
         
         if (!tagFound.Any())
         {
@@ -70,44 +70,52 @@ public class TagService : ITagService
         return new ResponseDto(HttpStatusCode.OK, "", mapperNote);
     }
 
-    public async Task<ResponseDto> InsertTags(List<TagDto> tagRequestDtos)
+    public async Task<ResponseDto> InsertTags(List<TagDto> dtos)
     {
-        foreach (var data in tagRequestDtos)
+        var errors = new List<object>();
+        foreach (var data in dtos)
         {
             var validationResult = await _validator.ValidateAsync(data);
             if (!validationResult.IsValid)
             {
-                var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage, data.TagName });
-                return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
+                var errorDetails = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage, data.TagName });
+                errors.AddRange(errorDetails);
             }
         }
+
+        if (errors.Any())
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
+        }
         
-        var listName = tagRequestDtos.Select(x => x.TagName).ToList();
+        var listName = dtos.Select(x => x.TagName.ToLower()).ToList();
         
-        var listExistName = await _unitOfWork.TagRepository.GetTagNameByNameAsync(listName);
+        var listExistName = await _unitOfWork.TagRepository.GetTagByNamesAsync(listName);
 
         var tagIsDuplicated = new List<TagDto>();
         
         // Check Dup Name
-        var existName = listExistName.ToList();
-        if (existName.Any())
+        if (listExistName.Any())
         {
-            tagIsDuplicated = tagRequestDtos.Join(
-                existName.Select(a => a.TagName).ToList(), 
+            tagIsDuplicated = dtos.Join(
+                listExistName.Select(a => a.TagName).ToList(), 
                 x => x.TagName,
                 name => name,
                 (x, _) => x).ToList();
                 
-            tagRequestDtos = tagRequestDtos.Where(x =>
-                    !existName.Any(name => name.Equals(x.TagName)))
+            dtos = dtos.Where(x =>
+                    !listExistName.Any(name => name.Equals(x.TagName)))
                 .ToList();
         }
 
-        var tagMapper = tagRequestDtos.Select(x =>
+        var tagMapper = dtos.Select(x =>
             {
-                var tag = _mapper.Map<Tag>(x);
-                tag.CreatedAt = _currentTime.GetCurrentTime();
-                tag.IsDeleted = false;
+                var tag = new Tag
+                {
+                    TagName = x.TagName.ToLower(),
+                    CreatedAt = _currentTime.GetCurrentTime(),
+                    IsDeleted = false
+                };
                 return tag;
             }
         ).ToList();
@@ -137,12 +145,19 @@ public class TagService : ITagService
         return result1 < 1 ? new ResponseDto(HttpStatusCode.BadRequest, "Something went wrong at Update Falshcard!") : new ResponseDto(HttpStatusCode.OK, "Delete Successfully");
     }
 
-    public async Task<ResponseDto> UpdateTag(Guid id, TagDto tagRequestDto)
+    public async Task<ResponseDto> UpdateTag(Guid id, TagDto dto)
     {
+        var validationResult = await _validator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage, dto.TagName });
+            return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
+        }
+        
         var tagFound = await _unitOfWork.TagRepository.GetByIdAsync(id);
         if (tagFound == null) return new ResponseDto(HttpStatusCode.NotFound, "Kiếm có thấy đâu");
-        
-        tagFound = _mapper.Map(tagRequestDto, tagFound);
+
+        tagFound.TagName = dto.TagName ?? tagFound.TagName;
         tagFound.UpdatedAt = _currentTime.GetCurrentTime();
         
         _unitOfWork.TagRepository.Update(tagFound);
