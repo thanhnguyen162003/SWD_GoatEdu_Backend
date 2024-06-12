@@ -58,17 +58,19 @@ public class ChapterController : ControllerBase
     }
     [HttpPost]
     [Authorize (Roles = UserEnum.MODERATOR)]
-    public async Task<ResponseDto> CreateChapter([FromBody] ChapterDto dto)
+    public async Task<ResponseDto> CreateChapter([FromBody] ChapterCreateModel dto)
     {
         if (!ModelState.IsValid)
         {
             return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", ModelState);
         }
-        return await _chapterService.CreateChapter(dto);
+
+        var mapper = _mapper.Map<ChapterDto>(dto);
+        return await _chapterService.CreateChapter(mapper);
     }
     [HttpPut("{id}")]
     [Authorize (Roles = UserEnum.MODERATOR)]
-    public async Task<ResponseDto> UpdateChapter([FromBody] ChapterCreateModel model, [FromRoute]Guid id)
+    public async Task<ResponseDto> UpdateChapter([FromBody] ChapterUpdateModel model, [FromRoute]Guid id)
     {
         var mapper = _mapper.Map<ChapterDto>(model);
         return await _chapterService.UpdateChapter(mapper, id);

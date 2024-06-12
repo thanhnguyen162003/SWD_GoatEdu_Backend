@@ -25,6 +25,8 @@ public class MapperConfigController : Profile
             .ForMember(dest => dest.image, opt => opt.MapFrom(src => src.ImageConvert))
             .ReverseMap();
         CreateMap<ChapterDto, ChapterCreateModel>().ReverseMap();
+        CreateMap<ChapterDto, ChapterResponseModel>().ReverseMap();
+        CreateMap<ChapterDto, ChapterUpdateModel>().ReverseMap();
         CreateMap<ChapterSubjectDto, ChapterResponseModel>().ReverseMap();
         CreateMap<CreateUserDto, CreateUserRequestModel>().ReverseMap();
         CreateMap<CreateUserDto, CreateUserResponseModel>().ReverseMap();

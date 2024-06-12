@@ -9,6 +9,10 @@ CREATE INDEX idx_chapter_subjectid ON "Chapter" ("subjectId");
 
 CREATE INDEX idx_subject_createdat_subjectname_id ON "Subject" ("createdAt", "subjectName", id);
 
+CREATE INDEX idx_subject_isDeleted ON "Subject" ("isDeleted");
+CREATE INDEX idx_chapter_subjectId_isDeleted ON "Chapter" ("subjectId", "isDeleted");
+CREATE INDEX idx_subject_ordering ON "Subject" ("createdAt", "subjectName", "id");
+
 
 -- Remove indexes
 DROP INDEX IF EXISTS idx_subject_isdeleted;

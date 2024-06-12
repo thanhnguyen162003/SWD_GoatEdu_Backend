@@ -7,4 +7,6 @@ public class ChapterDto
     public int? ChapterLevel { get; set; }
     public Guid? SubjectId { get; set; }
     public DateTime? CreatedAt { get; set; } 
+    public DateTime? UpdatedAt { get; set; } 
+
 }

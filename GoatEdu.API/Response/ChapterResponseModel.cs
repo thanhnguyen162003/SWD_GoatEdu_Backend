@@ -8,8 +8,9 @@ public class ChapterResponseModel
     public int? ChapterLevel { get; set; } 
     public Guid? SubjectId { get; set; } 
     public DateTime? CreatedAt { get; set; } 
-    
-    // public ICollection<Lesson>? Lessons { get; set; }
+    public DateTime? UpdatedAt { get; set; } 
+
+    // public ICollection<LessonDto>? Lessons { get; set; }
 
     
 }
