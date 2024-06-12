@@ -3,6 +3,7 @@ using GoatEdu.API;
 using GoatEdu.Core.DTOs.MailDto;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
+using GoatEdu.Core.Services.BackgroudTask;
 using GoatEdu.Core.Services.SignalR;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
@@ -104,6 +105,11 @@ builder.Services.AddAuthentication(opt =>
         }
     };
 });
+
+//Backgroud Service
+builder.Services.AddHostedService(
+    provider => provider.GetRequiredService<PeriodicHostedService>());
+
 // fluent mail config
 var mailSetting = configuration.GetSection("GmailSetting").Get<MailSetting>();
 
@@ -113,6 +119,7 @@ builder.Services.AddFluentEmail(mailSetting.Mail)
     .AddRazorRenderer();
 
 builder.Services.AddEndpointsApiExplorer();
+
 //SwaggerConfig
 builder.Services.AddSwaggerGen(option =>
 {
@@ -178,6 +185,12 @@ app.UseCors(builder =>
 });
 app.UseHttpsRedirection();
 
+app.MapMethods("/background", new[] { "PATCH" }, (
+    PeriodicHostedServiceState state, 
+    PeriodicHostedService service) =>
+{
+    service.IsEnabled = true;// can config later
+});
 app.UseAuthentication(); // Ensure this is before UseAuthorization
 
 app.UseAuthorization();

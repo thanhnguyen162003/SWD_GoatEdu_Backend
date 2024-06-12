@@ -31,6 +31,7 @@ using GoatEdu.Core.Interfaces.UserDetailInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using GoatEdu.Core.Mappings;
 using GoatEdu.Core.Services;
+using GoatEdu.Core.Services.BackgroudTask;
 using GoatEdu.Core.Validator;
 using Infrastructure.Repositories;
 using IMailService = GoatEdu.Core.Interfaces.MailInterfaces.IMailService;
@@ -82,8 +83,8 @@ public static class DI
         services.AddScoped<IFlashcardService, FlashcardService>();
         services.AddScoped<IAnswerService, AnswerService>();
         services.AddScoped<IFlashcardContentService, FlashcardContentService>();
-
-
+        services.AddScoped<BackgroundTaskService>();
+        services.AddSingleton<PeriodicHostedService>();
         
         
         // Others
