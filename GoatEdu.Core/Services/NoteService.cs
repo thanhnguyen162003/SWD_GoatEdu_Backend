@@ -111,6 +111,7 @@ public class NoteService : INoteService
 
         note.NoteName =  dto.NoteName ?? note.NoteName ;
         note.NoteBody =  dto.NoteBody ?? note.NoteBody;
+        note.NoteBodyHtml = dto.NoteBodyHtml ?? note.NoteBodyHtml;
         note.UpdatedBy = _claimsService.GetCurrentFullname;
         note.UpdatedAt = _currentTime.GetCurrentTime();
         

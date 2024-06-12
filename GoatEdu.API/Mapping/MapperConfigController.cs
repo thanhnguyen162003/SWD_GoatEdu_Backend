@@ -98,6 +98,9 @@ public class MapperConfigController : Profile
         CreateMap<AnswerDto, AnswerRequestModel>()
             .ForMember(dest => dest.AnswerImage, opt => opt.MapFrom(src => src.AnswerImageConvert))
             .ReverseMap();
+        CreateMap<AnswerDto, AnswerUpdateModel>()
+            .ForMember(dest => dest.AnswerImage, opt => opt.MapFrom(src => src.AnswerImageConvert))
+            .ReverseMap();
         CreateMap<AnswerDto, AnswerResponseModel>().ReverseMap();
         
         

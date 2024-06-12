@@ -16,6 +16,8 @@ namespace Infrastructure
         public string? NoteName { get; set; }
         [Column("noteBody", TypeName = "character varying")]
         public string? NoteBody { get; set; }
+        [Column("noteBodyHtml", TypeName = "character varying")]
+        public string? NoteBodyHtml { get; set; }
         [Column("userId")]
         public Guid? UserId { get; set; }
         [Column("createdAt", TypeName = "timestamp without time zone")]

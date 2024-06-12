@@ -4,4 +4,5 @@ public class NoteUpdateModel
 {
     public string? NoteName { get; set; }
     public string? NoteBody { get; set; }
+    public string? NoteBodyHtml { get; set; }
 }

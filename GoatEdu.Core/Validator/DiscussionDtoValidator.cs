@@ -12,7 +12,7 @@ public class DiscussionDtoValidator : AbstractValidator<DiscussionDto>
         RuleFor(x => x.DiscussionName)
             .NotEmpty().WithMessage("Discussion name is required!")
             .MaximumLength(100).WithMessage("Discussion name cannot exceed 100 characters.")
-            .Unless(x => string.IsNullOrEmpty(x.DiscussionName));
+            .Unless(x => x.DiscussionName is null);
 
         RuleFor(x => x.SubjectId)
             .NotEmpty().WithMessage("Subject Id is required!")
@@ -25,5 +25,13 @@ public class DiscussionDtoValidator : AbstractValidator<DiscussionDto>
             .Must(list => list.Count == 4).WithMessage("Tags must have only 4 tags!")
             .Must(list => list.Count == list.Distinct().Count()).WithMessage("Tags must not duplicate!")
             .Unless(x => x.Tags is null);
+        
+        RuleFor(x => x.DiscussionBody)
+            .NotEmpty().WithMessage("Discussion body is required!")
+            .Unless(x => x.DiscussionBody is null);
+        
+        RuleFor(x => x.DiscussionBodyHtml)
+            .NotEmpty().WithMessage("Discussion body html is required!")
+            .Unless(x => x.DiscussionBody is null);
     }
 }
