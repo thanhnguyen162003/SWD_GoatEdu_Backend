@@ -23,6 +23,8 @@ namespace Infrastructure
         public string? DiscussionName { get; set; }
         [Column("discussionBody", TypeName = "character varying")]
         public string? DiscussionBody { get; set; }
+        [Column("discussionBodyHtml", TypeName = "character varying")]
+        public string? DiscussionBodyHtml { get; set; }
         [Column("userId")]
         public Guid? UserId { get; set; }
         [Column("discussionImage", TypeName = "character varying")]

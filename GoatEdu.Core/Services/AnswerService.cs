@@ -1,5 +1,6 @@
 using System.Net;
 using AutoMapper;
+using FluentValidation;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.Interfaces;
@@ -25,8 +26,9 @@ public class AnswerService : IAnswerService
     private readonly PaginationOptions _paginationOptions;
     private readonly ICloudinaryService _cloudinaryService;
     private readonly IHubContext<HubService, IHubService> _hubContext;
+    private readonly IValidator<AnswerDto> _validator;
 
-    public AnswerService(IUnitOfWork unitOfWork, IClaimsService claimsService, ICurrentTime currentTime, IMapper mapper, IOptions<PaginationOptions> options, ICloudinaryService cloudinaryService, IHubContext<HubService, IHubService> hubContext)
+    public AnswerService(IUnitOfWork unitOfWork, IClaimsService claimsService, ICurrentTime currentTime, IMapper mapper, IOptions<PaginationOptions> options, ICloudinaryService cloudinaryService, IHubContext<HubService, IHubService> hubContext, IValidator<AnswerDto> validator)
     {
         _unitOfWork = unitOfWork;
         _claimsService = claimsService;
@@ -35,10 +37,18 @@ public class AnswerService : IAnswerService
         _paginationOptions = options.Value;
         _cloudinaryService = cloudinaryService;
         _hubContext = hubContext;
+        _validator = validator;
     }
 
     public async Task<ResponseDto> InsertAnswer(AnswerDto dto)
     {
+        var validationResult = await _validator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
+            return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
+        }
+        
         var mapper = _mapper.Map<Answer>(dto);
         
         if (dto.AnswerImageConvert != null)
@@ -72,8 +82,6 @@ public class AnswerService : IAnswerService
         var answer = await _unitOfWork.AnswerRepository.GetByIdAndUserId(guid, userId);
         if (answer is null) return new ResponseDto(HttpStatusCode.BadRequest, "");
         answer.IsDeleted = false;
-        answer.UpdatedAt = _currentTime.GetCurrentTime();
-        answer.UpdatedBy = _claimsService.GetCurrentFullname;
         _unitOfWork.AnswerRepository.Update(answer);
         var result = await _unitOfWork.SaveChangesAsync();
         return result > 0
@@ -94,11 +102,16 @@ public class AnswerService : IAnswerService
 
     public async Task<ResponseDto> UpdateAnswer(Guid guid, AnswerDto dto)
     {
+        var validationResult = await _validator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
+            return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
+        }
+        
         var userId = _claimsService.GetCurrentUserId;
         var answer = await _unitOfWork.AnswerRepository.GetByIdAndUserId(guid, userId);
         if (answer is null) return new ResponseDto(HttpStatusCode.NotFound, "");
-        
-        answer = _mapper.Map(dto, answer);
         
         if (dto.AnswerImageConvert != null)
         {
@@ -110,7 +123,9 @@ public class AnswerService : IAnswerService
         
             answer.AnswerImage = image.Url.ToString();
         }
-        
+
+        answer.AnswerBody = dto.AnswerBody ?? answer.AnswerBody;
+        answer.AnswerBodyHtml = dto.AnswerBodyHtml ?? answer.AnswerBodyHtml;
         answer.UpdatedAt = _currentTime.GetCurrentTime();
         answer.UpdatedBy = _claimsService.GetCurrentFullname;
         

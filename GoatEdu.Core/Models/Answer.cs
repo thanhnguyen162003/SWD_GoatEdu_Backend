@@ -22,6 +22,8 @@ namespace Infrastructure
         public string? AnswerName { get; set; }
         [Column("answerBody", TypeName = "character varying")]
         public string? AnswerBody { get; set; }
+        [Column("answerBodyHtml", TypeName = "character varying")]
+        public string? AnswerBodyHtml { get; set; }
         [Column("userId")]
         public Guid? UserId { get; set; }
         [Column("questionId")]

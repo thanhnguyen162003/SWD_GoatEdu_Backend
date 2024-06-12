@@ -7,4 +7,5 @@ public class NoteRequestModel
     [Required(ErrorMessage = "Note name is required!")]
     public string? NoteName { get; set; }
     public string? NoteBody { get; set; }
+    public string? NoteBodyHtml { get; set; }
 }

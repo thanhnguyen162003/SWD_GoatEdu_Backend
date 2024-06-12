@@ -10,6 +10,8 @@ public class DiscussionRequestModel
     public string? DiscussionName { get; set; }
     [Required(ErrorMessage = "Discussion body is required!")]
     public string? DiscussionBody { get; set; }
+    [Required(ErrorMessage = "Discussion body html is required!")]
+    public string? DiscussionBodyHtml { get; set; }
     public IFormFile? DiscussionImage { get; set; }
     [Required(ErrorMessage = "Tags is required!")]
     public List<TagUpdateModel>? Tags { get; set; }

@@ -167,6 +167,7 @@ public class DiscussionService : IDiscussionService
 
         disscussion.DiscussionName = dto.DiscussionName ?? disscussion.DiscussionName;
         disscussion.DiscussionBody = dto.DiscussionBody ?? disscussion.DiscussionBody;
+        disscussion.DiscussionBodyHtml = dto.DiscussionBodyHtml ?? disscussion.DiscussionBodyHtml;
         disscussion.IsSolved = dto.IsSolved ?? disscussion.IsSolved;
         disscussion.UpdatedBy = _claimsService.GetCurrentFullname;
         disscussion.UpdatedAt = _currentTime.GetCurrentTime();
