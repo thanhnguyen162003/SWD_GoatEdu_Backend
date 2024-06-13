@@ -14,10 +14,10 @@ public class NoteDtoValidator : AbstractValidator<NoteDto>
         
         RuleFor(dto => dto.NoteBody)
             .NotEmpty().WithMessage("Note body is required!")
-            .Unless(dto => dto.NoteBody is null);
+            .Unless(dto => dto.NoteBody is null && dto.NoteBodyHtml is null );
         
         RuleFor(dto => dto.NoteBodyHtml)
             .NotEmpty().WithMessage("Note body html is required!")
-            .Unless(dto => dto.NoteBody is null);
+            .Unless(dto => dto.NoteBody is null && dto.NoteBodyHtml is null);
     }
 }

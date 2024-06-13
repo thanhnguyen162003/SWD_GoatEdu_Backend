@@ -13,6 +13,7 @@ namespace Infrastructure
         {
             FlashcardContents = new HashSet<FlashcardContent>();
             Tags = new HashSet<Tag>();
+            Rates = new HashSet<Rate>();
         }
 
         [Key]
@@ -48,6 +49,7 @@ namespace Infrastructure
         public virtual ICollection<FlashcardContent> FlashcardContents { get; set; }
         [InverseProperty("Flashcards")]
         public virtual ICollection<Tag> Tags { get; set; }
-
+        [InverseProperty("Flashcard")]
+        public virtual ICollection<Rate> Rates { get; set; }
     }
 }

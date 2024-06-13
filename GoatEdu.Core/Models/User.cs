@@ -77,5 +77,7 @@ namespace Infrastructure
         public virtual ICollection<Report> Reports { get; set; }
         [InverseProperty("User")]
         public virtual ICollection<Vote> Votes { get; set; }
+        [InverseProperty("User")]
+        public virtual ICollection<Rate> Rates { get; set; }
     }
 }
