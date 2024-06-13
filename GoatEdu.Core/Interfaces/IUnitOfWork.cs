@@ -9,6 +9,7 @@ using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.ModeratorInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
+using GoatEdu.Core.Interfaces.RateInterfaces;
 using GoatEdu.Core.Interfaces.ReportInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
@@ -40,6 +41,8 @@ namespace GoatEdu.Core.Interfaces
         IModeratorRepository ModeratorRepository { get; }
         IFlashcardContentRepository FlashcardContentRepository { get; }
         IAnswerRepository AnswerRepository { get; }
+        IRateRepository RateRepository { get; }
+
         
         
         void SaveChanges();

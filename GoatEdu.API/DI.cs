@@ -21,6 +21,7 @@ using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.ModeratorInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
+using GoatEdu.Core.Interfaces.RateInterfaces;
 using GoatEdu.Core.Interfaces.ReportInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.StripeInterface;
@@ -60,6 +61,8 @@ public static class DI
         services.AddScoped<IFlashcardRepository, FlashcardRepository>();
         services.AddScoped<IAnswerRepository, AnswerRepository>();
         services.AddScoped<IFlashcardContentRepository, FlashcardContentRepository>();
+        services.AddScoped<IRateRepository, RateRepository>();
+
 
 
         
@@ -85,6 +88,8 @@ public static class DI
         services.AddScoped<IFlashcardContentService, FlashcardContentService>();
         services.AddScoped<BackgroundTaskService>();
         services.AddSingleton<PeriodicHostedService>();
+        services.AddScoped<IRateService, RateService>();
+
         
         
         // Others

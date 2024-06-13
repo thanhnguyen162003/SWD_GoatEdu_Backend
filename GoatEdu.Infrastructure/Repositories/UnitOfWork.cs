@@ -10,6 +10,7 @@ using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.ModeratorInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
+using GoatEdu.Core.Interfaces.RateInterfaces;
 using GoatEdu.Core.Interfaces.ReportInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
@@ -46,6 +47,8 @@ public class UnitOfWork : IUnitOfWork
     private readonly IModeratorRepository _moderatorRepository;
     private readonly IFlashcardContentRepository _flashcardContentRepository;
     private readonly IAnswerRepository _answerRepository;
+    private readonly IRateRepository _rateRepository;
+
 
 
     public UnitOfWork(GoatEduContext context, IDistributedCache distributedCache)
@@ -74,6 +77,8 @@ public class UnitOfWork : IUnitOfWork
     public IModeratorRepository ModeratorRepository => _moderatorRepository ?? new ModeratorRepository(_context);
     public IFlashcardContentRepository FlashcardContentRepository => _flashcardContentRepository ?? new FlashcardContentRepository(_context);
     public IAnswerRepository AnswerRepository => _answerRepository ?? new AnswerRepository(_context);
+    public IRateRepository RateRepository => _rateRepository ?? new RateRepository(_context);
+
 
 
     public void SaveChanges()
