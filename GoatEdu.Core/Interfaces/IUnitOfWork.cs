@@ -16,6 +16,7 @@ using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.TagInterfaces;
 using GoatEdu.Core.Interfaces.UserDetailInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
+using GoatEdu.Core.Interfaces.VoteInterface;
 
 namespace GoatEdu.Core.Interfaces
 {
@@ -42,10 +43,13 @@ namespace GoatEdu.Core.Interfaces
         IFlashcardContentRepository FlashcardContentRepository { get; }
         IAnswerRepository AnswerRepository { get; }
         IRateRepository RateRepository { get; }
-
+        IVoteRepository VoteRepository { get; }
         
         
         void SaveChanges();
         Task<int> SaveChangesAsync();
+        Task BeginTransactionAsync();
+        Task CommitTransactionAsync();
+        Task RollbackTransactionAsync();
     }
 }
