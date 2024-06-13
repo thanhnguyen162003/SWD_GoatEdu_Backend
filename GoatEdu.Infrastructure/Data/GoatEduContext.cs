@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Infrastructure.Migration;
 
 namespace Infrastructure.Data
 {
@@ -30,6 +31,7 @@ namespace Infrastructure.Data
         public virtual DbSet<Notification> Notifications { get; set; } = null!;
         public virtual DbSet<QuestionInQuiz> QuestionInQuizzes { get; set; } = null!;
         public virtual DbSet<Quiz> Quizzes { get; set; } = null!;
+        public virtual DbSet<Rate> Rates { get; set; } = null!;
         public virtual DbSet<Report> Reports { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<Subject> Subjects { get; set; } = null!;
@@ -47,12 +49,14 @@ namespace Infrastructure.Data
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseNpgsql("Host=35.240.220.220;Port=5432;Username=root;Password=Admin123456789@;Database=goateduprimary");
+                optionsBuilder.UseNpgsql("Host=35.240.220.220;Port=5432;Username=root;Password=Admin123456789@;Database=goateduprimary;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasPostgresExtension("uuid-ossp");
+
             modelBuilder.Entity<Achievement>(entity =>
             {
                 entity.ToTable("Achievement");
@@ -60,8 +64,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.UserId, "IX_Achievement_userId");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.AchievementContent)
                     .HasColumnType("character varying")
@@ -93,12 +97,16 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.UserId, "IX_Answer_userId");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.AnswerBody)
                     .HasColumnType("character varying")
                     .HasColumnName("answerBody");
+
+                entity.Property(e => e.AnswerBodyHtml)
+                    .HasColumnType("character varying")
+                    .HasColumnName("answerBodyHtml");
 
                 entity.Property(e => e.AnswerImage)
                     .HasColumnType("character varying")
@@ -172,9 +180,11 @@ namespace Infrastructure.Data
 
                 entity.HasIndex(e => e.SubjectId, "IX_Chapter_subjectId");
 
+                entity.HasIndex(e => new { e.SubjectId, e.IsDeleted }, "idx_chapter_subjectid_isdeleted");
+
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.ChapterLevel).HasColumnName("chapterLevel");
 
@@ -212,8 +222,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.UserId, "IX_Discussion_userId");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -226,6 +236,10 @@ namespace Infrastructure.Data
                 entity.Property(e => e.DiscussionBody)
                     .HasColumnType("character varying")
                     .HasColumnName("discussionBody");
+
+                entity.Property(e => e.DiscussionBodyHtml)
+                    .HasColumnType("character varying")
+                    .HasColumnName("discussionBodyHtml");
 
                 entity.Property(e => e.DiscussionImage)
                     .HasColumnType("character varying")
@@ -291,8 +305,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.SubjectId, "IX_Enrollment_subjectId");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -323,8 +337,8 @@ namespace Infrastructure.Data
                     .IsUnique();
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.ChapterId).HasColumnName("chapterId");
 
@@ -350,8 +364,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.UserId, "IX_Flashcard_userId");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -420,8 +434,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.FlashcardId, "IX_FlashcardContent_flashcardId");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -471,8 +485,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.ChapterId, "IX_Lesson_chapterId");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.ChapterId).HasColumnName("chapterId");
 
@@ -520,8 +534,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.UserId, "IX_Note_userId");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -536,6 +550,10 @@ namespace Infrastructure.Data
                 entity.Property(e => e.NoteBody)
                     .HasColumnType("character varying")
                     .HasColumnName("noteBody");
+
+                entity.Property(e => e.NoteBodyHtml)
+                    .HasColumnType("character varying")
+                    .HasColumnName("noteBodyHtml");
 
                 entity.Property(e => e.NoteName)
                     .HasColumnType("character varying")
@@ -563,8 +581,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.UserId, "IX_Notification_userId");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -596,8 +614,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.QuizId, "IX_QuestionInQuiz_quizId");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -647,8 +665,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.SubjectId, "IX_Quiz_subjectId");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.ChapterId).HasColumnName("chapterId");
 
@@ -687,6 +705,35 @@ namespace Infrastructure.Data
                     .HasForeignKey(d => d.SubjectId);
             });
 
+            modelBuilder.Entity<Rate>(entity =>
+            {
+                entity.ToTable("Rate");
+
+                entity.HasIndex(e => e.FlashcardId, "IX_Rate_flashcardId");
+
+                entity.HasIndex(e => e.UserId, "IX_Rate_userId");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("createdAt");
+
+                entity.Property(e => e.FlashcardId).HasColumnName("flashcardId");
+
+                entity.Property(e => e.RateValue).HasColumnName("rateValue");
+
+                entity.Property(e => e.UserId).HasColumnName("userId");
+
+                entity.HasOne(d => d.Flashcard)
+                    .WithMany(p => p.Rates)
+                    .HasForeignKey(d => d.FlashcardId);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Rates)
+                    .HasForeignKey(d => d.UserId);
+            });
+
             modelBuilder.Entity<Report>(entity =>
             {
                 entity.ToTable("Report");
@@ -694,8 +741,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.UserId, "IX_Report_userId");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -731,8 +778,8 @@ namespace Infrastructure.Data
                 entity.ToTable("Role");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -753,9 +800,13 @@ namespace Infrastructure.Data
             {
                 entity.ToTable("Subject");
 
+                entity.HasIndex(e => e.IsDeleted, "idx_subject_isdeleted");
+
+                entity.HasIndex(e => new { e.CreatedAt, e.SubjectName, e.Id }, "idx_subject_ordering");
+
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.Class)
                     .HasColumnType("character varying")
@@ -793,8 +844,8 @@ namespace Infrastructure.Data
                 entity.ToTable("Subscription");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -820,8 +871,8 @@ namespace Infrastructure.Data
                 entity.ToTable("Tag");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -845,8 +896,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.LessonId, "IX_Theory_lessonId");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -888,8 +939,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.TheoryId, "IX_TheoryFlashCardContent_theoryId");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.Answer)
                     .HasColumnType("character varying")
@@ -927,8 +978,8 @@ namespace Infrastructure.Data
                 entity.HasIndex(e => e.SubscriptionId, "IX_Transaction_subscriptionId");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -971,8 +1022,8 @@ namespace Infrastructure.Data
                     .IsUnique();
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
@@ -1076,8 +1127,8 @@ namespace Infrastructure.Data
                 entity.ToTable("Wallet");
 
                 entity.Property(e => e.Id)
-                    .HasDefaultValueSql("uuid_generate_v4()")
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("timestamp without time zone")
