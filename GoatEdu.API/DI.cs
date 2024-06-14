@@ -99,6 +99,9 @@ public static class DI
         services.AddScoped<ICurrentTime, CurrentTime>();
         services.AddScoped<IClaimsService, ClaimsService>();
         services.AddHttpContextAccessor();
+        services.AddScoped<IADProductService, ADProductService>();
+        services.AddScoped<IBotAPIService, BotAPIService>();
+
         
         
         //DI for Cloudinary Cloud
