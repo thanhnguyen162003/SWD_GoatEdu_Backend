@@ -15,4 +15,5 @@ public class DiscussionDetailResponseModel
     public DateTime? CreatedAt { get; set; }
     public ICollection<TagResponseModel>? Tags { get; set; }
     public UserAndSubject? UserAndSubject { get; set; }
+    public bool IsUserVoted { get; set; }
 }

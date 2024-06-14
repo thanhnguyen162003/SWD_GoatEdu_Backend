@@ -43,7 +43,7 @@ public class DiscussionController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetDetailsDiscussionByFilter([FromQuery, Required] DiscussionQueryFilter queryFilter)
+    public async Task<IActionResult> GetDiscussionByFilter([FromQuery, Required] DiscussionQueryFilter queryFilter)
     {
         try
         {
@@ -61,8 +61,10 @@ public class DiscussionController : ControllerBase
             };
             
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+
+            var mapper = _mapper.Map<PagedList<DiscussionDetailResponseModel>>(result);
             
-            return Ok(result);
+            return Ok(mapper);
         }
         catch (Exception e)
         {
@@ -72,7 +74,7 @@ public class DiscussionController : ControllerBase
     
     [HttpGet("user")]
     [Authorize]
-    public async Task<IActionResult> GetDetailsDiscussionByCurrentUser([FromQuery, Required] DiscussionQueryFilter queryFilter)
+    public async Task<IActionResult> GetDiscussionByCurrentUser([FromQuery, Required] DiscussionQueryFilter queryFilter)
     {
         try
         {
@@ -90,7 +92,7 @@ public class DiscussionController : ControllerBase
             
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
             
-            var mapper = _mapper.Map<DiscussionResponseModel>(result);
+            var mapper = _mapper.Map<DiscussionDetailResponseModel>(result);
             
             return Ok(mapper);
         }

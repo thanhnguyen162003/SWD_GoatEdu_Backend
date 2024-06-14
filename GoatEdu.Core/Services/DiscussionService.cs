@@ -42,15 +42,29 @@ public class DiscussionService : IDiscussionService
 
     public async Task<PagedList<DiscussionDto>> GetDiscussionByFilter(DiscussionQueryFilter queryFilter)
     {
-        queryFilter.page_number =
-            queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
+        queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
 
         var list = await _unitOfWork.DiscussionRepository.GetDiscussionByFilters(null, queryFilter);
 
         if (!list.Any()) return new PagedList<DiscussionDto>(new List<DiscussionDto>(), 0, 0, 0);
+        
+        var userId = _claimsService.GetCurrentUserId;
+        var discussionIdVote = new List<Guid?>();
+        
+        if (userId != Guid.Empty)
+        {
+            var discussionIds = list.Select(x => x.Id).ToList();
+            discussionIdVote = await _unitOfWork.VoteRepository.GetDiscussionVoteByUserId(userId, discussionIds);
+        }
 
-        var mapper = _mapper.Map<List<DiscussionDto>>(list);
+        var mapper = list.Select(discussion =>
+        {
+            var dto = _mapper.Map<DiscussionDto>(discussion);
+            dto.IsUserVoted = userId != Guid.Empty && discussionIdVote.Contains(dto.Id);
+            return dto;
+        });
+
         return PagedList<DiscussionDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
     }
 

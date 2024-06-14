@@ -1,4 +1,8 @@
+using AutoMapper;
+using GoatEdu.Core.DTOs;
+using GoatEdu.Core.DTOs.TagDto;
 using GoatEdu.Core.Enumerations;
+using GoatEdu.Core.Interfaces.ClaimInterfaces;
 using GoatEdu.Core.Interfaces.DiscussionInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure.Data;
@@ -10,7 +14,6 @@ namespace Infrastructure.Repositories;
 public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepository
 {
     private readonly GoatEduContext _context;
-    
     public DiscussionRepository(GoatEduContext context) : base(context)
     {
         _context = context;
@@ -24,10 +27,12 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
             .Include(x => x.User)
             .Include(x => x.Subject)
             .Include(x => x.Tags)
+            .Include(x => x.Votes)
             .AsQueryable();
         discussions = ApplyFilterSortAndSearch(discussions, queryFilter, userId);
-        discussions = ApplySorting(discussions, queryFilter);
-        return await discussions.ToListAsync(); 
+        discussions =  ApplySorting(discussions, queryFilter);
+        
+        return await discussions.ToListAsync();
     }
 
     public async Task<Discussion?> GetById(Guid guid)

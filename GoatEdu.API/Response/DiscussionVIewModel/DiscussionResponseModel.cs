@@ -13,4 +13,5 @@ public class DiscussionResponseModel
     public string? Status { get; set; }
     public DateTime? CreatedAt { get; set; }
     public UserAndSubject? UserAndSubject { get; set; }
+    public bool IsUserVoted { get; set; }
 }

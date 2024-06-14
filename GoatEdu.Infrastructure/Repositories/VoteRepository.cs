@@ -24,6 +24,14 @@ public class VoteRepository : IVoteRepository
         _context.Votes.Remove(vote);
     }
 
+    public async Task<List<Guid?>> GetDiscussionVoteByUserId(Guid userId, List<Guid> discussionIds)
+    {
+        return await _context.Votes
+            .Where(x => x.UserId == userId && discussionIds.Contains((Guid)x.DiscussionId))
+            .Select(x => x.DiscussionId)
+            .ToListAsync();
+    }
+
     public async Task<Vote?> GetDiscussionVote(Guid guid, Guid userId)
     {
         return await _context.Votes.FirstOrDefaultAsync(x => x.UserId == userId && x.DiscussionId == guid);

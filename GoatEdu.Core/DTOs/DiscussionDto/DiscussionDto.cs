@@ -18,4 +18,5 @@ public class DiscussionDto
     public bool? IsSolved { get; set; }
     public DateTime? CreatedAt { get; set; }
     public UserAndSubject? UserAndSubject { get; set; }
+    public bool IsUserVoted { get; set; }
 }
