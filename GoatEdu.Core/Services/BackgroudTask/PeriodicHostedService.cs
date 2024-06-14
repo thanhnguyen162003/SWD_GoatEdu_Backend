@@ -6,7 +6,7 @@ namespace GoatEdu.Core.Services.BackgroudTask;
 
 public class PeriodicHostedService : BackgroundService
 {
-    private readonly TimeSpan _period = TimeSpan.FromHours(10);
+    private readonly TimeSpan _period = TimeSpan.FromHours(6);
     private readonly ILogger<PeriodicHostedService> _logger;
     private readonly IServiceScopeFactory _factory;
     private int _executionCount = 0;

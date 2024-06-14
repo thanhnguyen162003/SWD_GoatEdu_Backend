@@ -20,6 +20,12 @@ public class RateService : IRateService
         _unitOfWork = unitOfWork;
     }
 
+    public async Task<ResponseDto> GetUserRateFlashcard(Guid flashcardId)
+    {
+        var userId = _claimsService.GetCurrentUserId;
+        return await _unitOfWork.RateRepository.GetUserRateFlashcard(flashcardId, userId);
+    }
+
     public async Task<ResponseDto> RateFlashcard(short rateValue, Guid flashcardId)
     {
         var userId = _claimsService.GetCurrentUserId;

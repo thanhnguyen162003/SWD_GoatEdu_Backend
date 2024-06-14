@@ -15,19 +15,29 @@ public class RateRepository : IRateRepository
         _context = context;
     }
 
-    public async Task<int> GetNumberRating(Guid flashcardId)
+    public async Task GetNumberRating()
     {
-        var ratings = await _context.Rates
-                                   .Where(r => r.FlashcardId == flashcardId)
-                                   .ToListAsync();
+        var flashcards = await _context.Flashcards.ToListAsync();
 
-        if (ratings == null || !ratings.Any())
+        foreach (var flashcard in flashcards)
         {
-            return 0; // No ratings found, return 0
+            var ratings = await _context.Rates
+                                        .Where(r => r.FlashcardId == flashcard.Id)
+                                        .ToListAsync();
+
+            if (ratings.Any())
+            {
+                flashcard.Star = (int)ratings.Average(r => r.RateValue.GetValueOrDefault());
+            }
+            else
+            {
+                flashcard.Star = 0; // or null, depending on your preference
+            }
+
+            _context.Flashcards.Update(flashcard);
         }
 
-        var averageRating = ratings.Average(r => r.RateValue.GetValueOrDefault());
-        return (int)averageRating;
+        await _context.SaveChangesAsync();
     }
 
     public async Task<ResponseDto> RateFlashcard(Rate rate)
@@ -37,5 +47,21 @@ public class RateRepository : IRateRepository
         return new ResponseDto(HttpStatusCode.OK, "Create Success");
     }
 
-    
+    public async Task<ResponseDto> GetUserRateFlashcard(Guid userId, Guid flashcardId)
+    {
+        var result = await _context.Rates
+                                   .AsNoTracking()
+                                   .Where(x => x.UserId == userId && x.FlashcardId == flashcardId)
+                                   .FirstOrDefaultAsync();
+
+        if (result == null)
+        {
+            return new ResponseDto(HttpStatusCode.NotFound, "You have not rated this flashcard yet");
+        }
+
+        return new ResponseDto(HttpStatusCode.OK, "Here is your rate", result.RateValue);
+    }
+
+
+
 }

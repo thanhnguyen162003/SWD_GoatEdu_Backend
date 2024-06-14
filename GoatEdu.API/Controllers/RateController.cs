@@ -22,4 +22,10 @@ public class RateController : ControllerBase
     {
         return await _rateService.RateFlashcard(rate, flashcardId);
     }
+
+    [HttpGet("{flashcardId}/user")]
+    public async Task<ResponseDto> GetRatingUser([FromRoute] Guid flashcardId)
+    {
+        return await _rateService.GetUserRateFlashcard(flashcardId);
+    }
 }
