@@ -17,8 +17,10 @@ using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.TagInterfaces;
 using GoatEdu.Core.Interfaces.UserDetailInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
+using GoatEdu.Core.Interfaces.VoteInterface;
 using Infrastructure.Data;
 using Infrastructure.Repositories.CacheRepository;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace Infrastructure.Repositories;
@@ -48,7 +50,8 @@ public class UnitOfWork : IUnitOfWork
     private readonly IFlashcardContentRepository _flashcardContentRepository;
     private readonly IAnswerRepository _answerRepository;
     private readonly IRateRepository _rateRepository;
-
+    private readonly IVoteRepository _voteRepository;
+    private IDbContextTransaction _transaction;
 
 
     public UnitOfWork(GoatEduContext context, IDistributedCache distributedCache)
@@ -78,8 +81,7 @@ public class UnitOfWork : IUnitOfWork
     public IFlashcardContentRepository FlashcardContentRepository => _flashcardContentRepository ?? new FlashcardContentRepository(_context);
     public IAnswerRepository AnswerRepository => _answerRepository ?? new AnswerRepository(_context);
     public IRateRepository RateRepository => _rateRepository ?? new RateRepository(_context);
-
-
+    public IVoteRepository VoteRepository => _voteRepository ?? new VoteRepository(_context);
 
     public void SaveChanges()
     {
@@ -99,6 +101,46 @@ public class UnitOfWork : IUnitOfWork
         }
     }
     
+    // Testing Transaction
+    public async Task BeginTransactionAsync()
+    {
+        if (_transaction != null)
+        {
+            return;
+        }
+    
+        _transaction = await _context.Database.BeginTransactionAsync();
+    }
+    
+    public async Task CommitTransactionAsync()
+    {
+        try
+        {
+            await _context.SaveChangesAsync();
+            await _transaction.CommitAsync();
+        }
+        finally
+        {
+            _transaction.Dispose();
+            _transaction = null;
+        }
+    }
+    
+    public async Task RollbackTransactionAsync()
+    {
+        try
+        {
+            if (_transaction != null)
+            {
+                await _transaction.RollbackAsync();
+            }
+        }
+        finally
+        {
+            _transaction?.Dispose();
+            _transaction = null;
+        }
+    }
     
     private bool IsRedisAvailable()
     {

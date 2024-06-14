@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using GoatEdu.Core.DTOs;
+using GoatEdu.Core.Interfaces.VoteInterface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoatEdu.API.Controllers;
@@ -6,9 +9,22 @@ namespace GoatEdu.API.Controllers;
 [ApiController]
 public class VoteController : ControllerBase
 {
-    
-    
-    public VoteController()
+    private readonly IVoteService _voteService;
+
+    public VoteController(IVoteService voteService)
     {
+        _voteService = voteService;
+    }
+
+    [HttpPost("discussion/{id}")]
+    public async Task<ResponseDto> DiscussionVoting([FromRoute, Required] Guid id)
+    {
+        return await _voteService.DiscussionVoting(id);
+    }
+    
+    [HttpPost("answer/{id}")]
+    public async Task<ResponseDto> AnswerVoting([FromRoute, Required] Guid id)
+    {
+        return await _voteService.AnswerVoting(id);
     }
 }
