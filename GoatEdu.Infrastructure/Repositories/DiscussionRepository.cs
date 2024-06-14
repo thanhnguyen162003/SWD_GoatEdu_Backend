@@ -28,6 +28,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
             .Include(x => x.Subject)
             .Include(x => x.Tags)
             .Include(x => x.Votes)
+            .AsSplitQuery()
             .AsQueryable();
         discussions = ApplyFilterSortAndSearch(discussions, queryFilter, userId);
         discussions =  ApplySorting(discussions, queryFilter);
@@ -41,6 +42,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
             .Include(x => x.User)
             .Include(x => x.Subject)
             .Include(x => x.Tags)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(x => x.Id == guid && x.IsDeleted == false);
     }
 
