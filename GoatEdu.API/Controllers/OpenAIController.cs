@@ -1,3 +1,6 @@
+using GoatEdu.API.Request.OpenAIRequestModel;
+using GoatEdu.API.Response;
+using GoatEdu.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenAI_API;
@@ -6,30 +9,32 @@ using OpenAI_API.Completions;
 namespace GoatEdu.API.Controllers;
 
 [Route("api/[controller]")]
-[Authorize]
+// [Authorize]
 [ApiController]
 public class OpenAIController : ControllerBase
 {
-    [HttpPost]
-    [Route("/OpenAI")]
-    public async Task<IActionResult> UseChatGPT(string query)
+    
+    private readonly IADProductService _adProduct;
+
+    public OpenAIController(IADProductService adProduct)
     {
-        string outputResult = "";
-        var openai = new OpenAIAPI("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");
-        CompletionRequest completionRequest = new CompletionRequest();
-        completionRequest.Prompt = query;
-        //no money just use davinciText model pls
-        completionRequest.Model = "gpt-3.5-turbo";
-        completionRequest.MaxTokens = 1024;
-
-        var completions = await openai.Completions.CreateCompletionAsync(completionRequest);
-
-        foreach (var completion in completions.Completions)
+        _adProduct = adProduct;
+    }
+    [HttpPost("OpenAI")]
+    public async Task<ActionResult<ADProductResponseModel>> GenerateAD(CustomerRequestModel aDGenerateRequestModel)
+    {
+        try
         {
-            outputResult += completion.Text;
-        }
 
-        return Ok(outputResult);
+            var response = await _adProduct.GenerateAdContent(aDGenerateRequestModel);
+
+            return response;
+        }
+        catch (System.Exception ex)
+        {
+
+            return null;
+        }
 
     }
 }
