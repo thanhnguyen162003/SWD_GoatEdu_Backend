@@ -30,6 +30,7 @@ using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.TagInterfaces;
 using GoatEdu.Core.Interfaces.UserDetailInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
+using GoatEdu.Core.Interfaces.VoteInterface;
 using GoatEdu.Core.Mappings;
 using GoatEdu.Core.Services;
 using GoatEdu.Core.Services.BackgroudTask;
@@ -62,6 +63,7 @@ public static class DI
         services.AddScoped<IAnswerRepository, AnswerRepository>();
         services.AddScoped<IFlashcardContentRepository, FlashcardContentRepository>();
         services.AddScoped<IRateRepository, RateRepository>();
+        services.AddScoped<IVoteRepository, VoteRepository>();
 
 
 
@@ -89,6 +91,7 @@ public static class DI
         services.AddScoped<BackgroundTaskService>();
         services.AddSingleton<PeriodicHostedService>();
         services.AddScoped<IRateService, RateService>();
+        services.AddScoped<IVoteService, VoteService>();
 
         
         
