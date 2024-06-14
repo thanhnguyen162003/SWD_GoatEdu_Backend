@@ -2,6 +2,7 @@ using System.Net;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.Interfaces.RateInterfaces;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
@@ -14,6 +15,21 @@ public class RateRepository : IRateRepository
         _context = context;
     }
 
+    public async Task<int> GetNumberRating(Guid flashcardId)
+    {
+        var ratings = await _context.Rates
+                                   .Where(r => r.FlashcardId == flashcardId)
+                                   .ToListAsync();
+
+        if (ratings == null || !ratings.Any())
+        {
+            return 0; // No ratings found, return 0
+        }
+
+        var averageRating = ratings.Average(r => r.RateValue.GetValueOrDefault());
+        return (int)averageRating;
+    }
+
     public async Task<ResponseDto> RateFlashcard(Rate rate)
     {
         _context.Rates.Add(rate);
@@ -21,8 +37,5 @@ public class RateRepository : IRateRepository
         return new ResponseDto(HttpStatusCode.OK, "Create Success");
     }
 
-    public async Task<bool> IsRated(Guid userId, Guid flashcardId)
-    {
-        throw new NotImplementedException();
-    }
+    
 }
