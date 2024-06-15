@@ -32,10 +32,7 @@ public class VoteService : IVoteService
             return new ResponseDto(HttpStatusCode.NotFound, "Discussion not found!");
         }
 
-        await _unitOfWork.BeginTransactionAsync();
-
-        try
-        {
+        
             if (vote is null)
             {
                 var newVote = new Vote
@@ -48,20 +45,18 @@ public class VoteService : IVoteService
                 _unitOfWork.DiscussionRepository.Update(discussion);
                 var result = await _unitOfWork.SaveChangesAsync();
 
-                return await DoTransactionAsync(result);
+                return result > 0
+                    ? new ResponseDto(HttpStatusCode.OK, "Vote is completed")
+                    : new ResponseDto(HttpStatusCode.BadRequest, "Vote Failed.");
             }
             
             _unitOfWork.VoteRepository.DeleteVote(vote);
             discussion.DiscussionVote--;
             var save = await _unitOfWork.SaveChangesAsync();
-            return await DoTransactionAsync(save);
+            return save > 0
+                ? new ResponseDto(HttpStatusCode.OK, "Vote is completed")
+                : new ResponseDto(HttpStatusCode.BadRequest, "Vote Failed.");
 
-        }
-        catch (Exception ex)
-        {
-            await _unitOfWork.RollbackTransactionAsync();
-            return new ResponseDto(HttpStatusCode.InternalServerError, "Some thing went wrong while voting!", ex);
-        }
     }
 
     public async Task<ResponseDto> AnswerVoting(Guid guid)
@@ -74,11 +69,8 @@ public class VoteService : IVoteService
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Answer not found!");
         }
-
-        await _unitOfWork.BeginTransactionAsync();
-
-        try
-        {
+        
+        
             if (vote is null)
             {
                 var newVote = new Vote
@@ -90,29 +82,29 @@ public class VoteService : IVoteService
                 answer.AnswerVote++;
                 _unitOfWork.AnswerRepository.Update(answer);
                 var result = await _unitOfWork.SaveChangesAsync();
-                return await DoTransactionAsync(result);
+                return result > 0
+                    ? new ResponseDto(HttpStatusCode.OK, "Vote is completed")
+                    : new ResponseDto(HttpStatusCode.BadRequest, "Vote Failed.");
             }
             
             _unitOfWork.VoteRepository.DeleteVote(vote);
             answer.AnswerVote--;
             var save = await _unitOfWork.SaveChangesAsync();
-            return await DoTransactionAsync(save);
-        }
-        catch (Exception ex)
-        {
-            await _unitOfWork.RollbackTransactionAsync();
-            return new ResponseDto(HttpStatusCode.InternalServerError, "Some thing went wrong while voting!", ex);
-        }
+            return save > 0
+                ? new ResponseDto(HttpStatusCode.OK, "Vote is completed")
+                : new ResponseDto(HttpStatusCode.BadRequest, "Vote Failed.");
+
     }
 
-    private async Task<ResponseDto> DoTransactionAsync(int result)
-    {
-        if (result > 0)
-        {
-            await _unitOfWork.CommitTransactionAsync();
-            return new ResponseDto(HttpStatusCode.OK, "Vote Successfully!");
-        }
-        await _unitOfWork.RollbackTransactionAsync();
-        return new ResponseDto(HttpStatusCode.BadRequest, "Vote Failed!");
-    }
+    // transaction error
+    // private async Task<ResponseDto> DoTransactionAsync(int result)
+    // {
+    //     if (result > 0)
+    //     {
+    //         await _unitOfWork.CommitTransactionAsync();
+    //         return new ResponseDto(HttpStatusCode.OK, "Vote Successfully!");
+    //     }
+    //     await _unitOfWork.RollbackTransactionAsync();
+    //     return new ResponseDto(HttpStatusCode.BadRequest, "Vote Failed!");
+    // }
 }

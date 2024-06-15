@@ -19,7 +19,7 @@ public class VoteController : ControllerBase
     [HttpPost("{id}")]
     public async Task<ResponseDto> DiscussionVoting([FromRoute, Required] Guid id)
     {
-        return await _voteService.DiscussionVoting(id);
+        return await _voteService.DiscussionVoting(id);     
     }
     
     [HttpPost("answer/{id}")]
