@@ -126,6 +126,7 @@ builder.Services.AddAuthentication(opt =>
         }
     };
 });
+StripeConfiguration.ApiKey = builder.Configuration["StripeOptions:SecretKey"];
 
 //Backgroud Service
 builder.Services.AddHostedService(
