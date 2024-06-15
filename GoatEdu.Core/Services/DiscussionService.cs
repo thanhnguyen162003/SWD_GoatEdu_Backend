@@ -74,6 +74,19 @@ public class DiscussionService : IDiscussionService
 
         if (result == null) return new ResponseDto(HttpStatusCode.NotFound, "Kiếm thấy đâu");
 
+        var userId = _claimsService.GetCurrentUserId;
+        var discussionIdVote = new List<Guid?>();
+        
+        if (userId != Guid.Empty)
+        {
+            var discussionIds = new List<Guid>
+            {
+                result.Id
+            };
+            discussionIdVote = await _unitOfWork.VoteRepository.GetDiscussionVoteByUserId(userId, discussionIds);
+        }
+
+        result.IsSolved = userId != Guid.Empty && discussionIdVote.Contains(result.Id);
         var mapper = _mapper.Map<DiscussionDto>(result);
         return new ResponseDto(HttpStatusCode.OK, "", mapper);
     }
