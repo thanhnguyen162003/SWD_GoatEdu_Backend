@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 public class PaymentsController : Controller
 {
     private readonly ILogger<PaymentsController> _logger;
+    const string endpointSecret = "whsec_HgktjnRdJz4sg1479qWJoMtj9YWPjEDT";
 
     public PaymentsController(ILogger<PaymentsController> logger)
     {
@@ -51,26 +52,23 @@ public class PaymentsController : Controller
         return Redirect(session.Url);
     }
 
+  
     [HttpPost("webhook")]
     public async Task<IActionResult> Webhook()
     {
         var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-
         try
         {
-            var stripeEvent = EventUtility.ConstructEvent(
-                json,
-                Request.Headers["Stripe-Signature"],
-                "whsec_HgktjnRdJz4sg1479qWJoMtj9YWPjEDT" // Replace with your webhook secret
-            );
+            var stripeEvent = EventUtility.ConstructEvent(json,
+                Request.Headers["Stripe-Signature"], endpointSecret);
 
             // Handle the event
-            if (stripeEvent.Type == Events.CheckoutSessionCompleted)
+            if (stripeEvent.Type == Events.PaymentIntentSucceeded)
             {
                 var session = stripeEvent.Data.Object as Session;
+                _logger.LogInformation("Payment successful. Session ID: " + session.Id);
 
                 // Process the session
-                Console.WriteLine("Payment successful. Session ID: " + session.Id);
                 // Here you can save the session details to your database or perform other necessary actions
             }
 
