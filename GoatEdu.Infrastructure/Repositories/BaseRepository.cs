@@ -21,7 +21,7 @@ public class BaseRepository<T> : IRepository<T> where T : class
 
     public async Task AddAsync(T entity)
     {
-        // entity.IsDeleted = false;
+        // entity = false;
         await _entities.AddAsync(entity);
     }
 

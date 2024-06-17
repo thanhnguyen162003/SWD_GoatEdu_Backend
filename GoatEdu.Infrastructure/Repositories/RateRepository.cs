@@ -31,7 +31,7 @@ public class RateRepository : IRateRepository
             }
             else
             {
-                flashcard.Star = 0; // or null, depending on your preference
+                flashcard.Star = 0; // or null, depending on preference
             }
 
             _context.Flashcards.Update(flashcard);
@@ -62,6 +62,15 @@ public class RateRepository : IRateRepository
         return new ResponseDto(HttpStatusCode.OK, "Here is your rate", result.RateValue);
     }
 
-
+    public async Task<bool> IsFlashcardRated(Guid userId, Guid flashcardId)
+    {
+        var result = await _context.Rates.AsNoTracking().Where(x => x.UserId == userId && x.FlashcardId == flashcardId)
+            .FirstOrDefaultAsync();
+        if (result is null)
+        {
+            return false;
+        }
+        return true;
+    }
 
 }

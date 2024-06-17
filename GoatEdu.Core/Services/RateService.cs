@@ -48,4 +48,10 @@ public class RateService : IRateService
         };
         return await _unitOfWork.RateRepository.RateFlashcard(rate);
     }
+
+    public async Task<bool> IsUserRate(Guid flashcardId)
+    {
+        var userId = _claimsService.GetCurrentUserId;
+        return await _unitOfWork.RateRepository.IsFlashcardRated(userId, flashcardId);
+    }
 }

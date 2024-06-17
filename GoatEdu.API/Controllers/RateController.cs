@@ -28,4 +28,11 @@ public class RateController : ControllerBase
     {
         return await _rateService.GetUserRateFlashcard(flashcardId);
     }
+    
+    // this code check if user rate flashcard already or not
+    [HttpGet("user/{flashcardId}")]
+    public async Task<bool> IsUserRated([FromRoute] Guid flashcardId)
+    {
+        return await _rateService.IsUserRate(flashcardId);
+    }
 }

@@ -9,5 +9,6 @@ public interface IRateRepository
     Task GetNumberRating();
     Task<ResponseDto> GetUserRateFlashcard(Guid userId, Guid flashcardId);
 
+    Task<bool> IsFlashcardRated(Guid userId, Guid flashcardId);
 
 }
