@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 public class PaymentsController : Controller
 {
     private readonly ILogger<PaymentsController> _logger;
-    const string endpointSecret = "whsec_HgktjnRdJz4sg1479qWJoMtj9YWPjEDT";
+    const string endpointSecret = "whsec_zDoM7pBkZdEKJPE7Hrz4s7jfKRCFoI5l";
 
     public PaymentsController(ILogger<PaymentsController> logger)
     {
