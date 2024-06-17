@@ -80,7 +80,7 @@ public class JWTConfig : JWTGenerator
         {
             Subject = new ClaimsIdentity(new[]
             {
-                new Claim(ClaimTypes.Name, user.Username),
+                // new Claim(ClaimTypes.Name, user.Username),
                 new Claim("UserId", user.Id.ToString()),
                 new Claim("RoleId", user.RoleId.ToString()),
                 new Claim(ClaimTypes.Role, user.Role.RoleName),

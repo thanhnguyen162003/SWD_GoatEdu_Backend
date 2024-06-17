@@ -22,11 +22,11 @@ public class PaymentsController : Controller
                 {
                     PriceData = new SessionLineItemPriceDataOptions
                     {
-                        UnitAmount = 3999,
+                        UnitAmount = 399,
                         Currency = "usd",
                         ProductData = new SessionLineItemPriceDataProductDataOptions
                         {
-                            Name = "Pro GoatEdu 1 year",
+                            Name = "Pro GoatEdu",
                         },
                     },
                     Quantity = 1,
