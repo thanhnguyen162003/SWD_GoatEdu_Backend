@@ -8,6 +8,7 @@ public class FlashcardDetailResponseModel
         public int star { get; set; }
         public string fullName { get; set; }
         public string createdAt { get; set; }
+        public string subjectName { get; set; }
         public string updatedAt { get; set; }
         public string userImage { get; set; }
         public int numberOfFlashcardContent { get; set; }

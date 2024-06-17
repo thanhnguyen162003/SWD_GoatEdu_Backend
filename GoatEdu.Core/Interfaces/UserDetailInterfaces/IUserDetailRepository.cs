@@ -11,5 +11,5 @@ public interface IUserDetailRepository : IRepository<User>
     Task<ResponseDto> GetSubcription();
     Task<Wallet> GetUserWallet();
     Task<ResponseDto> GetTranstractionWallet(Guid walletId);
-
+    Task<ResponseDto> UpdateSubscription(User user);
 }

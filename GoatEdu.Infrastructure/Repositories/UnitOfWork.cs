@@ -15,9 +15,11 @@ using GoatEdu.Core.Interfaces.ReportInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.TagInterfaces;
+using GoatEdu.Core.Interfaces.TranstractionInterfaces;
 using GoatEdu.Core.Interfaces.UserDetailInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using GoatEdu.Core.Interfaces.VoteInterface;
+using GoatEdu.Core.Interfaces.WalletInterfaces;
 using Infrastructure.Data;
 using Infrastructure.Repositories.CacheRepository;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -51,6 +53,11 @@ public class UnitOfWork : IUnitOfWork
     private readonly IAnswerRepository _answerRepository;
     private readonly IRateRepository _rateRepository;
     private readonly IVoteRepository _voteRepository;
+    private readonly IWalletRepository _walletRepository;
+    private readonly ITranstractionRepository _transtractionRepository;
+    private readonly ISubcriptionRepository _subcriptionRepository;
+
+
     private IDbContextTransaction _transaction;
 
 
@@ -82,6 +89,12 @@ public class UnitOfWork : IUnitOfWork
     public IAnswerRepository AnswerRepository => _answerRepository ?? new AnswerRepository(_context);
     public IRateRepository RateRepository => _rateRepository ?? new RateRepository(_context);
     public IVoteRepository VoteRepository => _voteRepository ?? new VoteRepository(_context);
+    public IWalletRepository WalletRepository => _walletRepository ?? new WalletRepository(_context);
+    public ISubcriptionRepository SubcriptionRepository => _subcriptionRepository ?? new SubscriptionRepository(_context);
+
+    public ITranstractionRepository TranstractionRepository => _transtractionRepository ?? new TranstractionRepository(_context);
+
+
 
     public void SaveChanges()
     {

@@ -62,6 +62,7 @@ public class MapperConfigController : Profile
         CreateMap<FlashcardDto, FlashcardResponseModel>()
             .ForMember(dest => dest.numberOfFlashcardContent, opt => opt.MapFrom(src => src.numberOfFlashcardContent))
             .ForMember(dest => dest.fullName, opt => opt.MapFrom(src => src.fullName))
+            .ForMember(dest => dest.subjectName, opt => opt.MapFrom(src => src.subjectName))
             .ReverseMap();
         CreateMap<FlashcardDto, FlashcardDetailResponseModel>()
             .ReverseMap();

@@ -4,6 +4,8 @@ using Stripe.Checkout;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using GoatEdu.Core.DTOs.TranstractionDto;
+using GoatEdu.Core.Interfaces.PaymentIntefaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 
@@ -13,10 +15,13 @@ public class PaymentsController : Controller
 {
     private readonly ILogger<PaymentsController> _logger;
     const string endpointSecret = "whsec_zDoM7pBkZdEKJPE7Hrz4s7jfKRCFoI5l";
+    private readonly IPaymentService _paymentService;
+    private Guid ProSubcriptionMonth;
 
-    public PaymentsController(ILogger<PaymentsController> logger)
+    public PaymentsController(ILogger<PaymentsController> logger, IPaymentService paymentService)
     {
         _logger = logger;
+        _paymentService = paymentService;
     }
 
     // [Authorize]
@@ -42,8 +47,8 @@ public class PaymentsController : Controller
                 },
             },
             Mode = "payment",
-            SuccessUrl = "https://goatedu.vercel.app/browse",
-            CancelUrl = "https://goatedu.vercel.app",
+            SuccessUrl = "https://goatedu.vercel.app/payment/success",
+            CancelUrl = "https://goatedu.vercel.app/payment/cancel",
         };
 
         var service = new SessionService();
@@ -66,10 +71,20 @@ public class PaymentsController : Controller
             if (stripeEvent.Type == Events.PaymentIntentSucceeded)
             {
                 var session = stripeEvent.Data.Object as Session;
+                if (session.AmountSubtotal == 399)
+                {
+                    ProSubcriptionMonth = new Guid("d94d0651-6a18-45d0-a0f9-bc00ea69b584");
+                    
+                }
                 _logger.LogInformation("Payment successful. Session ID: " + session.Id);
-
-                // Process the session
-                // Here you can save the session details to your database or perform other necessary actions
+                TranstractionDto transtractionDto = new TranstractionDto()
+                {
+                    transtractionName = session.Id,
+                    createdAt = DateTime.Now,
+                    note = "is in Development",
+                    SubcriptionId = ProSubcriptionMonth
+                };
+                await _paymentService.PaymentSuccess(transtractionDto);
             }
 
             return Ok();

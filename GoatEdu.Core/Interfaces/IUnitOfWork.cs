@@ -14,9 +14,11 @@ using GoatEdu.Core.Interfaces.ReportInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.TagInterfaces;
+using GoatEdu.Core.Interfaces.TranstractionInterfaces;
 using GoatEdu.Core.Interfaces.UserDetailInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using GoatEdu.Core.Interfaces.VoteInterface;
+using GoatEdu.Core.Interfaces.WalletInterfaces;
 
 namespace GoatEdu.Core.Interfaces
 {
@@ -44,6 +46,12 @@ namespace GoatEdu.Core.Interfaces
         IAnswerRepository AnswerRepository { get; }
         IRateRepository RateRepository { get; }
         IVoteRepository VoteRepository { get; }
+        IWalletRepository WalletRepository { get; }
+        ITranstractionRepository TranstractionRepository { get; }
+        ISubcriptionRepository SubcriptionRepository { get; }
+
+
+
         
         
         void SaveChanges();

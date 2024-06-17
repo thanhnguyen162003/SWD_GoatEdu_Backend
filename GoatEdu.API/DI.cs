@@ -21,6 +21,7 @@ using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.ModeratorInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
+using GoatEdu.Core.Interfaces.PaymentIntefaces;
 using GoatEdu.Core.Interfaces.RateInterfaces;
 using GoatEdu.Core.Interfaces.ReportInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
@@ -28,9 +29,11 @@ using GoatEdu.Core.Interfaces.StripeInterface;
 using GoatEdu.Core.Security;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.TagInterfaces;
+using GoatEdu.Core.Interfaces.TranstractionInterfaces;
 using GoatEdu.Core.Interfaces.UserDetailInterfaces;
 using GoatEdu.Core.Interfaces.UserInterfaces;
 using GoatEdu.Core.Interfaces.VoteInterface;
+using GoatEdu.Core.Interfaces.WalletInterfaces;
 using GoatEdu.Core.Mappings;
 using GoatEdu.Core.Services;
 using GoatEdu.Core.Services.BackgroudTask;
@@ -64,10 +67,11 @@ public static class DI
         services.AddScoped<IFlashcardContentRepository, FlashcardContentRepository>();
         services.AddScoped<IRateRepository, RateRepository>();
         services.AddScoped<IVoteRepository, VoteRepository>();
+        services.AddScoped<IWalletRepository, WalletRepository>();
+        services.AddScoped<ISubcriptionRepository, SubscriptionRepository>();
+        services.AddScoped<ITranstractionRepository, TranstractionRepository>();
 
 
-
-        
         // Services
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IMailService, MailService>();
@@ -92,6 +96,8 @@ public static class DI
         services.AddSingleton<PeriodicHostedService>();
         services.AddScoped<IRateService, RateService>();
         services.AddScoped<IVoteService, VoteService>();
+        services.AddScoped<IWalletService, WalletService>();
+        services.AddScoped<IPaymentService, PaymentService>();
 
         
         

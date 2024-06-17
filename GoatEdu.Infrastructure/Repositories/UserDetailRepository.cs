@@ -32,6 +32,23 @@ public class UserDetailRepository : BaseRepository<User>, IUserDetailRepository
 
         return new ResponseDto(HttpStatusCode.OK, "User successfully updated.");
     }
+    public async Task<ResponseDto> UpdateSubscription(User user)
+    {
+        var existingUser = await _entities.FindAsync(user.Id);
+        if (existingUser == null)
+        {
+            return new ResponseDto(HttpStatusCode.NotFound, "User not found.");
+        }
+
+        existingUser.SubscriptionEnd = user.SubscriptionEnd;
+        existingUser.Subscription = user.Subscription;
+        existingUser.UpdatedAt = DateTime.Now;
+
+        _context.Users.Update(existingUser);
+        await _context.SaveChangesAsync();
+
+        return new ResponseDto(HttpStatusCode.OK, "User successfully updated.");
+    }
 
     public Task<ResponseDto> GetSubcription()
     {

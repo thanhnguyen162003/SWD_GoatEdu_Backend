@@ -123,6 +123,8 @@ public class UserService : IUserService
             return new ResponseDto(HttpStatusCode.BadRequest, "Account has been exits!");
         }
 
+        var wallet = await _unitOfWork.WalletRepository.CreateWallet();
+        
         string hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerUser.Password);
         string hashedUsername = BCrypt.Net.BCrypt.HashPassword(registerUser.Username);
         User user = new User()
@@ -137,7 +139,8 @@ public class UserService : IUserService
             UpdatedAt = DateTime.Now,
             IsDeleted = false,
             EmailVerify = false,
-            Provider = UserEnum.CREDENTIAL
+            Provider = UserEnum.CREDENTIAL,
+            WalletId = wallet
         };
         var result = await _unitOfWork.UserRepository.AddUser(user);
         UserMail userMail = new UserMail()
