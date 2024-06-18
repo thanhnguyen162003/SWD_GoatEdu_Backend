@@ -1,10 +1,6 @@
 <img align="left" width="116" height="116" src="https://raw.githubusercontent.com/marlonajgayle/Net6WebApiTemplate/develop/src/Content/.template.config/icon.png" />
 ...
 # .NET 6 GoatEdu
-[![Build](https://github.com/marlonajgayle/Net6WebApiTemplate/actions/workflows/dotnet.yml/badge.svg?branch=develop)](https://github.com/marlonajgayle/Net6WebApiTemplate/actions/workflows/dotnet.yml)
-[![CodeQL](https://github.com/marlonajgayle/Net6WebApiTemplate/actions/workflows/codeql-analysis.yml/badge.svg?branch=develop)](https://github.com/marlonajgayle/Net6WebApiTemplate/actions/workflows/codeql-analysis.yml)
-[![Boilerplate.Templates NuGet Package](https://img.shields.io/nuget/v/Net6WebTemplate.svg)](https://www.nuget.org/packages/Net6WebTemplate)
-[![Boilerplate.Templates NuGet Package Downloads](https://img.shields.io/nuget/dt/Net6WebTemplate)](https://www.nuget.org/packages/Net6WebTemplate)
 
 This is a solution dotnet goatedu for developing an enterprise-level Web API with.NET 6 ASP.NET Core, following Clean Architecture principles and API best practices.
 The .NET 6 Web Api consist of scafolding for API versioning, Repository Pattern, email, Unit Of work, logging, IP rate limiting, JWT, Open API, validation, postgresql and more ...
@@ -53,9 +49,14 @@ docker-compose -f 'docker-compose.yml' up --build
 
 ### Database Setup
 To setup the SQL Server database following the instrcutions below:
-1. Reveiw the connection string in appsettings.Local.json and update the database name.
-2. Run `dotnet ef migrations add Initial --context <ProjectName>DbContext` to add migation with EF Core 
-3. Run `dotnet ef database update Initial` to create application database.
+Update db: 
+
+Add migration: dotnet ef migrations add AddUserWalletOneToOne -p GoatEdu.Infrastructure -s GoatEdu.API
+
+Update db : dotnet ef database update -p GoatEdu.Infrastructure -s GoatEdu.API
+
+
+dotnet ef dbcontext scaffold "Host=****;Port=5432;Username=root;Password=Admin123456789@;Database=goateduprimary;" Npgsql.EntityFrameworkCore.PostgreSQL -o ../GoatEdu.Core/Models --context-dir ../GoatEdu.Infrastructure/Data --context GoatEduContext --data-annotations
 
 ## Contributions
 - [ThanhNguyen](https://github.com/huscongao1692003) - Implemented API endpoints, Unit and Integration tests.
