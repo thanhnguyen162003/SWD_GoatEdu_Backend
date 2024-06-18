@@ -25,20 +25,19 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
         var discussions = _entities
             .AsNoTracking()
             .Include(x => x.User)
-            .Include(x => x.Subject)
             .Include(x => x.Tags)
-            .Include(x => x.Votes)
-            .AsSplitQuery()
+            .Include(x => x.Answers)
             .AsQueryable();
         discussions = ApplyFilterSortAndSearch(discussions, queryFilter, userId);
         discussions =  ApplySorting(discussions, queryFilter);
         
-        return await discussions.ToListAsync();
+        return await discussions.AsSplitQuery().ToListAsync();
     }
 
     public async Task<Discussion?> GetById(Guid guid)
     {
         return await _entities
+            .AsNoTracking()
             .Include(x => x.User)
             .Include(x => x.Subject)
             .Include(x => x.Tags)
@@ -46,7 +45,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
             .FirstOrDefaultAsync(x => x.Id == guid && x.IsDeleted == false);
     }
 
-    public async Task<Discussion?> GetByIdAndUserId(Guid guid, Guid userId)
+    public async Task<Discussion?> GetDiscussionByIdAndUserId(Guid guid, Guid userId)
     {
         return await _entities.FirstOrDefaultAsync(x => x.Id == guid && x.UserId == userId);
     }

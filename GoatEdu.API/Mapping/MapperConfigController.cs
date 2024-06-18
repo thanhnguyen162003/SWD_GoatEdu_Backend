@@ -1,6 +1,8 @@
 using AutoMapper;
 using GoatEdu.API.Request;
+using GoatEdu.API.Request.LessonViewModel;
 using GoatEdu.API.Response;
+using GoatEdu.API.Response.LessonViewModel;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.AdminDto;
@@ -21,16 +23,28 @@ public class MapperConfigController : Profile
 {
     public MapperConfigController()
     {
+        // Subject
         CreateMap<SubjectDto, SubjectCreateModel>()
             .ForMember(dest => dest.image, opt => opt.MapFrom(src => src.ImageConvert))
             .ReverseMap();
+        CreateMap<SubjectDto, SubjectResponseModel>().ReverseMap();
+        
+        // Chapter
         CreateMap<ChapterDto, ChapterCreateModel>().ReverseMap();
         CreateMap<ChapterDto, ChapterResponseModel>().ReverseMap();
         CreateMap<ChapterDto, ChapterUpdateModel>().ReverseMap();
         CreateMap<ChapterSubjectDto, ChapterResponseModel>().ReverseMap();
+        CreateMap<ChapterDto, ChapterSubjectDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.ChapterName, opt => opt.MapFrom(src => src.ChapterName))
+            .ForMember(dest => dest.ChapterLevel, opt => opt.MapFrom(src => src.ChapterLevel))
+            .ReverseMap();
+        
+        // User
         CreateMap<CreateUserDto, CreateUserRequestModel>().ReverseMap();
         CreateMap<CreateUserDto, CreateUserResponseModel>().ReverseMap();
-
+        CreateMap<UserUpdateModel, UserUpdateModel>().ReverseMap(); // ??? what the hell is this ?
+        CreateMap<UserUpdateModel, UserUpdateModel>().ReverseMap();
         
         // Note
         CreateMap<NoteDto, NoteRequestModel>().ReverseMap();
@@ -44,21 +58,6 @@ public class MapperConfigController : Profile
         // Flashcard
         CreateMap<FlashcardDto, FlashcardCreateModel>().ReverseMap();
         CreateMap<FlashcardDto, FlashcardUpdateModel>().ReverseMap();
-        
-        // Report
-        CreateMap<ReportDto, ReportRequestModel>().ReverseMap();
-        
-        // Tag
-        CreateMap<TagDto, TagRequestModel>().ReverseMap();
-        CreateMap<TagDto, TagUpdateModel>().ReverseMap();
-        CreateMap<TagDto, TagResponseModel>().ReverseMap();
-        
-        //
-        CreateMap<UserUpdateModel, UserUpdateModel>().ReverseMap();
-        CreateMap<RoleDto, RoleResponseModel>().ReverseMap();
-        CreateMap<UserUpdateModel, UserUpdateModel>().ReverseMap();
-        CreateMap<ReportDto, SubjectResponseModel>().ReverseMap();
-        CreateMap<SubjectDto, SubjectResponseModel>().ReverseMap();
         CreateMap<FlashcardDto, FlashcardResponseModel>()
             .ForMember(dest => dest.numberOfFlashcardContent, opt => opt.MapFrom(src => src.numberOfFlashcardContent))
             .ForMember(dest => dest.fullName, opt => opt.MapFrom(src => src.fullName))
@@ -66,12 +65,18 @@ public class MapperConfigController : Profile
             .ReverseMap();
         CreateMap<FlashcardDto, FlashcardDetailResponseModel>()
             .ReverseMap();
-
-        CreateMap<ChapterDto, ChapterSubjectDto>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.ChapterName, opt => opt.MapFrom(src => src.ChapterName))
-            .ForMember(dest => dest.ChapterLevel, opt => opt.MapFrom(src => src.ChapterLevel))
-            .ReverseMap();
+        
+        // Report
+        CreateMap<ReportDto, ReportRequestModel>().ReverseMap();
+        CreateMap<ReportDto, SubjectResponseModel>().ReverseMap(); // ??? what the hell is this ?
+        
+        // Tag
+        CreateMap<TagDto, TagRequestModel>().ReverseMap();
+        CreateMap<TagDto, TagUpdateModel>().ReverseMap();
+        CreateMap<TagDto, TagResponseModel>().ReverseMap();
+        
+        // Role
+        CreateMap<RoleDto, RoleResponseModel>().ReverseMap();
 
         // Discussion
         CreateMap<DiscussionDto, DiscussionRequestModel>()
@@ -80,7 +85,6 @@ public class MapperConfigController : Profile
         CreateMap<DiscussionDto, DiscussionUpdateModel>()
             .ForMember(dest => dest.DiscussionImage, opt => opt.MapFrom(src => src.DiscussionImageConvert))
             .ReverseMap();
-        
         CreateMap<DiscussionDto, DiscussionResponseModel>().ReverseMap();
         CreateMap<DiscussionDto, DiscussionDetailResponseModel>().ReverseMap();
         
@@ -93,7 +97,6 @@ public class MapperConfigController : Profile
             .ForMember(dest => dest.image, opt => opt.MapFrom(src => src.Image))
             .ForMember(dest => dest.emailVerify, opt => opt.MapFrom(src => src.EmailVerify))
             .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role));
-
         
         // Answer
         CreateMap<AnswerDto, AnswerRequestModel>()
@@ -104,9 +107,15 @@ public class MapperConfigController : Profile
             .ReverseMap();
         CreateMap<AnswerDto, AnswerResponseModel>().ReverseMap();
         
+        // Lesson
+        CreateMap<LessonDto, LessonRequestModel>().ReverseMap();
+        CreateMap<LessonDto, LessonUpdateModel>().ReverseMap();
+        CreateMap<LessonDto, LessonResponseModel>().ReverseMap();
+        CreateMap<LessonDto, LessonDetailResponseModel>().ReverseMap();
         
         // Mapping for PageList
         CreateMap(typeof(PagedList<>), typeof(PagedList<>))
             .ConvertUsing(typeof(PagedListTypeConverter<,>));
+            
     }
 }

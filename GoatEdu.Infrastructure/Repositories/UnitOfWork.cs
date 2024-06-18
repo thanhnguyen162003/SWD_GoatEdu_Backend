@@ -42,7 +42,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly IDistributedCache _distributedCache;
     private readonly ITagRepository _tagRepository;
     private readonly IFlashcardRepository _flashcardRepository;
-    private readonly IDiscussionRepository _discussionRepository;
+    private readonly IDiscussionRepository _discussionRepository;   
     private readonly IUserDetailRepository _userDetailRepository;
     private readonly IAdminRepository _adminRepository;
     private readonly IReportRepository _reportRepository;

@@ -39,70 +39,8 @@ public class DiscussionService : IDiscussionService
         _cloudinaryService = cloudinaryService;
         _validator = validator;
     }
-
-    public async Task<PagedList<DiscussionDto>> GetDiscussionByFilter(DiscussionQueryFilter queryFilter)
-    {
-        queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
-        queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
-
-        var list = await _unitOfWork.DiscussionRepository.GetDiscussionByFilters(null, queryFilter);
-
-        if (!list.Any()) return new PagedList<DiscussionDto>(new List<DiscussionDto>(), 0, 0, 0);
-        
-        var userId = _claimsService.GetCurrentUserId;
-        var discussionIdVote = new List<Guid?>();
-        
-        if (userId != Guid.Empty)
-        {
-            var discussionIds = list.Select(x => x.Id).ToList();
-            discussionIdVote = await _unitOfWork.VoteRepository.GetDiscussionVoteByUserId(userId, discussionIds);
-        }
-
-        var mapper = list.Select(discussion =>
-        {
-            var dto = _mapper.Map<DiscussionDto>(discussion);
-            dto.IsUserVoted = userId != Guid.Empty && discussionIdVote.Contains(dto.Id);
-            return dto;
-        });
-
-        return PagedList<DiscussionDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
-    }
-
-    public async Task<ResponseDto> GetDiscussionById(Guid guid)
-    {
-        var result = await _unitOfWork.DiscussionRepository.GetById(guid);
-
-        if (result == null) return new ResponseDto(HttpStatusCode.NotFound, "Kiếm thấy đâu");
-
-        var userId = _claimsService.GetCurrentUserId;
-        var discussionIdVote = new List<Guid?>();
-        
-        if (userId != Guid.Empty)
-        {
-            var discussionIds = new List<Guid>
-            {
-                result.Id
-            };
-            discussionIdVote = await _unitOfWork.VoteRepository.GetDiscussionVoteByUserId(userId, discussionIds);
-        }
-
-        result.IsSolved = userId != Guid.Empty && discussionIdVote.Contains(result.Id);
-        var mapper = _mapper.Map<DiscussionDto>(result);
-        return new ResponseDto(HttpStatusCode.OK, "", mapper);
-    }
-
-    public async Task<PagedList<DiscussionDto>> GetDiscussionByUserId(DiscussionQueryFilter queryFilter)
-    {
-        var userId = _claimsService.GetCurrentUserId;
-        var list = await _unitOfWork.DiscussionRepository.GetDiscussionByFilters(userId, queryFilter);
-
-        if (!list.Any()) return new PagedList<DiscussionDto>(new List<DiscussionDto>(), 0, 0, 0);
-
-        var mapper = _mapper.Map<List<DiscussionDto>>(list);
-        return PagedList<DiscussionDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
-    }
-
-    public async Task<ResponseDto> InsertDiscussion(DiscussionDto dto)
+    
+    public async Task<ResponseDto> CreateDiscussion(DiscussionDto dto)
     {
         var validationResult = await _validator.ValidateAsync(dto);
         if (!validationResult.IsValid)
@@ -130,7 +68,7 @@ public class DiscussionService : IDiscussionService
         mapper.Tags = (ICollection<Tag>)tag;
         mapper.IsSolved = false;
         mapper.DiscussionVote = 0;
-        mapper.Status = DiscussionStatus.Unapproved.ToString();
+        mapper.Status = StatusConstraint.UNAPPROVED;
         mapper.UserId = _claimsService.GetCurrentUserId;
         mapper.CreatedBy = _claimsService.GetCurrentFullname;
         mapper.CreatedAt = _currentTime.GetCurrentTime();
@@ -143,17 +81,7 @@ public class DiscussionService : IDiscussionService
             ? new ResponseDto(HttpStatusCode.OK, "Add Successfully!")
             : new ResponseDto(HttpStatusCode.BadRequest, "Add Failed!");
     }
-
-    public async Task<ResponseDto> DeleteDiscussions(List<Guid> guids)
-    {
-        var userId = _claimsService.GetCurrentUserId;
-        await _unitOfWork.DiscussionRepository.SoftDelete(guids, userId);
-        var result = await _unitOfWork.SaveChangesAsync();
-        return result > 0
-            ? new ResponseDto(HttpStatusCode.OK, "Delete Successfully!")
-            : new ResponseDto(HttpStatusCode.BadRequest, "Delete Failed!");
-    }
-
+    
     public async Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionDto dto)
     {
         var validationResult = await _validator.ValidateAsync(dto);
@@ -164,7 +92,7 @@ public class DiscussionService : IDiscussionService
         }
 
         var userId = _claimsService.GetCurrentUserId;
-        var disscussion = await _unitOfWork.DiscussionRepository.GetByIdAndUserId(guid, userId);
+        var disscussion = await _unitOfWork.DiscussionRepository.GetDiscussionByIdAndUserId(guid, userId);
         if (disscussion is null)
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Không có quyền cập nhật");
@@ -198,13 +126,88 @@ public class DiscussionService : IDiscussionService
         disscussion.IsSolved = dto.IsSolved ?? disscussion.IsSolved;
         disscussion.UpdatedBy = _claimsService.GetCurrentFullname;
         disscussion.UpdatedAt = _currentTime.GetCurrentTime();
-        disscussion.Status = DiscussionStatus.Unapproved.ToString();
+        disscussion.Status = StatusConstraint.UNAPPROVED;
 
         _unitOfWork.DiscussionRepository.Update(disscussion);
         var result = await _unitOfWork.SaveChangesAsync();
         return result > 0
             ? new ResponseDto(HttpStatusCode.OK, "Update Successfully!")
             : new ResponseDto(HttpStatusCode.BadRequest, "Update Failed!");
+    }
+    
+    public async Task<ResponseDto> DeleteDiscussions(List<Guid> guids)
+    {
+        var userId = _claimsService.GetCurrentUserId;
+        await _unitOfWork.DiscussionRepository.SoftDelete(guids, userId);
+        var result = await _unitOfWork.SaveChangesAsync();
+        return result > 0
+            ? new ResponseDto(HttpStatusCode.OK, "Delete Successfully!")
+            : new ResponseDto(HttpStatusCode.BadRequest, "Delete Failed!");
+    }
+
+    public async Task<PagedList<DiscussionDto>> GetDiscussionByFilter(DiscussionQueryFilter queryFilter)
+    {
+        queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
+        queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
+
+        var discussions = await _unitOfWork.DiscussionRepository.GetDiscussionByFilters(null, queryFilter);
+
+        if (!discussions.Any()) return new PagedList<DiscussionDto>(new List<DiscussionDto>(), 0, 0, 0);
+        
+        var userId = _claimsService.GetCurrentUserId;
+        var discussionIdVote = new List<Guid?>();
+        
+        if (userId != Guid.Empty)
+        {
+            var discussionIds = discussions.Select(x => x.Id);
+            discussionIdVote = await _unitOfWork.VoteRepository.GetDiscussionVoteByUserId(userId, discussionIds);
+        }
+
+        var mapper = discussions.Select(discussion =>
+        {
+            var dto = _mapper.Map<DiscussionDto>(discussion);
+            dto.IsUserVoted = userId != Guid.Empty && discussionIdVote.Contains(dto.Id);
+            return dto;
+        });
+
+        return PagedList<DiscussionDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
+    }
+
+    public async Task<DiscussionDto?> GetDiscussionById(Guid guid)
+    {
+        var result = await _unitOfWork.DiscussionRepository.GetById(guid);
+
+        if (result == null) return null;
+
+        var userId = _claimsService.GetCurrentUserId;
+        var discussionIdVote = new List<Guid?>();
+        
+        if (userId != Guid.Empty)
+        {
+            var discussionIds = new List<Guid>
+            {
+                result.Id
+            };
+            discussionIdVote = await _unitOfWork.VoteRepository.GetDiscussionVoteByUserId(userId, discussionIds);
+        }
+
+        result.IsSolved = userId != Guid.Empty && discussionIdVote.Contains(result.Id);
+        var mapper = _mapper.Map<DiscussionDto>(result);
+        return mapper;
+    }
+
+    public async Task<PagedList<DiscussionDto>> GetDiscussionByUserId(DiscussionQueryFilter queryFilter)
+    {
+        queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
+        queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
+        
+        var userId = _claimsService.GetCurrentUserId;
+        var list = await _unitOfWork.DiscussionRepository.GetDiscussionByFilters(userId, queryFilter);
+
+        if (!list.Any()) return new PagedList<DiscussionDto>(new List<DiscussionDto>(), 0, 0, 0);
+
+        var mapper = _mapper.Map<List<DiscussionDto>>(list);
+        return PagedList<DiscussionDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
     }
 
     private async Task<IEnumerable<Tag?>> CheckAndAddTags(IEnumerable<TagDto> tagDtos)

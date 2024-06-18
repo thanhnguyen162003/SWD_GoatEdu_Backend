@@ -28,80 +28,6 @@ public class DiscussionController : ControllerBase
         _mapper = mapper;
     }
     
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetDetailsDiscussionById([Required] Guid id)
-    {
-        try
-        {
-            var result = await _discussionService.GetDiscussionById(id);
-            return Ok(result);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-    }
-    
-    [HttpGet]
-    public async Task<IActionResult> GetDiscussionByFilter([FromQuery, Required] DiscussionQueryFilter queryFilter)
-    {
-        try
-        {
-            
-            var result = await _discussionService.GetDiscussionByFilter(queryFilter);
-            
-            var metadata = new Metadata
-            {
-                TotalCount = result.TotalCount,
-                PageSize = result.PageSize,
-                CurrentPage = result.CurrentPage,
-                TotalPages = result.TotalPages,
-                HasNextPage = result.HasNextPage,
-                HasPreviousPage = result.HasPreviousPage
-            };
-            
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-
-            var mapper = _mapper.Map<PagedList<DiscussionDetailResponseModel>>(result);
-            
-            return Ok(mapper);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-    }
-    
-    [HttpGet("user")]
-    [Authorize]
-    public async Task<IActionResult> GetDiscussionByCurrentUser([FromQuery, Required] DiscussionQueryFilter queryFilter)
-    {
-        try
-        {
-            var result = await _discussionService.GetDiscussionByUserId(queryFilter);
-            
-            var metadata = new Metadata
-            {
-                TotalCount = result.TotalCount,
-                PageSize = result.PageSize,
-                CurrentPage = result.CurrentPage,
-                TotalPages = result.TotalPages,
-                HasNextPage = result.HasNextPage,
-                HasPreviousPage = result.HasPreviousPage
-            };
-            
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-            
-            var mapper = _mapper.Map<DiscussionDetailResponseModel>(result);
-            
-            return Ok(mapper);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-    }
-    
     [HttpPost]
     [Authorize (Roles = $"{UserEnum.STUDENT}, {UserEnum.TEACHER}")]
     public async Task<IActionResult> CreateDiscussion([FromForm]DiscussionRequestModel model)
@@ -120,22 +46,7 @@ public class DiscussionController : ControllerBase
             }
 
             var mapper = _mapper.Map<DiscussionDto>(model);
-            var result = await _discussionService.InsertDiscussion(mapper);
-            return Ok(result);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-    }
-    
-    [HttpDelete]
-    [Authorize (Roles = $"{UserEnum.MODERATOR},{UserEnum.STUDENT},{UserEnum.TEACHER}")]
-    public async Task<IActionResult> DeleteDiscussions([FromQuery, Required] List<Guid> ids)
-    {
-        try
-        {
-            var result = await _discussionService.DeleteDiscussions(ids);
+            var result = await _discussionService.CreateDiscussion(mapper);
             return Ok(result);
         }
         catch (Exception e)
@@ -165,6 +76,100 @@ public class DiscussionController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+    
+    [HttpDelete]
+    [Authorize (Roles = $"{UserEnum.MODERATOR},{UserEnum.STUDENT},{UserEnum.TEACHER}")]
+    public async Task<IActionResult> DeleteDiscussions([FromQuery, Required] List<Guid> ids)
+    {
+        try
+        {
+            var result = await _discussionService.DeleteDiscussions(ids);
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetDetailsDiscussionById([Required] Guid id)
+    {
+        try
+        {
+            var result = await _discussionService.GetDiscussionById(id);
+            var mapper = _mapper.Map<DiscussionDetailResponseModel>(result);
+
+            return mapper is null
+                ? Ok(new ResponseDto(HttpStatusCode.NotFound, "Discussion not found"))
+                : Ok(new ResponseDto(HttpStatusCode.OK, "Found!", mapper));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetDiscussionByFilter([FromQuery, Required] DiscussionQueryFilter queryFilter)
+    {
+        try
+        {
+            var result = await _discussionService.GetDiscussionByFilter(queryFilter);
+            
+            var metadata = new Metadata
+            {
+                TotalCount = result.TotalCount,
+                PageSize = result.PageSize,
+                CurrentPage = result.CurrentPage,
+                TotalPages = result.TotalPages,
+                HasNextPage = result.HasNextPage,
+                HasPreviousPage = result.HasPreviousPage
+            };
+            
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+
+            var mapper = _mapper.Map<PagedList<DiscussionResponseModel>>(result);
+            
+            return Ok(mapper);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpGet("user")]
+    [Authorize]
+    public async Task<IActionResult> GetDiscussionByCurrentUser([FromQuery, Required] DiscussionQueryFilter queryFilter)
+    {
+        try
+        {
+            var result = await _discussionService.GetDiscussionByUserId(queryFilter);
+            
+            var metadata = new Metadata
+            {
+                TotalCount = result.TotalCount,
+                PageSize = result.PageSize,
+                CurrentPage = result.CurrentPage,
+                TotalPages = result.TotalPages,
+                HasNextPage = result.HasNextPage,
+                HasPreviousPage = result.HasPreviousPage
+            };
+            
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            
+            var mapper = _mapper.Map<DiscussionResponseModel>(result);
+            
+            return Ok(mapper);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    
     
     
 }

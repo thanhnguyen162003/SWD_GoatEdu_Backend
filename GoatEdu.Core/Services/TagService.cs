@@ -131,15 +131,11 @@ public class TagService : ITagService
         await _unitOfWork.TagRepository.SoftDelete(guids);
         var result = await _unitOfWork.SaveChangesAsync();
         
-        if (result < 1) return new ResponseDto(HttpStatusCode.BadRequest, "Delete Failed!");
-        
-        var flashFound = await _unitOfWork.FlashcardRepository.GetTwoTagFlashcard();
-        foreach (var data in flashFound)
+        if (result < 1) 
         {
-            data.Status = "Disable";
+            return new ResponseDto(HttpStatusCode.BadRequest, "Delete Failed!");
         }
         
-        _unitOfWork.FlashcardRepository.UpdateRange(flashFound);
         var result1 = await _unitOfWork.SaveChangesAsync();
         
         return result1 < 1 ? new ResponseDto(HttpStatusCode.BadRequest, "Something went wrong at Update Falshcard!") : new ResponseDto(HttpStatusCode.OK, "Delete Successfully");
