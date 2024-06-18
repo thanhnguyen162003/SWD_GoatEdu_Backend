@@ -13,5 +13,6 @@ public class FlashcardDto
     public string subjectName { get; set; }
     public string subjectId { get; set; }
     public int numberOfFlashcardContent { get; set; }
+    public string status { get; set; }
     
 }

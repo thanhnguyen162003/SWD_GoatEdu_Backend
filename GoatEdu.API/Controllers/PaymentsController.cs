@@ -14,9 +14,9 @@ using Microsoft.Extensions.Logging;
 public class PaymentsController : Controller
 {
     private readonly ILogger<PaymentsController> _logger;
-    const string endpointSecret = "whsec_zDoM7pBkZdEKJPE7Hrz4s7jfKRCFoI5l";
+    const string endpointSecret = "whsec_3cc554964386f69f0f5ac33314f1945bb7f2c77959a61cbbcae697bc39f39b66";
     private readonly IPaymentService _paymentService;
-    private Guid ProSubcriptionMonth;
+    private Guid ProSubcriptionMonth = new Guid("d94d0651-6a18-45d0-a0f9-bc00ea69b584");
 
     public PaymentsController(ILogger<PaymentsController> logger, IPaymentService paymentService)
     {
@@ -24,7 +24,7 @@ public class PaymentsController : Controller
         _paymentService = paymentService;
     }
 
-    // [Authorize]
+    [Authorize]
     [HttpPost("create-checkout-session")]
     public ActionResult CreateCheckoutSession()
     {
@@ -65,21 +65,16 @@ public class PaymentsController : Controller
         try
         {
             var stripeEvent = EventUtility.ConstructEvent(json,
-                Request.Headers["Stripe-Signature"], endpointSecret);
+                Request.Headers["Stripe-Signature"], endpointSecret, throwOnApiVersionMismatch: false);
 
             // Handle the event
             if (stripeEvent.Type == Events.PaymentIntentSucceeded)
             {
                 var session = stripeEvent.Data.Object as Session;
-                if (session.AmountSubtotal == 399)
-                {
-                    ProSubcriptionMonth = new Guid("d94d0651-6a18-45d0-a0f9-bc00ea69b584");
-                    
-                }
-                _logger.LogInformation("Payment successful. Session ID: " + session.Id);
+                
                 TranstractionDto transtractionDto = new TranstractionDto()
                 {
-                    transtractionName = session.Id,
+                    transtractionName = "Pro Service 1 Month",
                     createdAt = DateTime.Now,
                     note = "is in Development",
                     SubcriptionId = ProSubcriptionMonth

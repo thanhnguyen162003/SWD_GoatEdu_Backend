@@ -29,6 +29,7 @@ public class PaymentService : IPaymentService
             return new ResponseDto(HttpStatusCode.BadRequest, "cant find any subscription in out db");
         }
         TimeSpan duration = subscription.Duration ?? new TimeSpan(30, 0, 0, 0);
+        //need get userId claim here
         var userId = _claimsService.GetCurrentUserId;
         var user = await _unitOfWork.UserDetailRepository.GetByIdAsync(userId);
         

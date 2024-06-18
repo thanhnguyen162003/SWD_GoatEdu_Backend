@@ -11,5 +11,7 @@ public class FlashcardResponseModel
     public string subjectId { get; set; }
     public DateTime updatedAt { get; set; }
     public int numberOfFlashcardContent { get; set; }
+    public string status { get; set; }
+
 
 }

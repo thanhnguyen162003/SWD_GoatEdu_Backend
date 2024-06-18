@@ -1,5 +1,6 @@
 using System.Net;
 using GoatEdu.Core.DTOs;
+using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces.FlashcardInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure.Data;
@@ -38,7 +39,7 @@ public class FlashcardRepository : BaseRepository<Flashcard>, IFlashcardReposito
             .Include(y=> y.Subject)
             .Include(y=> y.FlashcardContents)
             .AsQueryable();
-        flashcards = ApplyFilterSortAndSearch(flashcards, queryFilter);
+        flashcards = ApplyFilterSortAndSearchOwn(flashcards, queryFilter);
         flashcards = ApplySorting(flashcards, queryFilter);
         return await flashcards.ToListAsync();
     }
@@ -103,8 +104,17 @@ public class FlashcardRepository : BaseRepository<Flashcard>, IFlashcardReposito
     
     private IQueryable<Flashcard> ApplyFilterSortAndSearch(IQueryable<Flashcard> flashcards, FlashcardQueryFilter queryFilter)
     {
-        flashcards = flashcards.Where(x => x.IsDeleted == false);
+        flashcards = flashcards.Where(x => x.IsDeleted == false && x.Status.Equals(StatusConstraint.OPEN));
         
+        if (!string.IsNullOrEmpty(queryFilter.search))
+        {
+            flashcards = flashcards.Where(x => x.FlashcardName.Contains(queryFilter.search));
+        }
+        return flashcards;
+    }
+    private IQueryable<Flashcard> ApplyFilterSortAndSearchOwn(IQueryable<Flashcard> flashcards, FlashcardQueryFilter queryFilter)
+    {
+        flashcards = flashcards.Where(x => x.IsDeleted == false && (x.Status == StatusConstraint.OPEN || x.Status == StatusConstraint.HIDDEN));
         if (!string.IsNullOrEmpty(queryFilter.search))
         {
             flashcards = flashcards.Where(x => x.FlashcardName.Contains(queryFilter.search));
