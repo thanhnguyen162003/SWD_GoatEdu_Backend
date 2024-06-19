@@ -77,7 +77,10 @@ public class MapperConfigProfile : Profile
             .ForMember(dest => dest.email, opt => opt.MapFrom(src => src.Email))
             .ForMember(dest => dest.image, opt => opt.MapFrom(src => src.Image))
             .ForMember(dest => dest.emailVerify, opt => opt.MapFrom(src => src.EmailVerify))
-            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role));
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))
+            .ForMember(dest => dest.subscription, opt =>opt.Ignore())
+            .ReverseMap();
+
 
         CreateMap<Answer, AnswerDto>()
             .ReverseMap()

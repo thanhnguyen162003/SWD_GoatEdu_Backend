@@ -20,4 +20,7 @@ public class LoginResponseDto
     public RoleDto.RoleDto Role { get; set; }
 
     public string Token { get; set; }
+    
+    public bool subscription { get; set; }
+
 }

@@ -79,40 +79,49 @@ public class UserService : IUserService
         return new ResponseDto(HttpStatusCode.OK, "Register Successful, please login again!");
     }
     
-
     public async Task<ResponseDto> GetLoginByCredentials(LoginCredentialDto login)
     {
-        var user = await _unitOfWork.UserRepository.GetUserByUsernameNotGoogle(login.Username);
-        // var emailUser = await _userRepository.GetUserByEmail(login.Username);
-        
+        if (login == null)
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "Invalid login credentials provided.");
+        }
+
+        var user = await _unitOfWork.UserRepository.GetUserByUsernameNotGoogle(login.Username.ToLower());
+
         if (user == null)
         {
-            return new ResponseDto(HttpStatusCode.NotFound, "UserName or Email not existed or you have register with Google");
+            return new ResponseDto(HttpStatusCode.NotFound, "Username or email does not exist or you have registered with Google.");
         }
+
         if (user.EmailVerify == false)
         {
-            return new ResponseDto(HttpStatusCode.BadRequest, "Please CONFIRM YOUR FAKING EMAIL !!!");
+            return new ResponseDto(HttpStatusCode.BadRequest, "Please confirm your email.");
         }
 
         if (!BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
         {
-            return new ResponseDto(HttpStatusCode.BadRequest, "Wrong password!");
-        }
-        // need add verify email to continute
-        if (user.IsDeleted == true)
-        {
-            return new ResponseDto(HttpStatusCode.Forbidden, "Your account is suspense!");
+            return new ResponseDto(HttpStatusCode.BadRequest, "Wrong password.");
         }
 
-        LoginDtoRequest loginDtoRequest = new LoginDtoRequest()
+        if (user.IsDeleted == true)
+        {
+            return new ResponseDto(HttpStatusCode.Forbidden, "Your account is suspended.");
+        }
+
+        bool subscriptionData = user.SubscriptionEnd.HasValue && user.SubscriptionEnd > DateTime.Now;
+
+        LoginDtoRequest loginDtoRequest = new LoginDtoRequest
         {
             Username = login.Username,
             Password = login.Password
         };
-       
+
         var token = await _tokenGenerator.GenerateToken(loginDtoRequest);
+
         var loginResponse = _mapper.Map<LoginResponseDto>(user);
         loginResponse.Token = token;
+        loginResponse.subscription = subscriptionData;
+
         return new ResponseDto(HttpStatusCode.OK, "Login successfully!", loginResponse);
     }
 
