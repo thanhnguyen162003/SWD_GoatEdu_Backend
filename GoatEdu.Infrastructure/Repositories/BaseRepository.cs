@@ -23,13 +23,11 @@ public class BaseRepository<T> : IRepository<T> where T : class
     public async Task AddAsync(T entity)
     {
         await _entities.AddAsync(entity);
-        await _context.SaveChangesAsync();
     }
 
     public async Task AddRangeAsync(List<T> entities)
     {
         await _entities.AddRangeAsync(entities);
-        await _context.SaveChangesAsync();
     }
 
     public IQueryable<T> GetAll()
@@ -40,13 +38,11 @@ public class BaseRepository<T> : IRepository<T> where T : class
     public void Update(T entity)
     {
         _entities.Update(entity);
-        _context.SaveChanges();
     }
 
     public void UpdateRange(List<T> entities)
     {
         _entities.UpdateRange(entities);
-        _context.SaveChanges();
     }
     // public void DeleteRange(List<T> entities)
     // {
