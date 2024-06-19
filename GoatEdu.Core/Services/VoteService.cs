@@ -41,7 +41,6 @@ public class VoteService : IVoteService
                     DiscussionId = discussionGuid
                 };
                 await _unitOfWork.VoteRepository.AddVote(newVote);
-                await _unitOfWork.SaveChangesAsync();
                 discussion.DiscussionVote++;
                 _unitOfWork.DiscussionRepository.Update(discussion);
                 var result = await _unitOfWork.SaveChangesAsync();

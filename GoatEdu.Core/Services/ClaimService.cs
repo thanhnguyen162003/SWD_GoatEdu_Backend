@@ -18,7 +18,7 @@ public class ClaimsService : IClaimsService
         GetCurrentUserId = string.IsNullOrEmpty(extractedId) ? Guid.Empty : new Guid(extractedId);
         GetCurrentUsername = string.IsNullOrEmpty(username) ? "" : username;
         GetCurrentFullname = string.IsNullOrEmpty(fullname) ? "" : fullname;
-        GetCurrentFullname = string.IsNullOrEmpty(email) ? "" : email;
+        GetCurrentEmail = string.IsNullOrEmpty(email) ? "" : email;
 
 
     }
