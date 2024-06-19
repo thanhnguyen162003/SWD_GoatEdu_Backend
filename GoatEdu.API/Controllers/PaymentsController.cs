@@ -16,7 +16,7 @@ public class PaymentsController : Controller
 {
     private readonly ILogger<PaymentsController> _logger;
     private readonly IClaimsService _claimsService;
-    const string endpointSecret = "whsec_3cc554964386f69f0f5ac33314f1945bb7f2c77959a61cbbcae697bc39f39b66";
+    const string endpointSecret = "whsec_zDoM7pBkZdEKJPE7Hrz4s7jfKRCFoI5l";
     private readonly IPaymentService _paymentService;
     private Guid ProSubcriptionMonth = new Guid("d94d0651-6a18-45d0-a0f9-bc00ea69b584");
 
