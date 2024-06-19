@@ -6,4 +6,5 @@ public class TranstractionDto
     public string note { get; set; }
     public DateTime createdAt { get; set; }
     public Guid SubcriptionId { get; set; }
+    public string username { get; set; }
 }

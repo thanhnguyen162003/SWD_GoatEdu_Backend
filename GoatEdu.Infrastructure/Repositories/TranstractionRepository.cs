@@ -17,11 +17,7 @@ public class TranstractionRepository : BaseRepository<Transaction>, ITranstracti
     public async Task<ResponseDto> AddTranstraction(Transaction transaction)
     {
         var result = await _entities.AddAsync(transaction);
-        if (result is null)
-        {
-            return new ResponseDto(HttpStatusCode.BadRequest, "Add Transtraction Error");
-        }
-
-        return new ResponseDto(HttpStatusCode.OK, "Successfully Add Transtraction", result.Entity.Id);
+        await _context.SaveChangesAsync();
+        return new ResponseDto(HttpStatusCode.OK, "Successfully Added Transaction", result.Entity.Id);
     }
 }

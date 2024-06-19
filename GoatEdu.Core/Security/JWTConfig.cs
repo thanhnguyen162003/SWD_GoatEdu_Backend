@@ -46,7 +46,9 @@ public class JWTConfig : JWTGenerator
                 new Claim("UserId", user.Id.ToString()),
                 new Claim("RoleId",user.RoleId.ToString()),
                 new Claim(ClaimTypes.Role, user.Role.RoleName),
-                new Claim("Fullname", user.Fullname)
+                new Claim("Fullname", user.Fullname),
+                new Claim("Email", user.Email)
+
             }),
             Expires = DateTime.UtcNow.AddDays(7),
             Issuer = _jwtSetting.Issuer,
@@ -84,7 +86,8 @@ public class JWTConfig : JWTGenerator
                 new Claim("UserId", user.Id.ToString()),
                 new Claim("RoleId", user.RoleId.ToString()),
                 new Claim(ClaimTypes.Role, user.Role.RoleName),
-                new Claim("Fullname", user.Fullname)
+                new Claim("Fullname", user.Fullname),
+                new Claim("Email", user.Email)
             }),
             Expires = DateTime.UtcNow.AddDays(7),
             Issuer = _jwtSetting.Issuer,

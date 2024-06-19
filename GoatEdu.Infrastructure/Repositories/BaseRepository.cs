@@ -8,6 +8,7 @@ public class BaseRepository<T> : IRepository<T> where T : class
 {
     private readonly GoatEduContext _context;
     protected readonly DbSet<T> _entities;
+
     public BaseRepository(GoatEduContext context)
     {
         _context = context;
@@ -21,26 +22,39 @@ public class BaseRepository<T> : IRepository<T> where T : class
 
     public async Task AddAsync(T entity)
     {
-        // entity = false;
         await _entities.AddAsync(entity);
+        await _context.SaveChangesAsync();
     }
 
     public async Task AddRangeAsync(List<T> entities)
     {
         await _entities.AddRangeAsync(entities);
+        await _context.SaveChangesAsync();
     }
-    
+
     public IQueryable<T> GetAll()
     {
         return _entities.AsQueryable();
     }
+
     public void Update(T entity)
     {
         _entities.Update(entity);
+        _context.SaveChanges();
     }
 
     public void UpdateRange(List<T> entities)
     {
         _entities.UpdateRange(entities);
+        _context.SaveChanges();
     }
+    // public void DeleteRange(List<T> entities)
+    // {
+    //     foreach (var entity in entities)
+    //     {
+    //         entity.IsDeleted = true;
+    //         _entities.Update(entity);
+    //     }
+    //     _context.SaveChanges();
+    // }
 }

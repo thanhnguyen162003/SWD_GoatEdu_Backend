@@ -24,11 +24,7 @@ public class WalletRepository : BaseRepository<Wallet>, IWalletRepository
             UpdatedAt = DateTime.Now
         };
         var result = await _entities.AddAsync(wallet);
-        if (result is null)
-        {
-            return Guid.Empty;
-        }
-
+        await _context.SaveChangesAsync();
         return result.Entity.Id;
     }
 

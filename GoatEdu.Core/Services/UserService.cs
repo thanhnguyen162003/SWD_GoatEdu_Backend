@@ -56,6 +56,7 @@ public class UserService : IUserService
         {
             return new ResponseDto(HttpStatusCode.BadRequest, "Account has been linked!, please login.");
         }
+        var wallet = await _unitOfWork.WalletRepository.CreateWallet();
         User user = new User()
         {
             Fullname = dto.Name,
@@ -66,7 +67,8 @@ public class UserService : IUserService
             UpdatedAt = DateTime.Now,
             IsDeleted = false,
             EmailVerify = true,
-            Provider = UserEnum.GOOGLE
+            Provider = UserEnum.GOOGLE,
+            WalletId = wallet
         };
         var result = await _unitOfWork.UserRepository.AddUser(user);
         if (result == null)

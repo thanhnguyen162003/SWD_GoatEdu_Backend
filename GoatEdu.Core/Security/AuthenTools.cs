@@ -33,4 +33,13 @@ public class AuthenTools
         }
         return null;
     }
+    public static string GetCurrentEmail(ClaimsIdentity identity)
+    {
+        if (identity != null)
+        {
+            var userClaims = identity.Claims;
+            return userClaims.FirstOrDefault(x => x.Type == "Email")?.Value;
+        }
+        return null;
+    }
 }

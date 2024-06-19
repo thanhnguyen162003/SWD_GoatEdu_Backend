@@ -30,8 +30,8 @@ public class PaymentService : IPaymentService
         }
         TimeSpan duration = subscription.Duration ?? new TimeSpan(30, 0, 0, 0);
         //need get userId claim here
-        var userId = _claimsService.GetCurrentUserId;
-        var user = await _unitOfWork.UserDetailRepository.GetByIdAsync(userId);
+        var username = transaction.username;
+        var user = await _unitOfWork.UserRepository.GetUserByUsername(username);
         
         Transaction transactionReal = new Transaction()
         {
@@ -41,10 +41,12 @@ public class PaymentService : IPaymentService
             IsDeleted = false,
             SubscriptionId = transaction.SubcriptionId,
             EndDate = DateTime.Now.Add(duration),
+            StartDate = DateTime.Now,
             WalletId = user.WalletId
         };
         User userData = new User()
         {
+            Id = user.Id,
             Subscription = subscription.SubscriptionName,
             SubscriptionEnd = transactionReal.EndDate
         };
