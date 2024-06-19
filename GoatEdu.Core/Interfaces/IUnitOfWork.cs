@@ -56,9 +56,8 @@ namespace GoatEdu.Core.Interfaces
         
         void SaveChanges();
         Task<int> SaveChangesAsync();
-        // Transaction error
-        // Task BeginTransactionAsync();
-        // Task CommitTransactionAsync();
-        // Task RollbackTransactionAsync();
+        Task BeginTransactionAsync();
+        Task CommitTransactionAsync();
+        Task RollbackTransactionAsync();
     }
 }

@@ -17,9 +17,10 @@ public class FlashcardRepository : BaseRepository<Flashcard>, IFlashcardReposito
         _context = context;
     }
 
-    public async Task<List<Flashcard>> GetTwoTagFlashcard()
-    {
-        return await _entities.Where(x => x.Tags.Count(tag => tag.IsDeleted == false) <= 2).ToListAsync();
+    public async Task DisableUnder4TagsFlashcard()
+    { 
+        await _entities.Where(x => x.Tags.Count(tag => tag.IsDeleted == false) < 4 && x.IsDeleted == false).ForEachAsync(x => x.Status = StatusConstraint.VAC);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<Flashcard>> GetFlashcards(FlashcardQueryFilter queryFilter)

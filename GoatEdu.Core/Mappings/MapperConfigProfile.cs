@@ -60,6 +60,7 @@ public class MapperConfigProfile : Profile
         
         CreateMap<Discussion, DiscussionDto>()
             .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags))
+            .ForMember(dest => dest.CommentCount, opt => opt.MapFrom(src => src.Answers.Count))
             .ForPath(dest => dest.UserAndSubject.UserId, opt => opt.MapFrom(src => src.UserId))
             .ForPath(dest => dest.UserAndSubject.UserName, opt => opt.MapFrom(src => src.User.Username))
             .ForPath(dest => dest.UserAndSubject.FullName, opt => opt.MapFrom(src => src.User.Fullname))
@@ -79,6 +80,12 @@ public class MapperConfigProfile : Profile
             .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role));
 
         CreateMap<Answer, AnswerDto>()
+            .ReverseMap()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+        
+        CreateMap<Lesson, LessonDto>()
+            .ForMember(dest => dest.QuizCount, opt => opt.MapFrom(src => src.Quizzes.Count))
+            .ForMember(dest => dest.TheoryCount, opt => opt.MapFrom(src => src.Theories.Count))
             .ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
     }

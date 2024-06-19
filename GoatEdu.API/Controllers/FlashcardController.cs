@@ -14,7 +14,6 @@ namespace GoatEdu.API.Controllers;
 [ApiController]
 public class FlashcardController : ControllerBase
 {
-
     private readonly IFlashcardService _flashcardService;
     private readonly IMapper _mapper;
 

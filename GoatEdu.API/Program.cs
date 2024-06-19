@@ -131,6 +131,9 @@ StripeConfiguration.ApiKey = builder.Configuration["StripeOptions:SecretKey"];
 //Backgroud Service
 builder.Services.AddHostedService(
     provider => provider.GetRequiredService<PeriodicHostedService>());
+//
+// builder.Services.AddHostedService(
+//     provider => provider.GetRequiredService<FlashcardHostedService>());
 
 // fluent mail config
 var mailSetting = configuration.GetSection("GmailSetting").Get<MailSetting>();
@@ -213,6 +216,15 @@ app.MapMethods("/background", new[] { "PATCH" }, (
 {
     service.IsEnabled = true;// can config later
 });
+
+// app.MapMethods("/flashcardbackground", new[] { "PATCH" }, (
+//     PeriodicHostedServiceState state, 
+//     FlashcardHostedService service) =>
+// {
+//     service.IsEnabled = true;// can config later
+// });
+
+
 app.UseAuthentication(); // Ensure this is before UseAuthorization
 
 app.UseAuthorization();

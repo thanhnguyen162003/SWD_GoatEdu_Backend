@@ -28,10 +28,10 @@ public class DiscussionDtoValidator : AbstractValidator<DiscussionDto>
         
         RuleFor(x => x.DiscussionBody)
             .NotEmpty().WithMessage("Discussion body is required!")
-            .Unless(x => x.DiscussionBody is null);
+            .Unless(x => x.DiscussionBody is null && x.DiscussionBodyHtml is null);
         
         RuleFor(x => x.DiscussionBodyHtml)
             .NotEmpty().WithMessage("Discussion body html is required!")
-            .Unless(x => x.DiscussionBody is null);
+            .Unless(x => x.DiscussionBody is null && x.DiscussionBodyHtml is null);
     }
 }

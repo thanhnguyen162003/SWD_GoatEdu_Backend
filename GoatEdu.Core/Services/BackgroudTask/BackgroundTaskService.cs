@@ -20,4 +20,16 @@ public class BackgroundTaskService
         _logger.LogInformation(
             "Background Service updated Rating for Flashcard!!!");
     }
+
+    public async Task VACFlashcard()
+    {
+        await _unitOfWork.FlashcardRepository.DisableUnder4TagsFlashcard();
+        _logger.LogInformation("Background Service do VAC Flashcard!!!");
+    }
+    
+    public async Task VACDiscussion()
+    {
+        // await _unitOfWork.FlashcardRepository.DisableUnder4TagsFlashcard();
+        _logger.LogInformation("Background Service do VAC Discussion!!!");
+    }
 }

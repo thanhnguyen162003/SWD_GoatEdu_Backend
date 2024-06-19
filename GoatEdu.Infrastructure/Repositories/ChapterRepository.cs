@@ -112,6 +112,22 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
             // }).ToList()
             }).FirstOrDefaultAsync();
     }
+
+    public async Task<bool> ChapterIdExistsAsync(Guid? guid)
+    {
+        return await _entities.AnyAsync(s => s.Id == guid);
+    }
+    
+    public async Task<bool> ChapterNameExistsAsync(string name)
+    {
+        return await _entities.AnyAsync(s => s.ChapterName.ToLower() == name.ToLower());
+    }
+
+    public async Task<bool> ChapterLevelExistsAsync(int? code)
+    {
+        return await _entities.AnyAsync(s => s.ChapterLevel == code);
+    }
+    
     private IQueryable<Chapter> ApplyFilterSortAndSearch(IQueryable<Chapter> chapters, ChapterQueryFilter queryFilter)
     {
         chapters = chapters.Where(c => c.IsDeleted == false);
@@ -135,15 +151,5 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
                 : chapters.OrderBy(c => c.CreatedAt).ThenBy(c => c.ChapterName),
         };
         return chapters;
-    }
-    
-    public async Task<bool> ChapterNameExistsAsync(string name)
-    {
-        return await _entities.AnyAsync(s => s.ChapterName.ToLower() == name.ToLower());
-    }
-
-    public async Task<bool> ChapterLevelExistsAsync(int? code)
-    {
-        return await _entities.AnyAsync(s => s.ChapterLevel == code);
     }
 }

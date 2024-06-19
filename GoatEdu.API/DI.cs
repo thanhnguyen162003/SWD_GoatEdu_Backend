@@ -2,6 +2,7 @@ using FluentValidation;
 using GoatEdu.API.Request;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.ChapterDto;
+using GoatEdu.Core.DTOs.FlashcardDto;
 using GoatEdu.Core.DTOs.NoteDto;
 using GoatEdu.Core.DTOs.NotificationDto;
 using GoatEdu.Core.DTOs.SubjectDto;
@@ -93,6 +94,7 @@ public static class DI
         services.AddScoped<IAnswerService, AnswerService>();
         services.AddScoped<IFlashcardContentService, FlashcardContentService>();
         services.AddScoped<BackgroundTaskService>();
+        services.AddSingleton<FlashcardHostedService>();
         services.AddSingleton<PeriodicHostedService>();
         services.AddScoped<IRateService, RateService>();
         services.AddScoped<IVoteService, VoteService>();
@@ -123,7 +125,8 @@ public static class DI
         services.AddScoped<IValidator<ChapterDto>, ChapterDtoValidator>();
         services.AddScoped<IValidator<TagDto>, TagDtoValidator>();
         services.AddScoped<IValidator<DiscussionDto>, DiscussionDtoValidator>();
-        services.AddScoped<IValidator<AnswerDto>, AnswerDtoValidator>();        
+        services.AddScoped<IValidator<AnswerDto>, AnswerDtoValidator>();
+        services.AddScoped<IValidator<LessonDto>, LessonDtoValidator>();
         
         return services;
     }

@@ -17,6 +17,8 @@ public interface IChapterRepository : IRepository<Chapter>
     Task<ResponseDto> CreateChapter(Chapter dto);
     Task<ChapterDto> GetChapterByChapterName(string chapterName);
     // Validation
+    Task<bool> ChapterIdExistsAsync(Guid? guid);
     Task<bool> ChapterNameExistsAsync(string name);
     Task<bool> ChapterLevelExistsAsync(int? code);
+    
 }

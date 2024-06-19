@@ -7,7 +7,7 @@ namespace GoatEdu.Core.Interfaces.FlashcardInterfaces;
 
 public interface IFlashcardRepository : IRepository<Flashcard>
 {
-    Task<List<Flashcard>> GetTwoTagFlashcard();
+    Task DisableUnder4TagsFlashcard();
     Task<IEnumerable<Flashcard>> GetFlashcards(FlashcardQueryFilter queryFilter);
     Task<Flashcard> GetFlashcardById(Guid flashcardId);
     Task<IEnumerable<Flashcard>> GetFlashcardsBySubject(FlashcardQueryFilter queryFilter, Guid id);
