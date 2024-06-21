@@ -27,14 +27,17 @@ using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Services.BackgroudTask;
 using GoatEdu.Core.Services.SignalR;
+using HealthChecks.UI.Client;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.CacheRepository;
 using Infrastructure.Ultils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PaypalCheckoutExample.Clients;
@@ -149,7 +152,7 @@ builder.Services.AddEndpointsApiExplorer();
 //SwaggerConfig
 builder.Services.AddSwaggerGen(option =>
 {
-    option.SwaggerDoc("v1", new OpenApiInfo { Title = "GoatEdu API", Version = "v1" });
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "GoatEdu API", Version = "v2" });
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -174,6 +177,10 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
+// add health check
+builder.Services.AddHealthChecks()
+    .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection"))
+    .AddRedis(builder.Configuration.GetConnectionString("RedisCheck"));
 
 //config unlock potential of upload image
 //Set size limit for request
@@ -191,7 +198,12 @@ builder.Services.Configure<FormOptions>(options =>
 builder.Services.AddSignalR();
 
 var app = builder.Build();
-
+app.MapHealthChecks(
+    "/health",
+    new HealthCheckOptions
+    {
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    });
 //random theme =)))
 var availableThemes = new[] { Theme.OneDark, Theme.UniversalDark, Theme.XCodeLight, Theme.Sepia, Theme.Dracula, Theme.NordDark }; 
 var randomIndex = new Random().Next(availableThemes.Length); // 0 to (array length - 1)
