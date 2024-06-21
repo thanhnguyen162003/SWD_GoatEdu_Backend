@@ -21,6 +21,7 @@
 */
 using System.Text;
 using GoatEdu.API;
+using GoatEdu.API.Middelware;
 using GoatEdu.Core.DTOs.MailDto;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
@@ -223,7 +224,8 @@ app.MapMethods("/background", new[] { "PATCH" }, (
 // {
 //     service.IsEnabled = true;// can config later
 // });
-
+// using middelware
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseAuthentication(); // Ensure this is before UseAuthorization
 
