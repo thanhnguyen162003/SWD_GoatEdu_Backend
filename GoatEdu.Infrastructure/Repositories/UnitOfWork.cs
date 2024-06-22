@@ -15,6 +15,7 @@ using GoatEdu.Core.Interfaces.ReportInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.TagInterfaces;
+using GoatEdu.Core.Interfaces.TheoryFlashcardContentInterfaces;
 using GoatEdu.Core.Interfaces.TheoryInterfaces;
 using GoatEdu.Core.Interfaces.TranstractionInterfaces;
 using GoatEdu.Core.Interfaces.UserDetailInterfaces;
@@ -58,6 +59,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly ITranstractionRepository _transtractionRepository;
     private readonly ISubcriptionRepository _subcriptionRepository;
     private readonly ITheoryRepository _theoryRepository;
+    private readonly ITheoryFlashcardContentRepository _theoryFlashcardContentRepository;
 
 
     private IDbContextTransaction _transaction;
@@ -94,6 +96,8 @@ public class UnitOfWork : IUnitOfWork
     public IWalletRepository WalletRepository => _walletRepository ?? new WalletRepository(_context);
     public ISubcriptionRepository SubcriptionRepository => _subcriptionRepository ?? new SubscriptionRepository(_context);
     public ITheoryRepository TheoryRepository => _theoryRepository ?? new TheoryRepository(_context);
+    public ITheoryFlashcardContentRepository TheoryFlashcardContentRepository =>
+        _theoryFlashcardContentRepository ?? new TheoryFlashcardContentRepository(_context);
 
     public ITranstractionRepository TranstractionRepository => _transtractionRepository ?? new TranstractionRepository(_context);
 

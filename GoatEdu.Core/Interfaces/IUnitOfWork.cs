@@ -14,6 +14,7 @@ using GoatEdu.Core.Interfaces.ReportInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.TagInterfaces;
+using GoatEdu.Core.Interfaces.TheoryFlashcardContentInterfaces;
 using GoatEdu.Core.Interfaces.TheoryInterfaces;
 using GoatEdu.Core.Interfaces.TranstractionInterfaces;
 using GoatEdu.Core.Interfaces.UserDetailInterfaces;
@@ -51,6 +52,7 @@ namespace GoatEdu.Core.Interfaces
         ITranstractionRepository TranstractionRepository { get; }
         ISubcriptionRepository SubcriptionRepository { get; }
         ITheoryRepository TheoryRepository { get; }
+        ITheoryFlashcardContentRepository TheoryFlashcardContentRepository { get; }
 
 
 

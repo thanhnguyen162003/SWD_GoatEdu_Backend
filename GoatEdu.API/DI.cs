@@ -8,6 +8,7 @@ using GoatEdu.Core.DTOs.NotificationDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.DTOs.TagDto;
 using GoatEdu.Core.DTOs.TheoryDto;
+using GoatEdu.Core.DTOs.TheoryFlashcardDto;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.AdminInterfaces;
 using GoatEdu.Core.Interfaces.AnswerInterfaces;
@@ -31,6 +32,7 @@ using GoatEdu.Core.Interfaces.StripeInterface;
 using GoatEdu.Core.Security;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.Interfaces.TagInterfaces;
+using GoatEdu.Core.Interfaces.TheoryFlashcardContentInterfaces;
 using GoatEdu.Core.Interfaces.TheoryInterfaces;
 using GoatEdu.Core.Interfaces.TranstractionInterfaces;
 using GoatEdu.Core.Interfaces.UserDetailInterfaces;
@@ -74,6 +76,7 @@ public static class DI
         services.AddScoped<ISubcriptionRepository, SubscriptionRepository>();
         services.AddScoped<ITranstractionRepository, TranstractionRepository>();
         services.AddScoped<ITheoryRepository, TheoryRepository>();
+        services.AddScoped<ITheoryFlashcardContentRepository, TheoryFlashcardContentRepository>();
 
 
         // Services
@@ -105,7 +108,7 @@ public static class DI
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IGoogleCloudService, GoogleCloudService>();
         services.AddScoped<ITheoryService, TheoryService>();
-        
+        services.AddScoped<ITheoryFlashcardContentService, TheoryFlashcardContentService>();
         
         // Others
         services.AddAutoMapper(typeof(MapperConfigProfile).Assembly);
@@ -132,6 +135,7 @@ public static class DI
         services.AddScoped<IValidator<AnswerDto>, AnswerDtoValidator>();
         services.AddScoped<IValidator<LessonDto>, LessonDtoValidator>();
         services.AddScoped<IValidator<TheoryDto>, TheoryDtoValidator>();
+        services.AddScoped<IValidator<TheoryFlashcardContentsDto>, TheoryFlashcardContentDtoValidator>();
         
         return services;
     }

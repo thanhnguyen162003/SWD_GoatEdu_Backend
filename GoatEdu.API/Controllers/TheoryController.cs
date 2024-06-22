@@ -98,7 +98,7 @@ public class TheoryController : ControllerBase
         }
     }
     
-    [HttpGet("{lessonId}")]
+    [HttpGet("lesson/{lessonId}")]
     public async Task<IActionResult> GetTheoriesByFilter(Guid? lessonId, [FromQuery, Required] TheoryQueryFilter queryFilter)
     {
         try

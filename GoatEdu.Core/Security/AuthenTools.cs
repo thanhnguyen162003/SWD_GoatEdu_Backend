@@ -14,7 +14,7 @@ public class AuthenTools
         return null;
     }
     
-    public static string GetCurrentUsernam(ClaimsIdentity identity)
+    public static string GetCurrentUsername(ClaimsIdentity identity)
     {
         if (identity != null)
         {
@@ -39,6 +39,16 @@ public class AuthenTools
         {
             var userClaims = identity.Claims;
             return userClaims.FirstOrDefault(x => x.Type == "Email")?.Value;
+        }
+        return null;
+    }
+    
+    public static string GetRole(ClaimsIdentity identity)
+    {
+        if (identity != null)
+        {
+            var userClaims = identity.Claims;
+            return userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
         }
         return null;
     }

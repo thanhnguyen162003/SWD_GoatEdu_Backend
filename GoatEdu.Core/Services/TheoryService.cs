@@ -71,7 +71,7 @@ public class TheoryService : ITheoryService
         await _unitOfWork.TheoryRepository.AddAsync(theory);
         var result = await _unitOfWork.SaveChangesAsync();
         return result > 0
-            ? new ResponseDto(HttpStatusCode.OK, "Create Theory Successfully!")
+            ? new ResponseDto(HttpStatusCode.Created, "Create Theory Successfully!", theory.Id)
             : new ResponseDto(HttpStatusCode.BadRequest, "Create Theory Failed!");
     }
 

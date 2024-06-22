@@ -9,6 +9,7 @@ using GoatEdu.Core.DTOs.RoleDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.DTOs.TagDto;
 using GoatEdu.Core.DTOs.TheoryDto;
+using GoatEdu.Core.DTOs.TheoryFlashcardDto;
 using Infrastructure;
 
 namespace GoatEdu.Core.Mappings;
@@ -96,6 +97,9 @@ public class MapperConfigProfile : Profile
         CreateMap<Theory, TheoryDto>()
             .ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            
+
+        CreateMap<TheoryFlashCardContent, TheoryFlashcardContentsDto>()
+            .ReverseMap()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
     }
 }

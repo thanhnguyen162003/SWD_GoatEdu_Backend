@@ -6,5 +6,6 @@ public interface IClaimsService
     public string GetCurrentUsername {  get; }
     public string GetCurrentFullname {  get; }
     public string GetCurrentEmail {  get; }
+    public string GetRole { get; }
 
 }
