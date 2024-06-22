@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using GoatEdu.API.Request;
+using GoatEdu.API.Request.TheoryViewModel;
 using GoatEdu.API.Response;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
+using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.AnswerInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +19,19 @@ public class AnswerController : ControllerBase
 {
     private readonly IAnswerService _answerService;
     private readonly IMapper _mapper;
+    private readonly IGoogleCloudService _googleCloudService;
 
-    public AnswerController(IAnswerService answerService, IMapper mapper)
+    public AnswerController(IAnswerService answerService, IMapper mapper, IGoogleCloudService googleCloudService)
     {
         _answerService = answerService;
         _mapper = mapper;
+        _googleCloudService = googleCloudService;
     }
+    // public AnswerController(IAnswerService answerService, IMapper mapper)
+    // {
+    //     _answerService = answerService;
+    //     _mapper = mapper;
+    // }
 
     [HttpGet("discussion/{id}")]
     public async Task<IActionResult> GetAnswersByDiscussion([FromRoute, Required] Guid id,[FromQuery, Required] AnswerQueryFilter queryFilter)

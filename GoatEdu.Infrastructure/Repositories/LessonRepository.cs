@@ -40,6 +40,11 @@ public class LessonRepository : BaseRepository<Lesson>, ILessonRepository
         return await lessons.ToListAsync();
     }
 
+    public async Task<bool> LessonIdExistAsync(Guid? lessonId)
+    {
+        return await _entities.AnyAsync(x => x.Id == lessonId);
+    }
+
     private IQueryable<Lesson> ApplyFilterSortAndSearch(IQueryable<Lesson> lessons, LessonQueryFilter queryFilter, Guid? chapterId)
     {
         if (chapterId != null)

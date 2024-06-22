@@ -16,8 +16,6 @@ public class ChapterDtoValidator : AbstractValidator<ChapterDto>
             .WithMessage("A subject with this name already exists.");
 
         RuleFor(dto => dto.ChapterLevel)
-            .GreaterThan(0).WithMessage("Chapter code must be greater than 0.")
-            .MustAsync(async (code, cancellation) => !await chapterRepository.ChapterLevelExistsAsync(code))
-            .WithMessage("A subject with this code already exists.");
+            .GreaterThan(0).WithMessage("Chapter level must be greater than 0.");
     }
 }

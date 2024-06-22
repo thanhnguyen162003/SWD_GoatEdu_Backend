@@ -114,12 +114,12 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
 
     public async Task<bool> SubjectNameExistAsync(string name)
     {
-        return await _entities.AnyAsync(x => x.SubjectName.Equals(name, StringComparison.OrdinalIgnoreCase));
+        return await _entities.AnyAsync(x => x.SubjectName.Equals(name));
     }
 
     public async Task<bool> SubjectCodeExistAsync(string code)
     {
-        return await _entities.AnyAsync(x => x.SubjectCode.Equals(code, StringComparison.OrdinalIgnoreCase));
+        return await _entities.AnyAsync(x => x.SubjectCode.Equals(code));
     }
 
     public async Task<SubjectDto> GetSubjectBySubjectName(string subjectName)

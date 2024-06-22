@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "sharp-voyage-422303-u7",
+  "private_key_id": "8b49e3a337908cafb82d895218e4507ae61ae032",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCRagCA2ZaAe5i0\nDPLEUn51H0s/Wqs9O9+YnyU4sDFSRH05N+gipwj9hw/tchcX+nPi05sfnEYOKpQC\nzpsy7hT8GLsja4MvVytFm+mO489zlzmMviajwfFsCqSV1nKxEt3oGvdC6/+lEni9\nBe13K1e5AEkmh3uGlaF+YX0w0XjbA7LrqMmt0RkODR0iVjShPdlkvSolqdoEGzMJ\n3t7NBkEn2bDXmlNLlBuudbohENOc6Xyd7A8KOIGD9ajGHXBfrkYCtRnoZ6lLQrbN\nu5pmc4uTgAXL8zHo1XY7eCMjwBoSd8mOdEvwP6M4uVInmIRSyGOCQ54fF9RJLAtt\nMmwrNDm5AgMBAAECggEABFbd9S2V393dJJslHKlIWPvNYowbNqrhO5KdAtaOYKHN\nMAmhKNuQ/9Cc4vb37A31kSWQaDHHjQFFq0As6HWrWz4fsE+Zua468XGIJDmPHyg6\nauuuIOfj0CR3KeBQfUR09v0X0NlUpsGCdRDGt9SR++IGAAGkZ+0++JPPL3qoxekh\n7O82LccWC5YEESpla5oeF3bG3jXORlmZ+fz+NYZFeENQgks9yPvNdni/6oUlB+tj\nhDuhx+1M8JbGPeKtn8LkS+IwCLGImjYQB55Iq3RwOhEltTaY/7BX8vWa129owWjc\nktMlrFX/8w0N9/JzQqEXxnkpNZWuXh9UXmQMeEmCUwKBgQDHVyO4FlhPK5SVOFrx\nOK5nm1f4NC1x8vJOUyUVvDDsDDngJZ9HJbxGZTiB/uEtcB9ggBxT08QjViNqrlwz\nXhUS0DAS0UotzdyO/0lMzAKo/bHwClBtYpMuZ+plId8YRwRj6h0hbr4OtLCMSmDE\nSfK8otGqpawoIynugirw0ec90wKBgQC6vvPY39ZuWa+eme2gHJTTRRlwfR6r4PPc\n0mbfwuyvh1tHqyrUF+rBUG/dqOm3Scf4sTYATorftJE4hZBR59yNo5Rd5781i17f\nQ7RUkz2MepTR3TB9q5ywFl7rW9bnHW5LToiAlmoSkLRujdMnKOXh/c8dTcRS4z/6\nKV/UvEAWwwKBgQC3EtuWLMdr5o1uQjSbh7/9HVk8dccq+MH6lzfe71hK4auhpUvU\nDt8ME9hC42+wyGG4wc/CWSGwhmK+jmXVM1nNTnBoR9iFmqQunFyYcGEdDOoHl6Fn\n5HlhzEQkH2iCJm7syE16r/dTEDV4krKuc2/AORSwUbl7n1faWafQRibGywKBgQCW\noyvOOJkfQKdCd4ZQDl4aofWoYLVaDkaITQyA2RrVaIlAIZmVpolOUNU752JH4HM3\nb7NQwgqR83TlNBA7kZ2+f0JSEXuS9I6d6F5RjsgqRkM/mn3gEYt+Gz2L+vQ6T+pF\nQt8nYq3Dtghl2W+Heh0dk//68l04Q2m7IJ7V2tiTwwKBgQCUrAt+txyTKyNO/96o\nPA68Rd8JsuVOXoGy+vEhnMvM4dGH9edODH8YVUPBjZBf9PyBvv4cN4JF1Pup+n26\n/5VkrtVDYVrf3h8RVZ1m3b5g02a4XV1vVzQevkevN8WoeKdKbaRJY9dhQZJU6aaX\nq0hecZYgXLNKDqxD60uKBc2ygA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "file-service@sharp-voyage-422303-u7.iam.gserviceaccount.com",
+  "client_id": "117567984934454613091",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/file-service%40sharp-voyage-422303-u7.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

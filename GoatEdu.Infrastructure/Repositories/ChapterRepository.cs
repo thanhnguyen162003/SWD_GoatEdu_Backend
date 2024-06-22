@@ -122,11 +122,6 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
     {
         return await _entities.AnyAsync(s => s.ChapterName.ToLower() == name.ToLower());
     }
-
-    public async Task<bool> ChapterLevelExistsAsync(int? code)
-    {
-        return await _entities.AnyAsync(s => s.ChapterLevel == code);
-    }
     
     private IQueryable<Chapter> ApplyFilterSortAndSearch(IQueryable<Chapter> chapters, ChapterQueryFilter queryFilter)
     {

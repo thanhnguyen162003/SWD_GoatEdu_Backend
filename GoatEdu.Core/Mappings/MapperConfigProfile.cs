@@ -8,6 +8,7 @@ using GoatEdu.Core.DTOs.NotificationDto;
 using GoatEdu.Core.DTOs.RoleDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.DTOs.TagDto;
+using GoatEdu.Core.DTOs.TheoryDto;
 using Infrastructure;
 
 namespace GoatEdu.Core.Mappings;
@@ -91,5 +92,10 @@ public class MapperConfigProfile : Profile
             .ForMember(dest => dest.TheoryCount, opt => opt.MapFrom(src => src.Theories.Count))
             .ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+        
+        CreateMap<Theory, TheoryDto>()
+            .ReverseMap()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            
     }
 }

@@ -19,6 +19,4 @@ public interface IChapterRepository : IRepository<Chapter>
     // Validation
     Task<bool> ChapterIdExistsAsync(Guid? guid);
     Task<bool> ChapterNameExistsAsync(string name);
-    Task<bool> ChapterLevelExistsAsync(int? code);
-    
 }

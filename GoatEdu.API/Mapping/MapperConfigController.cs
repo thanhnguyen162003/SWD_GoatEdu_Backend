@@ -1,8 +1,10 @@
 using AutoMapper;
 using GoatEdu.API.Request;
 using GoatEdu.API.Request.LessonViewModel;
+using GoatEdu.API.Request.TheoryViewModel;
 using GoatEdu.API.Response;
 using GoatEdu.API.Response.LessonViewModel;
+using GoatEdu.API.Response.TheoryViewModel;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.AdminDto;
@@ -14,6 +16,7 @@ using GoatEdu.Core.DTOs.ReportDto;
 using GoatEdu.Core.DTOs.RoleDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.DTOs.TagDto;
+using GoatEdu.Core.DTOs.TheoryDto;
 using Infrastructure;
 using LoginResponseDto = GoatEdu.Core.DTOs.LoginResponseDto;
 
@@ -112,6 +115,11 @@ public class MapperConfigController : Profile
         CreateMap<LessonDto, LessonUpdateModel>().ReverseMap();
         CreateMap<LessonDto, LessonResponseModel>().ReverseMap();
         CreateMap<LessonDto, LessonDetailResponseModel>().ReverseMap();
+        
+        // Theory
+        CreateMap<TheoryDto, TheoryRequestModel>().ReverseMap();
+        CreateMap<TheoryDto, TheoryUpdateModel>().ReverseMap();
+        CreateMap<TheoryDto, TheoryResponseModel>().ReverseMap();
         
         // Mapping for PageList
         CreateMap(typeof(PagedList<>), typeof(PagedList<>))

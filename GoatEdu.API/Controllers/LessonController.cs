@@ -68,7 +68,7 @@ public class LessonController : ControllerBase
     
     [HttpDelete]
     [Authorize (Roles = UserEnum.MODERATOR)]
-    public async Task<IActionResult> UpdateLesson([FromQuery, Required] IEnumerable<Guid> lessonnId)
+    public async Task<IActionResult> DeleteLesson([FromQuery, Required] IEnumerable<Guid> lessonnId)
     {
         try
         {
@@ -83,11 +83,11 @@ public class LessonController : ControllerBase
     
     [HttpGet("{lessonId}")]
     [Authorize]
-    public async Task<ResponseDto> GetDetailLesson([FromRoute, Required] Guid lessonnId)
+    public async Task<ResponseDto> GetDetailLesson([FromRoute, Required] Guid lessonId)
     {
         try
         {
-            var result = await _lessonService.GetDetailLessonById(lessonnId);
+            var result = await _lessonService.GetDetailLessonById(lessonId);
             var mapper = _mapper.Map<LessonDetailResponseModel>(result);
             return mapper is null
                 ? new ResponseDto(HttpStatusCode.NotFound, "Lesson not found")
