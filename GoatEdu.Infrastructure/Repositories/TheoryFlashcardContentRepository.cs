@@ -11,9 +11,9 @@ public class TheoryFlashcardContentRepository : BaseRepository<TheoryFlashCardCo
     {
     }
 
-    public async Task<List<TheoryFlashCardContent>> GetTheoryFlashCardContentByIds(IEnumerable<Guid?> guids)
+    public async Task<List<TheoryFlashCardContent>> GetTheoryFlashCardContentByIds(Guid theoryId, IEnumerable<Guid?> guids)
     {
-        return await _entities.Where(x => guids.Contains(x.Id)).ToListAsync();
+        return await _entities.Where(x => guids.Contains(x.Id) && x.TheoryId == theoryId).ToListAsync();
     }
     
     public async Task SoftDelete(IEnumerable<Guid> guids)

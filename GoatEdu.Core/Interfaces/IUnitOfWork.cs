@@ -9,6 +9,7 @@ using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.ModeratorInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
+using GoatEdu.Core.Interfaces.QuizInterfaces;
 using GoatEdu.Core.Interfaces.RateInterfaces;
 using GoatEdu.Core.Interfaces.ReportInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
@@ -53,6 +54,7 @@ namespace GoatEdu.Core.Interfaces
         ISubcriptionRepository SubcriptionRepository { get; }
         ITheoryRepository TheoryRepository { get; }
         ITheoryFlashcardContentRepository TheoryFlashcardContentRepository { get; }
+        IQuizRepository QuizRepository { get; }
 
 
 

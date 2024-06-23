@@ -41,8 +41,8 @@ public class TheoryFlashcardContentService : ITheoryFlashcardContentService
             }
         }
 
-        var theory = await _unitOfWork.TheoryRepository.GetByIdAsync(theoryId);
-        if (theory is null)
+        var theory = await _unitOfWork.TheoryRepository.TheoryIdExistAsync(theoryId);
+        if (theory is false)
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Theory not found!");
         }
@@ -76,14 +76,14 @@ public class TheoryFlashcardContentService : ITheoryFlashcardContentService
             }
         }
         
-        var theory = await _unitOfWork.TheoryRepository.GetByIdAsync(theoryId);
-        if (theory is null)
+        var theory = await _unitOfWork.TheoryRepository.TheoryIdExistAsync(theoryId);
+        if (theory is false)
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Theory not found!");
         }
 
         var guids = dtos.Select(x => x.Id);
-        var theoryFlashcards = await _unitOfWork.TheoryFlashcardContentRepository.GetTheoryFlashCardContentByIds(guids);
+        var theoryFlashcards = await _unitOfWork.TheoryFlashcardContentRepository.GetTheoryFlashCardContentByIds(theoryId, guids);
 
         if (!theoryFlashcards.Any())
         {

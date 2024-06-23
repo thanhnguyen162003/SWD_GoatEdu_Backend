@@ -8,4 +8,5 @@ public interface ITheoryRepository : IRepository<Theory>
  {
      Task SoftDelete(IEnumerable<Guid> guids);
      Task<IEnumerable<Theory>> GetTheoryByFilters(Guid? lessonId, TheoryQueryFilter queryFilter);
+     Task<bool> TheoryIdExistAsync(Guid theoryId);
  }

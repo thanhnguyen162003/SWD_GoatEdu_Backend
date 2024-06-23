@@ -5,6 +5,7 @@ using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.FlashcardDto;
 using GoatEdu.Core.DTOs.NoteDto;
 using GoatEdu.Core.DTOs.NotificationDto;
+using GoatEdu.Core.DTOs.QuizDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.DTOs.TagDto;
 using GoatEdu.Core.DTOs.TheoryDto;
@@ -25,6 +26,7 @@ using GoatEdu.Core.Interfaces.ModeratorInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
 using GoatEdu.Core.Interfaces.PaymentIntefaces;
+using GoatEdu.Core.Interfaces.QuizInterfaces;
 using GoatEdu.Core.Interfaces.RateInterfaces;
 using GoatEdu.Core.Interfaces.ReportInterfaces;
 using GoatEdu.Core.Interfaces.RoleInterfaces;
@@ -77,6 +79,7 @@ public static class DI
         services.AddScoped<ITranstractionRepository, TranstractionRepository>();
         services.AddScoped<ITheoryRepository, TheoryRepository>();
         services.AddScoped<ITheoryFlashcardContentRepository, TheoryFlashcardContentRepository>();
+        services.AddScoped<IQuizRepository, QuizRepository>();
 
 
         // Services
@@ -106,9 +109,9 @@ public static class DI
         services.AddScoped<IVoteService, VoteService>();
         services.AddScoped<IWalletService, WalletService>();
         services.AddScoped<IPaymentService, PaymentService>();
-        services.AddScoped<IGoogleCloudService, GoogleCloudService>();
         services.AddScoped<ITheoryService, TheoryService>();
         services.AddScoped<ITheoryFlashcardContentService, TheoryFlashcardContentService>();
+        services.AddScoped<IQuizService, QuizService>();
         
         // Others
         services.AddAutoMapper(typeof(MapperConfigProfile).Assembly);
@@ -120,7 +123,8 @@ public static class DI
         services.AddScoped<IADProductService, ADProductService>();
         services.AddScoped<IBotAPIService, BotAPIService>();
 
-        
+        //Di for Google Cloud
+        services.AddScoped<IGoogleCloudService, GoogleCloudService>();
         
         //DI for Cloudinary Cloud
         services.AddScoped<ICloudinaryService, CloudinaryService>();
@@ -136,6 +140,7 @@ public static class DI
         services.AddScoped<IValidator<LessonDto>, LessonDtoValidator>();
         services.AddScoped<IValidator<TheoryDto>, TheoryDtoValidator>();
         services.AddScoped<IValidator<TheoryFlashcardContentsDto>, TheoryFlashcardContentDtoValidator>();
+        services.AddScoped<IValidator<QuizDto>, QuizDtoValidator>();
         
         return services;
     }

@@ -67,7 +67,7 @@ public class TheoryController : ControllerBase
     
     [HttpDelete]
     [Authorize(Roles = UserEnum.MODERATOR)]
-    public async Task<IActionResult> DeleteTheories([Required] IEnumerable<Guid> theoryIds)
+    public async Task<IActionResult> DeleteTheories([FromQuery] IEnumerable<Guid> theoryIds)
     {
         try
         {

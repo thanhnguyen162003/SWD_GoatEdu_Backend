@@ -83,8 +83,8 @@ public class AnswerController : ControllerBase
         }
     }
     
-    [HttpPut]
-    public async Task<IActionResult> DeleteNotifications(Guid id, AnswerRequestModel model)
+    [HttpPatch("{answerId}")]
+    public async Task<IActionResult> UpdateAnswer([FromRoute, Required] Guid answerId, AnswerRequestModel model)
     {
         try
         {
@@ -94,7 +94,7 @@ public class AnswerController : ControllerBase
             }
             
             var mapper = _mapper.Map<AnswerDto>(model);
-            var result = await _answerService.UpdateAnswer(id, mapper);
+            var result = await _answerService.UpdateAnswer(answerId, mapper);
             return Ok(result);
         }
         catch (Exception e)

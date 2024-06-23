@@ -100,7 +100,7 @@ public class AnswerService : IAnswerService
         return PagedList<AnswerDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
 
-    public async Task<ResponseDto> UpdateAnswer(Guid guid, AnswerDto dto)
+    public async Task<ResponseDto> UpdateAnswer(Guid answerId, AnswerDto dto)
     {
         var validationResult = await _validator.ValidateAsync(dto);
         if (!validationResult.IsValid)
@@ -110,7 +110,7 @@ public class AnswerService : IAnswerService
         }
         
         var userId = _claimsService.GetCurrentUserId;
-        var answer = await _unitOfWork.AnswerRepository.GetByIdAndUserId(guid, userId);
+        var answer = await _unitOfWork.AnswerRepository.GetByIdAndUserId(answerId, userId);
         if (answer is null) return new ResponseDto(HttpStatusCode.NotFound, "");
         
         if (dto.AnswerImageConvert != null)

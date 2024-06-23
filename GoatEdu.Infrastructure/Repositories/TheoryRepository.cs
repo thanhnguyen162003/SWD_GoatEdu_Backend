@@ -23,7 +23,12 @@ public class TheoryRepository : BaseRepository<Theory>, ITheoryRepository
         theories = ApplySorting(theories, queryFilter);
         return await theories.ToListAsync();
     }
-    
+
+    public async Task<bool> TheoryIdExistAsync(Guid theoryId)
+    {
+        return await _entities.AnyAsync(x => x.Id == theoryId);
+    }
+
     private IQueryable<Theory> ApplyFilterSortAndSearch(IQueryable<Theory> theories, TheoryQueryFilter queryFilter, Guid? lessonId)
     {
         if (lessonId != null)

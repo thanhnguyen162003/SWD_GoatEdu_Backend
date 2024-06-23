@@ -22,7 +22,6 @@ public class TheoryDtoValidator : AbstractValidator<TheoryDto>
             .Unless(x => x.TheoryContent is null);
         
         RuleFor(x => x.LessonId)
-            .NotEmpty().WithMessage("Lesson id is required!")
             .MustAsync(async (id, cancellationtoken) => await lessonRepository.LessonIdExistAsync(id))
             .WithMessage("Lesson id must exist!")
             .Unless(x => x.LessonId is null);

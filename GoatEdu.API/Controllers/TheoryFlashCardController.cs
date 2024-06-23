@@ -70,7 +70,7 @@ public class TheoryFlashCardController : ControllerBase
     
     [HttpDelete]
     [Authorize(Roles = UserEnum.MODERATOR)]
-    public async Task<IActionResult> DeleteTheoryFlashcards([FromBody] List<Guid> guids)
+    public async Task<IActionResult> DeleteTheoryFlashcards([FromQuery] List<Guid> guids)
     {
         try
         {
@@ -84,7 +84,7 @@ public class TheoryFlashCardController : ControllerBase
     }
     
     [HttpGet("theory/{theoryId}")]
-    [Authorize(Roles = UserEnum.MODERATOR)]
+    [Authorize(Roles = $"{UserEnum.MODERATOR}, {UserEnum.STUDENT}")]
     public async Task<IActionResult> GetTheoryFlashcardsByTheory([FromRoute, Required] Guid theoryId)
     {
         try

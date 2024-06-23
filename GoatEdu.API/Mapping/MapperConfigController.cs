@@ -1,6 +1,7 @@
 using AutoMapper;
 using GoatEdu.API.Request;
 using GoatEdu.API.Request.LessonViewModel;
+using GoatEdu.API.Request.QuizViewModel;
 using GoatEdu.API.Request.TheoryFlashcardViewModel;
 using GoatEdu.API.Request.TheoryViewModel;
 using GoatEdu.API.Response;
@@ -13,6 +14,8 @@ using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.FlashcardDto;
 using GoatEdu.Core.DTOs.NoteDto;
 using GoatEdu.Core.DTOs.NotificationDto;
+using GoatEdu.Core.DTOs.QuestionInQuizDto;
+using GoatEdu.Core.DTOs.QuizDto;
 using GoatEdu.Core.DTOs.ReportDto;
 using GoatEdu.Core.DTOs.RoleDto;
 using GoatEdu.Core.DTOs.SubjectDto;
@@ -124,9 +127,20 @@ public class MapperConfigController : Profile
         CreateMap<TheoryDto, TheoryResponseModel>().ReverseMap();
         
         // TheoryFlashcard
-        CreateMap<TheoryFlashcardContentsDto, TheoryFlashcardRequestModel>();
-        CreateMap<TheoryFlashcardContentsDto, TheoryFlashcardUpdateModel>();
-        CreateMap<TheoryFlashcardContentsDto, TheoryFlashcardResponseModel>();
+        CreateMap<TheoryFlashcardContentsDto, TheoryFlashcardRequestModel>().ReverseMap();
+        CreateMap<TheoryFlashcardContentsDto, TheoryFlashcardUpdateModel>().ReverseMap();
+        CreateMap<TheoryFlashcardContentsDto, TheoryFlashcardResponseModel>().ReverseMap();
+
+        // Quiz
+        CreateMap<QuizDto, QuizCreateModel>().ReverseMap();
+        CreateMap<QuizDto, QuizUpdateModel>().ReverseMap();
+        CreateMap<QuizDto, QuizResponseModel>().ReverseMap();
+        
+        // Answer
+        CreateMap<QuestionInQuizDto, QuestionInQuizCreateModel>().ReverseMap();
+        CreateMap<QuestionInQuizDto, QuestionInQuizUpdateModel>().ReverseMap();
+        CreateMap<QuestionInQuizDto, QuestionInQuizResponseModel>().ReverseMap();
+
         
         // Mapping for PageList
         CreateMap(typeof(PagedList<>), typeof(PagedList<>))

@@ -7,10 +7,6 @@ public class TheoryFlashcardContentDtoValidator : AbstractValidator<TheoryFlashc
 {
     public TheoryFlashcardContentDtoValidator()
     {
-        RuleFor(x => x.Id)
-            .NotEmpty().WithMessage("Question is required!")
-            .Unless(x => x.Id is null);
-        
         RuleFor(x => x.Question)
             .NotEmpty().WithMessage("Question is required!")
             .Unless(x => x.Question is null);
