@@ -43,9 +43,9 @@ public class QuestionQuizController : ControllerBase
         }
     }
     
-    [HttpPost("quiz/{quizId}")]
+    [HttpPatch("quiz/{quizId}")]
     [Authorize(Roles = UserEnum.MODERATOR)]
-    public async Task<IActionResult> UpdateQuestionInQuiz([FromRoute, Required] Guid chapterId, [FromBody] List<QuestionInQuizUpdateModel> model)
+    public async Task<IActionResult> UpdateQuestionInQuiz([FromRoute, Required] Guid quizId, [FromBody] List<QuestionInQuizUpdateModel> model)
     {
         try
         {
@@ -55,7 +55,7 @@ public class QuestionQuizController : ControllerBase
             }
             
             var mapper = _mapper.Map<List<QuestionInQuizDto>>(model);
-            var result = await _questionQuizService.UpdateQuestionQuiz(chapterId, mapper);
+            var result = await _questionQuizService.UpdateQuestionQuiz(quizId, mapper);
             return Ok(result);
         }
         catch (Exception e)
@@ -64,7 +64,7 @@ public class QuestionQuizController : ControllerBase
         }
     }
     
-    [HttpPost]
+    [HttpDelete]
     [Authorize(Roles = UserEnum.MODERATOR)]
     public async Task<IActionResult> DeleteQuestionInQuiz([FromQuery] IEnumerable<Guid> ids)
     {

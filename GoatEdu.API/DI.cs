@@ -44,6 +44,7 @@ using GoatEdu.Core.Interfaces.UserInterfaces;
 using GoatEdu.Core.Interfaces.VoteInterface;
 using GoatEdu.Core.Interfaces.WalletInterfaces;
 using GoatEdu.Core.Mappings;
+using GoatEdu.Core.QueriesFilter;
 using GoatEdu.Core.Services;
 using GoatEdu.Core.Services.BackgroudTask;
 using GoatEdu.Core.Validator;
@@ -146,6 +147,7 @@ public static class DI
         services.AddScoped<IValidator<TheoryDto>, TheoryDtoValidator>();
         services.AddScoped<IValidator<TheoryFlashcardContentsDto>, TheoryFlashcardContentDtoValidator>();
         services.AddScoped<IValidator<QuizDto>, QuizDtoValidator>();
+        services.AddScoped<IValidator<QuizQueryFilter>, QuizQueryFilterValidator>();
         services.AddScoped<IValidator<QuestionInQuizDto>, QuestionQuizDtoValidator>();
         
         return services;
