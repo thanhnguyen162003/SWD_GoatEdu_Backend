@@ -3,6 +3,7 @@ using System.Net;
 using AutoMapper;
 using GoatEdu.API.Request.QuizViewModel;
 using GoatEdu.API.Response;
+using GoatEdu.API.Response.QuizViewModel;
 using GoatEdu.API.Response.TheoryViewModel;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
@@ -31,7 +32,7 @@ public class QuizController : ControllerBase
     
     [HttpPost("chapter/{chapterId}")]
     [Authorize(Roles = UserEnum.MODERATOR)]
-    public async Task<IActionResult> CreateQuizByChapter([FromRoute, Required] Guid chapterId, [FromForm] QuizCreateModel model)
+    public async Task<IActionResult> CreateQuizByChapter([FromRoute, Required] Guid chapterId, [FromBody] QuizCreateModel model)
     {
         try
         {
@@ -52,7 +53,7 @@ public class QuizController : ControllerBase
     
     [HttpPost("lesson/{lessonId}")]
     [Authorize(Roles = UserEnum.MODERATOR)]
-    public async Task<IActionResult> CreateQuizByLesson([FromRoute, Required] Guid lessonId, [FromForm] QuizCreateModel model)
+    public async Task<IActionResult> CreateQuizByLesson([FromRoute, Required] Guid lessonId, [FromBody] QuizCreateModel model)
     {
         try
         {
@@ -73,7 +74,7 @@ public class QuizController : ControllerBase
     
     [HttpPost("subject/{subjectId}")]
     [Authorize(Roles = UserEnum.MODERATOR)]
-    public async Task<IActionResult> CreateQuizBySubject([FromRoute, Required] Guid subjectId, [FromForm] QuizCreateModel model)
+    public async Task<IActionResult> CreateQuizBySubject([FromRoute, Required] Guid subjectId, [FromBody] QuizCreateModel model)
     {
         try
         {
@@ -94,7 +95,7 @@ public class QuizController : ControllerBase
     
     [HttpPatch("{quizId}")]
     [Authorize(Roles = UserEnum.MODERATOR)]
-    public async Task<IActionResult> UpdateQuiz([FromRoute, Required] Guid quizId, [FromForm] QuizUpdateModel model)
+    public async Task<IActionResult> UpdateQuiz([FromRoute, Required] Guid quizId, [FromBody] QuizUpdateModel model)
     {
         try
         {
@@ -129,7 +130,7 @@ public class QuizController : ControllerBase
         try
         {
             var result = await _quizService.GetQuizDetail(quizId);
-            var mapper = _mapper.Map<QuizResponseModel>(result);
+            var mapper = _mapper.Map<QuizDetailResponseModel>(result);
 
             return mapper is null
                 ? Ok(new ResponseDto(HttpStatusCode.NotFound, "Quiz not found!"))

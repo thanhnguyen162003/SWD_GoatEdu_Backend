@@ -2,7 +2,7 @@ namespace GoatEdu.Core.DTOs.QuestionInQuizDto;
 
 public class QuestionInQuizDto
 {
-    public Guid Id { get; set; }
+    public Guid? Id { get; set; }
     public Guid? QuizId { get; set; }
     public string? QuizQuestion { get; set; }
     public string? QuizAnswer1 { get; set; }

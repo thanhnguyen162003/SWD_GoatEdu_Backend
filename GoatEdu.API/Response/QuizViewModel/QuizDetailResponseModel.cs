@@ -1,6 +1,6 @@
-namespace GoatEdu.API.Response;
+namespace GoatEdu.API.Response.QuizViewModel;
 
-public class QuizResponseModel
+public class QuizDetailResponseModel
 {
     public Guid Id { get; set; }
     public string? Quiz1 { get; set; }
@@ -12,5 +12,5 @@ public class QuizResponseModel
     public DateTime? UpdatedAt { get; set; }
     public bool? IsRequire { get; set; }
     public ICollection<QuestionInQuizResponseModel> QuestionInQuizzes { get; set; }
-    public int QuestionCount { get; set; }
+    public int QuestionCount { get; set; } 
 }

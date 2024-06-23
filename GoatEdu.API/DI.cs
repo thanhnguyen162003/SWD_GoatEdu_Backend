@@ -5,6 +5,7 @@ using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.FlashcardDto;
 using GoatEdu.Core.DTOs.NoteDto;
 using GoatEdu.Core.DTOs.NotificationDto;
+using GoatEdu.Core.DTOs.QuestionInQuizDto;
 using GoatEdu.Core.DTOs.QuizDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.DTOs.TagDto;
@@ -26,6 +27,7 @@ using GoatEdu.Core.Interfaces.ModeratorInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
 using GoatEdu.Core.Interfaces.PaymentIntefaces;
+using GoatEdu.Core.Interfaces.QuestionQuizInterfaces;
 using GoatEdu.Core.Interfaces.QuizInterfaces;
 using GoatEdu.Core.Interfaces.RateInterfaces;
 using GoatEdu.Core.Interfaces.ReportInterfaces;
@@ -80,6 +82,7 @@ public static class DI
         services.AddScoped<ITheoryRepository, TheoryRepository>();
         services.AddScoped<ITheoryFlashcardContentRepository, TheoryFlashcardContentRepository>();
         services.AddScoped<IQuizRepository, QuizRepository>();
+        services.AddScoped<IQuestionQuizRepository, QuestionQuizRepository>();
 
 
         // Services
@@ -112,6 +115,8 @@ public static class DI
         services.AddScoped<ITheoryService, TheoryService>();
         services.AddScoped<ITheoryFlashcardContentService, TheoryFlashcardContentService>();
         services.AddScoped<IQuizService, QuizService>();
+        services.AddScoped<IQuestionQuizService, QuestionQuizService>();
+        
         
         // Others
         services.AddAutoMapper(typeof(MapperConfigProfile).Assembly);
@@ -141,6 +146,7 @@ public static class DI
         services.AddScoped<IValidator<TheoryDto>, TheoryDtoValidator>();
         services.AddScoped<IValidator<TheoryFlashcardContentsDto>, TheoryFlashcardContentDtoValidator>();
         services.AddScoped<IValidator<QuizDto>, QuizDtoValidator>();
+        services.AddScoped<IValidator<QuestionInQuizDto>, QuestionQuizDtoValidator>();
         
         return services;
     }

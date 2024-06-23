@@ -10,4 +10,5 @@ public class TheoryResponseModel
     public Guid? LessonId { get; set; }
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
+    public int FlashcardCount { get; set; }
 }

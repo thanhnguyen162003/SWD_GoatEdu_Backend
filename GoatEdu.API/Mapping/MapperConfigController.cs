@@ -6,6 +6,7 @@ using GoatEdu.API.Request.TheoryFlashcardViewModel;
 using GoatEdu.API.Request.TheoryViewModel;
 using GoatEdu.API.Response;
 using GoatEdu.API.Response.LessonViewModel;
+using GoatEdu.API.Response.QuizViewModel;
 using GoatEdu.API.Response.TheoryViewModel;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
@@ -135,6 +136,7 @@ public class MapperConfigController : Profile
         CreateMap<QuizDto, QuizCreateModel>().ReverseMap();
         CreateMap<QuizDto, QuizUpdateModel>().ReverseMap();
         CreateMap<QuizDto, QuizResponseModel>().ReverseMap();
+        CreateMap<QuizDto, QuizDetailResponseModel>().ReverseMap();
         
         // Answer
         CreateMap<QuestionInQuizDto, QuestionInQuizCreateModel>().ReverseMap();

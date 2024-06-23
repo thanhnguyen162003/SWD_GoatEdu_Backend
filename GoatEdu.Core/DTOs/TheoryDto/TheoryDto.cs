@@ -16,5 +16,5 @@ public class TheoryDto
     public Guid? LessonId { get; set; }
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
-    public ICollection<TheoryFlashcardContentsDto>? TheoryFlashCardContents { get; set; }
+    public int FlashcardCount { get; set; }
 }

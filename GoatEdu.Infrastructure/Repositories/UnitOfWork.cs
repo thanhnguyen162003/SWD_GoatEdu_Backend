@@ -10,6 +10,7 @@ using GoatEdu.Core.Interfaces.LessonInterfaces;
 using GoatEdu.Core.Interfaces.ModeratorInterfaces;
 using GoatEdu.Core.Interfaces.NoteInterfaces;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
+using GoatEdu.Core.Interfaces.QuestionQuizInterfaces;
 using GoatEdu.Core.Interfaces.QuizInterfaces;
 using GoatEdu.Core.Interfaces.RateInterfaces;
 using GoatEdu.Core.Interfaces.ReportInterfaces;
@@ -62,7 +63,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly ITheoryRepository _theoryRepository;
     private readonly ITheoryFlashcardContentRepository _theoryFlashcardContentRepository;
     private readonly IQuizRepository _quizRepository;
-
+    private readonly IQuestionQuizRepository _questionQuizRepository;
 
     private IDbContextTransaction _transaction;
 
@@ -102,6 +103,8 @@ public class UnitOfWork : IUnitOfWork
         _theoryFlashcardContentRepository ?? new TheoryFlashcardContentRepository(_context);
     public IQuizRepository QuizRepository => _quizRepository ?? new QuizRepository(_context);
 
+    public IQuestionQuizRepository QuestionQuizRepository =>
+        _questionQuizRepository ?? new QuestionQuizRepository(_context);
     public ITranstractionRepository TranstractionRepository => _transtractionRepository ?? new TranstractionRepository(_context);
 
 

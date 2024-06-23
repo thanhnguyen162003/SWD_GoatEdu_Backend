@@ -29,6 +29,11 @@ public class QuizRepository : BaseRepository<Quiz>, IQuizRepository
         return await _entities.Include(x => x.QuestionInQuizzes).FirstOrDefaultAsync(x => x.Id == quizId);
     }
 
+    public async Task<bool> QuizIdExistAsync(Guid quizId)
+    {
+        return await _entities.AnyAsync(x => x.Id == quizId);
+    }
+
     private IQueryable<Quiz> ApplyFilterSortAndSearch(IQueryable<Quiz> quizzes, QuizQueryFilter queryFilter)
     {
         quizzes = quizzes.Where(x => x.IsDeleted == false);

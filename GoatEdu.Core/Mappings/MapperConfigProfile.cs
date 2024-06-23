@@ -97,6 +97,7 @@ public class MapperConfigProfile : Profile
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         
         CreateMap<Theory, TheoryDto>()
+            .ForMember(dest => dest.FlashcardCount, opts => opts.MapFrom(src => src.TheoryFlashCardContents.Count))
             .ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
@@ -107,12 +108,13 @@ public class MapperConfigProfile : Profile
         CreateMap<Quiz, QuizDto>()
             .ForMember(dest => dest.QuestionCount, opts => opts.MapFrom(src => src.QuestionInQuizzes.Count))
             .ForMember(dest => dest.QuestionInQuizzes, opts => opts.MapFrom(src => src.QuestionInQuizzes))
-
             .ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); ;
 
         CreateMap<QuestionInQuiz, QuestionInQuizDto>()
             .ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+        
+        
     }
 }

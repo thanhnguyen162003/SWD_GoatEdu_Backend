@@ -9,5 +9,6 @@ public interface IQuizRepository : IRepository<Quiz>
     Task SoftDelete(IEnumerable<Guid> guids);
     Task<IEnumerable<Quiz>> GetQuizByFilters(QuizQueryFilter queryFilter);
     Task<Quiz?> GetQuizById(Guid quizId);
+    Task<bool> QuizIdExistAsync(Guid quizId);
 
 }
