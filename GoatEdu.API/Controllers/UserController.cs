@@ -32,6 +32,13 @@ public class UserController : ControllerBase
         return await _userService.UpdateProfile(dto);
     }
     
+    [HttpPatch("new_user")]
+    [Authorize]
+    public async Task<ResponseDto> UpdateNewUser()
+    {
+        return await _userService.UpdateNewUser();
+    }
+    
     [HttpPost("subject/{id}")]
     [Authorize]
     public async Task<ResponseDto> EnrollSubject([FromRoute] Guid id)

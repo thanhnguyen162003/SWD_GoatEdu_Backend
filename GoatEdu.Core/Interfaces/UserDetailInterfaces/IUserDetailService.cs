@@ -10,5 +10,6 @@ public interface IUserDetailService
     Task<ResponseDto> GetSubcription();
     Task<Wallet> GetUserWallet();
     Task<ResponseDto> GetTranstractionWallet(Guid walletId);
+    Task<ResponseDto> UpdateNewUser();
 
 }

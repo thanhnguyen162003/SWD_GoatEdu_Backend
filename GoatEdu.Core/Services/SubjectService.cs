@@ -85,13 +85,7 @@ public class SubjectService : ISubjectService
 
     public async Task<ResponseDto> UpdateSubject(SubjectDto dto, Guid id)
     {
-        // var validationResult = await _validator.ValidateAsync(dto);
-        // if (!validationResult.IsValid)
-        // {
-        //     var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
-        //     return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
-        // }
-        
+       
         string imageUrl = null;
 
         if (dto.Image != null)

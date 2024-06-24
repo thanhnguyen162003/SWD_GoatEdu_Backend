@@ -61,6 +61,11 @@ public class UserDetailService : IUserDetailService
         };
         return await _unitOfWork.UserDetailRepository.UpdateProfile(userUpdate);
     }
+    public async Task<ResponseDto> UpdateNewUser()
+    {
+        var userId = _claimsService.GetCurrentUserId;
+        return await _unitOfWork.UserDetailRepository.UpdateNewUser(userId);
+    }
 
     public Task<ResponseDto> GetSubcription()
     {

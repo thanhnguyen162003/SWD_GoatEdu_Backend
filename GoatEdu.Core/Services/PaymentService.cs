@@ -23,16 +23,15 @@ public class PaymentService : IPaymentService
 
     public async Task<ResponseDto> PaymentSuccess(TranstractionDto transaction)
     {
-        var subscription = await _unitOfWork.SubcriptionRepository.GetSubscriptionById(transaction.SubcriptionId);
+        var username = transaction.username;
+        var user =  _unitOfWork.UserRepository.GetUserByUsername(username);
+        var subscription =  _unitOfWork.SubcriptionRepository.GetSubscriptionById(transaction.SubcriptionId);
+        await Task.WhenAll(user, subscription);
         if (subscription is null)
         {
             return new ResponseDto(HttpStatusCode.BadRequest, "cant find any subscription in out db");
         }
-        TimeSpan duration = subscription.Duration ?? new TimeSpan(30, 0, 0, 0);
-        //need get userId claim here
-        var username = transaction.username;
-        var user = await _unitOfWork.UserRepository.GetUserByUsername(username);
-        
+        TimeSpan duration = subscription.Result.Duration ?? new TimeSpan(30, 0, 0, 0);
         Transaction transactionReal = new Transaction()
         {
             Note = transaction.note,
@@ -42,12 +41,12 @@ public class PaymentService : IPaymentService
             SubscriptionId = transaction.SubcriptionId,
             EndDate = DateTime.Now.Add(duration),
             StartDate = DateTime.Now,
-            WalletId = user.WalletId
+            WalletId = user.Result.WalletId
         };
         User userData = new User()
         {
-            Id = user.Id,
-            Subscription = subscription.SubscriptionName,
+            Id = user.Result.Id,
+            Subscription = subscription.Result.SubscriptionName,
             SubscriptionEnd = transactionReal.EndDate
         };
         var calculateUser = await _unitOfWork.UserDetailRepository.UpdateSubscription(userData);
