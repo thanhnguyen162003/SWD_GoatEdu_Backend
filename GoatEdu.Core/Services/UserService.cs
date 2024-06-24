@@ -67,6 +67,7 @@ public class UserService : IUserService
             UpdatedAt = DateTime.Now,
             IsDeleted = false,
             EmailVerify = true,
+            IsNewUser = true,
             Provider = UserEnum.GOOGLE,
             WalletId = wallet
         };
@@ -150,6 +151,7 @@ public class UserService : IUserService
             UpdatedAt = DateTime.Now,
             IsDeleted = false,
             EmailVerify = false,
+            IsNewUser = true,
             Provider = UserEnum.CREDENTIAL,
             WalletId = wallet
         };

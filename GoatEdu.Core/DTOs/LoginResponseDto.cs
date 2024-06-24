@@ -22,5 +22,7 @@ public class LoginResponseDto
     public string Token { get; set; }
     
     public bool subscription { get; set; }
+    
+    public bool isNewUser { get; set; }
 
 }

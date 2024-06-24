@@ -25,9 +25,9 @@ public class UserController : ControllerBase
         _enrollmentService = enrollmentService;
         _mapper = mapper;
     }
-    [HttpPut("profile")]
+    [HttpPatch("profile")]
     [Authorize]
-    public async Task<ResponseDto> UpdateSubject([FromForm] UserUpdateDto dto)
+    public async Task<ResponseDto> UpdateProfile([FromForm] UserUpdateDto dto)
     {
         return await _userService.UpdateProfile(dto);
     }

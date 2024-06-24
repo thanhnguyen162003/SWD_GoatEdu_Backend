@@ -80,7 +80,7 @@ public class SubjectController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPut("{id}")]
+    [HttpPatch("{id}")]
     [Authorize(Roles = UserEnum.MODERATOR)]
     public async Task<IActionResult> UpdateSubject([FromForm] SubjectCreateModel model, Guid id)
     {

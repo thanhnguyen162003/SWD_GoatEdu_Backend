@@ -31,10 +31,11 @@ public class UserDetailService : IUserDetailService
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Somethings has error, We cant find your account");
         }
-        if (!BCrypt.Net.BCrypt.Verify(user.password, userResult.Password))
-        {
-            return new ResponseDto(HttpStatusCode.BadRequest, "Wrong password!");
-        }
+        
+        // if (!BCrypt.Net.BCrypt.Verify(user.password, userResult.Password))
+        // {
+        //     return new ResponseDto(HttpStatusCode.BadRequest, "Wrong password!");
+        // }
 
         string imageUrl = userResult.Image; // Keep the existing image URL by default
         if (user.Image != null)

@@ -53,6 +53,8 @@ namespace Infrastructure
         public DateTime? CreatedAt { get; set; }
         [Column("updatedAt", TypeName = "timestamp without time zone")]
         public DateTime? UpdatedAt { get; set; }
+        [Column("isNewUser")]
+        public bool? IsNewUser { get; set; }
         [ForeignKey("RoleId")]
         [InverseProperty("Users")]
         public virtual Role? Role { get; set; }

@@ -59,7 +59,7 @@ public class FlashcardController : ControllerBase
     {
         return await _flashcardService.DeleteFlashcard(id);
     }
-    [HttpPut]
+    [HttpPatch]
     [Route("{id}")]
     [Authorize]
     public async Task<ResponseDto> UpdateFlashcard([FromRoute] Guid id, [FromBody] FlashcardUpdateModel flashcardUpdateModel)

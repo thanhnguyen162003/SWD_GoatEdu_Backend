@@ -68,7 +68,7 @@ public class ChapterController : ControllerBase
         var mapper = _mapper.Map<ChapterDto>(dto);
         return await _chapterService.CreateChapter(mapper);
     }
-    [HttpPut("{id}")]
+    [HttpPatch("{id}")]
     [Authorize (Roles = UserEnum.MODERATOR)]
     public async Task<ResponseDto> UpdateChapter([FromBody] ChapterUpdateModel model, [FromRoute]Guid id)
     {

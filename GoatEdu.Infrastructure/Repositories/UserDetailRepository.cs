@@ -22,9 +22,9 @@ public class UserDetailRepository : BaseRepository<User>, IUserDetailRepository
             return new ResponseDto(HttpStatusCode.NotFound, "User not found.");
         }
 
-        existingUser.Fullname = user.Fullname;
-        existingUser.Image = user.Image;
-        existingUser.PhoneNumber = user.PhoneNumber;
+        existingUser.Fullname = user.Fullname ?? existingUser.Fullname;
+        existingUser.Image = user.Image ?? existingUser.Image;
+        existingUser.PhoneNumber = user.PhoneNumber ?? existingUser.PhoneNumber;
         existingUser.UpdatedAt = DateTime.Now;
 
         _context.Users.Update(existingUser);

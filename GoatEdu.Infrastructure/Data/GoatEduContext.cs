@@ -1045,6 +1045,8 @@ namespace Infrastructure.Data
 
                 entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
 
+                entity.Property(e => e.IsNewUser).HasColumnName("isNewUser");
+
                 entity.Property(e => e.Password)
                     .HasColumnType("character varying")
                     .HasColumnName("password");
