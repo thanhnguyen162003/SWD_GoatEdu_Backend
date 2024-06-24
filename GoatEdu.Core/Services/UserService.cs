@@ -44,9 +44,12 @@ public class UserService : IUserService
         {
             return new ResponseDto(HttpStatusCode.Forbidden, "Your account is suspended!");
         }
-
+        bool subscriptionData = user.SubscriptionEnd.HasValue && user.SubscriptionEnd > DateTime.Now;
         var token = await _tokenGenerator.GenerateTokenGoogle(email);
-        return new ResponseDto(HttpStatusCode.OK, "Login successfully!", token);
+        var loginResponse = _mapper.Map<LoginResponseDto>(user);
+        loginResponse.Token = token;
+        loginResponse.subscription = subscriptionData;
+        return new ResponseDto(HttpStatusCode.OK, "Login successfully!", loginResponse);
     }
 
     public async Task<ResponseDto> RegisterByGoogle(GoogleRegisterDto dto)

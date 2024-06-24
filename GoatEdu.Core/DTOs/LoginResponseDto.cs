@@ -14,6 +14,8 @@ public class LoginResponseDto
     public string email { get; set; }
     
     public string image { get; set; }
+    public string phoneNumber { get; set; }
+
     
     public bool emailVerify { get; set; }
     
