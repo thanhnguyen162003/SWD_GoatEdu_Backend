@@ -61,6 +61,24 @@ public class UserDetailService : IUserDetailService
         };
         return await _unitOfWork.UserDetailRepository.UpdateProfile(userUpdate);
     }
+    
+    public async Task<ResponseDto> UpdatePassword(string oldPassword, string newPassword)
+    {
+        var userId = _claimsService.GetCurrentUserId;
+        var userResult = await _unitOfWork.UserRepository.GetUserByUserId(userId);
+        
+        if (userResult is null)
+        {
+            return new ResponseDto(HttpStatusCode.NotFound, "Somethings has error, We cant find your account");
+        }
+        
+        if (!BCrypt.Net.BCrypt.Verify(oldPassword, userResult.Password))
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "Wrong password!");
+        }
+        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        return await _unitOfWork.UserDetailRepository.UpdatePassword(userId,hashedPassword);
+    }
     public async Task<ResponseDto> UpdateNewUser()
     {
         var userId = _claimsService.GetCurrentUserId;

@@ -30,7 +30,7 @@ public class UserDetailRepository : BaseRepository<User>, IUserDetailRepository
         _context.Users.Update(existingUser);
         await _context.SaveChangesAsync();
 
-        return new ResponseDto(HttpStatusCode.OK, "User successfully updated.");
+        return new ResponseDto(HttpStatusCode.OK, "User successfully updated.", existingUser.Image);
     }
     public async Task<ResponseDto> UpdateNewUser(Guid userId)
     {
@@ -47,6 +47,22 @@ public class UserDetailRepository : BaseRepository<User>, IUserDetailRepository
         await _context.SaveChangesAsync();
 
         return new ResponseDto(HttpStatusCode.OK, "User successfully updated.");
+    }
+    public async Task<ResponseDto> UpdatePassword(Guid userId, string hashedPassword)
+    {
+        var existingUser = await _entities.FindAsync(userId);
+        if (existingUser == null)
+        {
+            return new ResponseDto(HttpStatusCode.NotFound, "User not found.");
+        }
+
+        existingUser.Password = hashedPassword;
+       
+
+        _context.Users.Update(existingUser);
+        await _context.SaveChangesAsync();
+
+        return new ResponseDto(HttpStatusCode.OK, "User password updated.");
     }
     public async Task<ResponseDto> UpdateSubscription(User user)
     {

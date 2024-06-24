@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using GoatEdu.API.Request;
 using GoatEdu.API.Response;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.UserDetailDto;
@@ -37,6 +38,14 @@ public class UserController : ControllerBase
     public async Task<ResponseDto> UpdateNewUser()
     {
         return await _userService.UpdateNewUser();
+    }
+    [HttpPatch("password")]
+    [Authorize]
+    public async Task<ResponseDto> UpdatePassword([FromBody] ChangePasswordModel model)
+    {
+        var oldpassword = model.old_password;
+        var newpassword = model.new_password;
+        return await _userService.UpdatePassword(oldpassword, newpassword);
     }
     
     [HttpPost("subject/{id}")]

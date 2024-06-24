@@ -11,5 +11,6 @@ public interface IUserDetailService
     Task<Wallet> GetUserWallet();
     Task<ResponseDto> GetTranstractionWallet(Guid walletId);
     Task<ResponseDto> UpdateNewUser();
+    Task<ResponseDto> UpdatePassword(string oldPassword, string newPassword);
 
 }

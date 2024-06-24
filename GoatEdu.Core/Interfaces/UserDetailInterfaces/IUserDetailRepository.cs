@@ -13,4 +13,5 @@ public interface IUserDetailRepository : IRepository<User>
     Task<ResponseDto> GetTranstractionWallet(Guid walletId);
     Task<ResponseDto> UpdateSubscription(User user);
     Task<ResponseDto> UpdateNewUser(Guid userId);
+    Task<ResponseDto> UpdatePassword(Guid userId, string hashedPassword);
 }
