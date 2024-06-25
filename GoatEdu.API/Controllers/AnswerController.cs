@@ -5,9 +5,11 @@ using GoatEdu.API.Request.TheoryViewModel;
 using GoatEdu.API.Response;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
+using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.AnswerInterfaces;
 using GoatEdu.Core.QueriesFilter;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -62,7 +64,7 @@ public class AnswerController : ControllerBase
     }
     
     [HttpPost]
-    
+    [Authorize(Roles = $"{UserEnum.TEACHER}, {UserEnum.STUDENT}")]
     public async Task<IActionResult> InsertAnswer([FromForm, Required] AnswerRequestModel model)
     {
         try
@@ -84,6 +86,7 @@ public class AnswerController : ControllerBase
     }
     
     [HttpPatch("{answerId}")]
+    [Authorize(Roles = $"{UserEnum.TEACHER}, {UserEnum.STUDENT}")]
     public async Task<IActionResult> UpdateAnswer([FromRoute, Required] Guid answerId, AnswerRequestModel model)
     {
         try
@@ -103,13 +106,13 @@ public class AnswerController : ControllerBase
         }
     }
     
-    [HttpDelete("{id}")]
-    // [Authorize (Roles = "Student, Teacher")]
-    public async Task<IActionResult> DeleteAnswer([Required] Guid id)
+    [HttpDelete("{answerId}")]
+    [Authorize(Roles = $"{UserEnum.TEACHER}, {UserEnum.STUDENT}")]
+    public async Task<IActionResult> DeleteAnswer([Required] Guid answerId)
     {
         try
         {
-            var result = await _answerService.DeleteAnswer(id);
+            var result = await _answerService.DeleteAnswer(answerId);
             return Ok(result);
         }
         catch (Exception e)

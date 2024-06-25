@@ -62,6 +62,9 @@ public class AnswerService : IAnswerService
             mapper.AnswerImage = image.Url.ToString();
         }
 
+        var userId = _claimsService.GetCurrentUserId;
+
+        mapper.UserId = userId;
         mapper.AnswerVote = 0;
         mapper.AnswerName = _claimsService.GetCurrentFullname;
         mapper.CreatedAt = _currentTime.GetCurrentTime();
@@ -77,10 +80,10 @@ public class AnswerService : IAnswerService
 
     }
 
-    public async Task<ResponseDto> DeleteAnswer(Guid guid)
+    public async Task<ResponseDto> DeleteAnswer(Guid answerId)
     {
         var userId = _claimsService.GetCurrentUserId;
-        var answer = await _unitOfWork.AnswerRepository.GetByIdAndUserId(guid, userId);
+        var answer = await _unitOfWork.AnswerRepository.GetByIdAndUserId(answerId, userId);
         if (answer is null) return new ResponseDto(HttpStatusCode.BadRequest, "");
         answer.IsDeleted = false;
         _unitOfWork.AnswerRepository.Update(answer);
@@ -112,7 +115,7 @@ public class AnswerService : IAnswerService
         
         var userId = _claimsService.GetCurrentUserId;
         var answer = await _unitOfWork.AnswerRepository.GetByIdAndUserId(answerId, userId);
-        if (answer is null) return new ResponseDto(HttpStatusCode.NotFound, "");
+        if (answer is null) return new ResponseDto(HttpStatusCode.NotFound, "You dont allow to update this answer!");
         
         if (dto.AnswerImageConvert != null)
         {
@@ -124,7 +127,7 @@ public class AnswerService : IAnswerService
         
             answer.AnswerImage = image.Url.ToString();
         }
-
+        
         answer.AnswerBody = dto.AnswerBody ?? answer.AnswerBody;
         answer.AnswerBodyHtml = dto.AnswerBodyHtml ?? answer.AnswerBodyHtml;
         answer.UpdatedAt = _currentTime.GetCurrentTime();

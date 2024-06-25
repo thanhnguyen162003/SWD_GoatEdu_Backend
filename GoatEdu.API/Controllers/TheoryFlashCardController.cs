@@ -84,7 +84,7 @@ public class TheoryFlashCardController : ControllerBase
     }
     
     [HttpGet("theory/{theoryId}")]
-    [Authorize(Roles = $"{UserEnum.MODERATOR}, {UserEnum.STUDENT}")]
+    [Authorize(Roles = $"{UserEnum.MODERATOR}, {UserEnum.TEACHER}, {UserEnum.STUDENT}")]
     public async Task<IActionResult> GetTheoryFlashcardsByTheory([FromRoute, Required] Guid theoryId)
     {
         try
