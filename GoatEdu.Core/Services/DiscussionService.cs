@@ -98,18 +98,7 @@ public class DiscussionService : IDiscussionService
             return new ResponseDto(HttpStatusCode.NotFound, "Không có quyền cập nhật");
         }
 
-        if (dto.DiscussionImageConvert != null)
-        {
-            var image = await _cloudinaryService.UploadAsync(dto.DiscussionImageConvert);
-            if (image.Error != null)
-            {
-                return new ResponseDto(HttpStatusCode.BadRequest, image.Error.Message);
-            }
-
-            disscussion.DiscussionImage = image.Url.ToString();
-        }
-
-        if (dto.Tags != null)
+        if (dto.Tags.Count > 0)
         {
             var tag = await CheckAndAddTags(dto.Tags);
             if (!tag.Any())
@@ -117,8 +106,22 @@ public class DiscussionService : IDiscussionService
                 return new ResponseDto(HttpStatusCode.NotFound, "Có lỗi lúc add tag mới rồi!");
             }
 
+            disscussion.Tags.Clear();
+            await _unitOfWork.SaveChangesAsync();
+            
             disscussion.Tags = (ICollection<Tag>)tag;
         }
+        
+        if (dto.DiscussionImageConvert != null)
+        {
+            var image = await _cloudinaryService.UploadAsync(dto.DiscussionImageConvert);
+            if (image.Error != null)
+            {
+                return new ResponseDto(HttpStatusCode.BadRequest, image.Error.Message);
+            }
+            disscussion.DiscussionImage = image.Url.ToString();
+        }
+        
 
         disscussion.DiscussionName = dto.DiscussionName ?? disscussion.DiscussionName;
         disscussion.DiscussionBody = dto.DiscussionBody ?? disscussion.DiscussionBody;
@@ -190,9 +193,8 @@ public class DiscussionService : IDiscussionService
             };
             discussionIdVote = await _unitOfWork.VoteRepository.GetDiscussionVoteByUserId(userId, discussionIds);
         }
-
-        result.IsSolved = userId != Guid.Empty && discussionIdVote.Contains(result.Id);
         var mapper = _mapper.Map<DiscussionDto>(result);
+        mapper.IsUserVoted = userId != Guid.Empty && discussionIdVote.Contains(result.Id);
         return mapper;
     }
 

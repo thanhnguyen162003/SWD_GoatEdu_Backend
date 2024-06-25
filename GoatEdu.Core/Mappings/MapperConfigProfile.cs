@@ -88,6 +88,9 @@ public class MapperConfigProfile : Profile
 
 
         CreateMap<Answer, AnswerDto>()
+            .ForPath(dest => dest.UserInformation.UserId, opts => opts.MapFrom(src => src.UserId))
+            .ForPath(dest => dest.UserInformation.UserImage, opts => opts.MapFrom(src => src.User.Image))
+            .ForPath(dest => dest.UserInformation.FullName, opts => opts.MapFrom(src => src.User.Fullname))
             .ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         

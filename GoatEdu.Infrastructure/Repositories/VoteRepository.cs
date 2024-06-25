@@ -32,6 +32,14 @@ public class VoteRepository : IVoteRepository
             .ToListAsync();
     }
 
+    public async Task<List<Guid?>> GetAnswerVoteByUserId(Guid userId, IEnumerable<Guid> answerIds)
+    {
+        return await _context.Votes
+            .Where(x => x.UserId == userId && answerIds.Contains((Guid)x.AnswerId))
+            .Select(x => x.AnswerId)
+            .ToListAsync();
+    }
+
     public async Task<Vote?> GetDiscussionVote(Guid guid, Guid userId)
     {
         return await _context.Votes.FirstOrDefaultAsync(x => x.UserId == userId && x.DiscussionId == guid);

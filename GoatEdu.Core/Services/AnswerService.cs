@@ -75,7 +75,7 @@ public class AnswerService : IAnswerService
         var result = await _unitOfWork.SaveChangesAsync();
 
         if (result <= 0) return new ResponseDto(HttpStatusCode.OK, "Add Failed !");
-        await _hubContext.Clients.All.SendAnswer(new {dto.UserId, dto.QuestionId});
+        await _hubContext.Clients.All.SendAnswer(new {userId, dto.QuestionId});
         return new ResponseDto(HttpStatusCode.OK, "Add Successfully !");
 
     }
@@ -98,10 +98,26 @@ public class AnswerService : IAnswerService
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
 
-        var lists = await _unitOfWork.AnswerRepository.GetAnswersByDiscussionIdFilters(guid, queryFilter);
-        if(!lists.Any()) return new PagedList<AnswerDto>(new List<AnswerDto>(), 0, 0, 0);
-        var mapperList = _mapper.Map<List<AnswerDto>>(lists);
-        return PagedList<AnswerDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
+        var answers = await _unitOfWork.AnswerRepository.GetAnswersByDiscussionIdFilters(guid, queryFilter);
+        if(!answers.Any()) return new PagedList<AnswerDto>(new List<AnswerDto>(), 0, 0, 0);
+
+        var userId = _claimsService.GetCurrentUserId;
+        var answerIdVote = new List<Guid?>();
+        
+        if (userId != Guid.Empty)
+        {
+            var answerIds = answers.Select(x => x.Id);
+            answerIdVote = await _unitOfWork.VoteRepository.GetAnswerVoteByUserId(userId, answerIds);
+        }
+
+        var mapper = answers.Select(x =>
+        {
+            var dto = _mapper.Map<AnswerDto>(x);
+            dto.IsUserVoted = userId != Guid.Empty && answerIdVote.Contains(dto.Id);
+            return dto;
+        });
+        
+        return PagedList<AnswerDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
     }
 
     public async Task<ResponseDto> UpdateAnswer(Guid answerId, AnswerDto dto)

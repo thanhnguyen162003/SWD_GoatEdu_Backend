@@ -22,14 +22,14 @@ public class VoteService : IVoteService
     public async Task<ResponseDto> DiscussionVoting(Guid discussionGuid)
     {
         var userId = _claimsService.GetCurrentUserId;
-        var vote = await _unitOfWork.VoteRepository.GetDiscussionVote(discussionGuid, userId);
         var discussion = await _unitOfWork.DiscussionRepository.GetByIdAsync(discussionGuid);
 
         if (discussion is null)
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Discussion not found!");
         }
-
+        var vote = await _unitOfWork.VoteRepository.GetDiscussionVote(discussionGuid, userId);
+        
         await _unitOfWork.BeginTransactionAsync();
         try
         {
@@ -64,16 +64,16 @@ public class VoteService : IVoteService
     public async Task<ResponseDto> AnswerVoting(Guid answerGuid)
     {
         var userId = _claimsService.GetCurrentUserId;
-        var vote = await _unitOfWork.VoteRepository.GetAnswerVote(answerGuid, userId);
         var answer = await _unitOfWork.AnswerRepository.GetByIdAsync(answerGuid);
 
         if (answer is null)
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Answer not found!");
         }
-
+        var vote = await _unitOfWork.VoteRepository.GetAnswerVote(answerGuid, userId);
+        
         await _unitOfWork.BeginTransactionAsync();
-
+        
         try
         {
             if (vote is null)
@@ -81,7 +81,7 @@ public class VoteService : IVoteService
                 var newVote = new Vote
                 {
                     UserId = userId,
-                    DiscussionId = answerGuid
+                    AnswerId = answerGuid
                 };
                 await _unitOfWork.VoteRepository.AddVote(newVote);
                 answer.AnswerVote++;

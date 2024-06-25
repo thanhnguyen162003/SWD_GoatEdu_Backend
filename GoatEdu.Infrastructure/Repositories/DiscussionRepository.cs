@@ -47,7 +47,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
 
     public async Task<Discussion?> GetDiscussionByIdAndUserId(Guid guid, Guid userId)
     {
-        return await _entities.FirstOrDefaultAsync(x => x.Id == guid && x.UserId == userId);
+        return await _entities.Include(x => x.Tags).AsSplitQuery().FirstOrDefaultAsync(x => x.Id == guid && x.UserId == userId);
     }
 
     public async Task SoftDelete(List<Guid> guids, Guid userId)

@@ -21,10 +21,9 @@ public class DiscussionDtoValidator : AbstractValidator<DiscussionDto>
             .Unless(x => x.SubjectId == null);
 
         RuleFor(x => x.Tags)
-            .NotEmpty().WithMessage("Tags is required!")
             .Must(list => list.Count == 4).WithMessage("Tags must have only 4 tags!")
             .Must(list => list.Count == list.Distinct().Count()).WithMessage("Tags must not duplicate!")
-            .Unless(x => x.Tags is null);
+            .Unless(x => x.Tags.Count == 0);
         
         RuleFor(x => x.DiscussionBody)
             .NotEmpty().WithMessage("Discussion body is required!")

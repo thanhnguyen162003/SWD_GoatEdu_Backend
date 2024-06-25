@@ -13,10 +13,12 @@ public class AnswerRepository : BaseRepository<Answer>, IAnswerRepository
 
     public async Task<IEnumerable<Answer>> GetAnswersByDiscussionIdFilters(Guid guid, AnswerQueryFilter queryFilter)
     {
-        var answers = _entities.Where(x => x.QuestionId == guid);
+        var answers = _entities.AsNoTracking()
+            .Where(x => x.QuestionId == guid).
+            Include(x => x.User).AsQueryable();
         answers = ApplyFilterSort(answers);
         answers = ApplySorting(answers, queryFilter);
-        return await answers.ToListAsync();
+        return await answers.AsSplitQuery().ToListAsync();
     }
 
     public async Task<Answer?> GetByIdAndUserId(Guid guid, Guid userId)

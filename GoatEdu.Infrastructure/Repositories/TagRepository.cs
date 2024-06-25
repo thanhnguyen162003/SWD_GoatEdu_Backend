@@ -36,7 +36,7 @@ public class TagRepository : BaseRepository<Tag>, ITagRepository
 
     public async Task<IEnumerable<Tag?>> GetTagByNamesAsync(List<string?> tagNames)
     {
-        var query = "SELECT * FROM \"Tag\" WHERE LOWER(\"tagName\") =  ANY@TagNames";
+        var query = "SELECT * FROM \"Tag\" WHERE LOWER(\"tagName\") =  ANY(@TagNames)";
         var connectionString = _context.Database.GetConnectionString();
         await using var connection = new NpgsqlConnection(connectionString);
         var result = await connection.QueryAsync<Tag>(query, new {TagNames = tagNames});
