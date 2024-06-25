@@ -13,7 +13,7 @@ public class AnswerRepository : BaseRepository<Answer>, IAnswerRepository
 
     public async Task<IEnumerable<Answer>> GetAnswersByDiscussionIdFilters(Guid guid, AnswerQueryFilter queryFilter)
     {
-        var answers = _entities.Where(x => x.Id == guid);
+        var answers = _entities.Where(x => x.QuestionId == guid);
         answers = ApplyFilterSort(answers);
         answers = ApplySorting(answers, queryFilter);
         return await answers.ToListAsync();
