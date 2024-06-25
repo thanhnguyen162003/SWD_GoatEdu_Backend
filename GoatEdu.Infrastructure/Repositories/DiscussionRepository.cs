@@ -41,6 +41,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
             .Include(x => x.User)
             .Include(x => x.Subject)
             .Include(x => x.Tags)
+            .Include(x => x.Answers)
             .AsSplitQuery()
             .FirstOrDefaultAsync(x => x.Id == guid && x.IsDeleted == false);
     }
