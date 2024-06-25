@@ -66,6 +66,7 @@ public class AnswerService : IAnswerService
         mapper.AnswerName = _claimsService.GetCurrentFullname;
         mapper.CreatedAt = _currentTime.GetCurrentTime();
         mapper.CreatedBy = _claimsService.GetCurrentFullname;
+        mapper.IsDeleted = false;
         
         await _unitOfWork.AnswerRepository.AddAsync(mapper);
         var result = await _unitOfWork.SaveChangesAsync();
