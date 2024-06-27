@@ -99,7 +99,7 @@ public class LessonController : ControllerBase
         }
     }
     
-    [HttpGet("{chapterId}")]
+    [HttpGet("chapter/{chapterId}")]
     [Authorize]
     public async Task<IActionResult> GetLessonsByChapter([FromRoute, Required] Guid chapterId, [FromQuery, Required] LessonQueryFilter queryFilter)
     {
