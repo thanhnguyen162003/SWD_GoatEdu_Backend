@@ -159,7 +159,7 @@ public class DiscussionController : ControllerBase
             
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
             
-            var mapper = _mapper.Map<DiscussionResponseModel>(result);
+            var mapper = _mapper.Map<PagedList<DiscussionResponseModel>>(result);
             
             return Ok(mapper);
         }
