@@ -58,6 +58,8 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
     
     private IQueryable<Discussion> ApplyFilterSortAndSearch(IQueryable<Discussion> discussions, DiscussionQueryFilter queryFilter, Guid? userId)
     {
+        discussions = discussions.Where(x => x.IsDeleted == false);
+        
         if (userId != null)
         {
             discussions = discussions
@@ -65,7 +67,10 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
                 .Include(x => x.User);
         }
         
-        discussions = discussions.Where(x => x.IsDeleted == false && x.Status.Equals(queryFilter.status));
+        if (string.IsNullOrEmpty(queryFilter.status))
+        {
+            discussions = discussions.Where(x => x.Status.Equals(queryFilter.status));
+        }
         
         if (queryFilter.tag_names.Any())
         {
