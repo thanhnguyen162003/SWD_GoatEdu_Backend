@@ -40,6 +40,7 @@ public class EnrollmentRepository : BaseRepository<Enrollment>, IEnrollmentRepos
                 joined => joined.Enrollment.SubjectId,
                 s => s.Id,
                 (joined, s) => s)
+            .Include(x => x.Chapters.Where(chapter => chapter.IsDeleted == false))
             .AsQueryable();
         
         subjects = ApplySorting(subjects, queryFilter);
