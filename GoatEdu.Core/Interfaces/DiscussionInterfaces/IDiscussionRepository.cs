@@ -11,4 +11,5 @@ public interface IDiscussionRepository : IRepository<Discussion>
     Task<Discussion?> GetById(Guid guid);
     Task<Discussion?> GetDiscussionByIdAndUserId(Guid guid, Guid userId);
     Task SoftDelete(List<Guid> guids, Guid userId);
+    Task<IEnumerable<Discussion>> GetSignificantDiscussionByFilter(DiscussionQueryFilter queryFilter);
 }

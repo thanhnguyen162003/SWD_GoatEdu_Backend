@@ -1,13 +1,8 @@
-using AutoMapper;
-using GoatEdu.Core.DTOs;
-using GoatEdu.Core.DTOs.TagDto;
-using GoatEdu.Core.Enumerations;
-using GoatEdu.Core.Interfaces.ClaimInterfaces;
+
 using GoatEdu.Core.Interfaces.DiscussionInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Stripe;
 
 namespace Infrastructure.Repositories;
 
@@ -55,7 +50,17 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
     {
         await _entities.Where(x => guids.Any(id => id == x.Id) && x.UserId == userId).ForEachAsync(a => a.IsDeleted = true);
     }
-    
+
+    public async Task<IEnumerable<Discussion>> GetSignificantDiscussionByFilter(DiscussionQueryFilter queryFilter)
+    {
+        var discussions = _entities.AsNoTracking().Where(x => x.IsDeleted == false)
+            .Include(x => x.Answers)
+            .Include(x => x.User)
+            .AsQueryable();
+        discussions = ApplySorting(discussions, queryFilter);
+        return await discussions.AsSplitQuery().ToListAsync();
+    }
+
     private IQueryable<Discussion> ApplyFilterSortAndSearch(IQueryable<Discussion> discussions, DiscussionQueryFilter queryFilter, Guid? userId)
     {
         discussions = discussions.Where(x => x.IsDeleted == false);
@@ -90,6 +95,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
     {
         discussions = queryFilter.sort.ToLower() switch
         {
+            "significant" => discussions.OrderByDescending(x=> x.Answers.Count).ThenByDescending(x => x.DiscussionVote),
             _ => queryFilter.sort_direction.ToLower() == "desc"
                 ? discussions.OrderByDescending(x => x.CreatedAt).ThenBy(x => x.Id)
                 : discussions.OrderBy(x => x.CreatedAt).ThenBy(x => x.Id)
