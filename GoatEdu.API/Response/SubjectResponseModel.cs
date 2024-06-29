@@ -11,7 +11,7 @@ public class SubjectResponseModel
     public string? SubjectCode { get; set; } 
     public string? Information { get; set; } 
     public string? Class { get; set; } 
-
+    // public string? Status { get; set; }
     public DateTime? CreatedAt { get; set; } 
 
     public ICollection<ChapterSubjectDto>? Chapters { get; set; } 

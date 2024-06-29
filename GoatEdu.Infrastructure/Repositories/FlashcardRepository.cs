@@ -80,6 +80,7 @@ public class FlashcardRepository : BaseRepository<Flashcard>, IFlashcardReposito
         }
         flashcardUpdate.FlashcardName = flashcard.FlashcardName ?? flashcardUpdate.FlashcardName;
         flashcardUpdate.FlashcardDescription = flashcard.FlashcardDescription ?? flashcardUpdate.FlashcardDescription;
+        flashcardUpdate.Status = flashcard.Status ?? flashcardUpdate.Status;
         flashcardUpdate.UpdatedAt = DateTime.Now;
 
         _entities.Update(flashcardUpdate);

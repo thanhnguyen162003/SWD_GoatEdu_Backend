@@ -13,7 +13,8 @@ public class SubjectDto
 
     public string? SubjectCode { get; set; } 
     public string? Information { get; set; } 
-    public string? Class { get; set; } 
+    public string? Class { get; set; }
+    
     public ICollection<ChapterSubjectDto>? Chapters { get; set; } 
     public int? NumberOfChapters { get; set; }
     public DateTime? CreatedAt { get; set; }
