@@ -37,6 +37,7 @@ public class MapperConfigProfile : Profile
             .ForMember(dest => dest.fullName, opt => opt.MapFrom(src => src.User.Fullname))
             .ForMember(dest => dest.userImage, opt => opt.MapFrom(src => src.User.Image))
             .ForMember(dest => dest.subjectName, opt => opt.MapFrom(src => src.Subject.SubjectName))
+            .ForMember(dest => dest.userId, opt => opt.MapFrom(src => src.User.Id))
             .ReverseMap();
 
         // Map Chapter to ChapterSubjectDto
