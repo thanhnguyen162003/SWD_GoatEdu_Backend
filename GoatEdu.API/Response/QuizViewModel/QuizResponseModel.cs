@@ -12,4 +12,5 @@ public class QuizResponseModel
     public DateTime? UpdatedAt { get; set; }
     public bool? IsRequire { get; set; }
     public int QuestionCount { get; set; }
+    public IEnumerable<QuestionInQuizResponseModel> QuestionInQuizzes { get; set; }
 }
