@@ -47,12 +47,17 @@ public class FlashcardRepository : BaseRepository<Flashcard>, IFlashcardReposito
 
     public async Task<Flashcard> GetFlashcardById(Guid flashcardId)
     {
-        return await _entities.AsNoTracking().Where(x => x.Id == flashcardId).Include(x=>x.Subject).FirstOrDefaultAsync();
+        return await _entities.AsNoTracking().Where(x => x.Id == flashcardId).Include(x=>x.Subject)
+            .Include(y=> y.FlashcardContents)
+            .FirstOrDefaultAsync();
     }
     
     public async Task<Flashcard> GetFlashcarDetail(Guid flashcardId)
     {
-        return await _entities.AsNoTracking().Include(x=>x.User).Where(x => x.Id == flashcardId).Include(x=>x.Subject).FirstOrDefaultAsync();
+        return await _entities.AsNoTracking()
+            .Include(x=>x.User).Where(x => x.Id == flashcardId)
+            .Include(y=> y.FlashcardContents)
+            .Include(x=>x.Subject).FirstOrDefaultAsync();
     }
 
     public async Task<IEnumerable<Flashcard>> GetFlashcardsBySubject(FlashcardQueryFilter queryFilter, Guid id)
