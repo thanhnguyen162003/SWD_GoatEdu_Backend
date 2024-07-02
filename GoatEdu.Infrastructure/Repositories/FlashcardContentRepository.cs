@@ -57,7 +57,22 @@ public class FlashcardContentRepository : BaseRepository<FlashcardContent>, IFla
         await _context.SaveChangesAsync();
         return new ResponseDto(HttpStatusCode.OK, "Flashcard Content successfully updated.");
     }
+    
+    public async Task<ResponseDto> DeleteFlashcardContent(Guid flashcardContentId, Guid userId)
+    {
+        var flashcards = await _entities.Where(x => x.Id == flashcardContentId && x.Flashcard.UserId == userId).FirstOrDefaultAsync();
+        if (flashcards is null)
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "Cant get any flashcard content, make sure you own this flashcard and check again");
+        }
+        // Set IsDeleted to true
+        flashcards.IsDeleted = true;
+        // Save changes to the database
+        await _context.SaveChangesAsync();
 
+        // Return a successful response
+        return new ResponseDto(HttpStatusCode.OK, "Flashcard Content successfully deleted.");
+    }
 
     private IQueryable<FlashcardContent> ApplyFilterSortAndSearch(IQueryable<FlashcardContent> flashcards, FlashcardQueryFilter queryFilter)
     {

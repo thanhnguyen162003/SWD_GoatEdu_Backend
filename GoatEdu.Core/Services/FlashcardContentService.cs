@@ -78,4 +78,9 @@ public class FlashcardContentService : IFlashcardContentService
         mapper.Id = id;
         return await _unitOfWork.FlashcardContentRepository.UpdateFlashcardContent(mapper, userId);
     }
+    public async Task<ResponseDto> DeleteFlashcardContent(Guid flashcardContentId)
+    {
+        var userId = _claimsService.GetCurrentUserId;
+        return await _unitOfWork.FlashcardContentRepository.DeleteFlashcardContent(flashcardContentId, userId);
+    }
 }

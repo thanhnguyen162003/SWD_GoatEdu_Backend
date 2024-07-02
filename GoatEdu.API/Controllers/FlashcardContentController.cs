@@ -46,4 +46,11 @@ public class FlashcardContentController : ControllerBase
         var mapper = _mapper.Map<FlashcardContentDto>(flashcardUpdateModel);
         return await _flashcardContentService.UpdateFlashcardContent(mapper, id);
     }
+    [HttpDelete]
+    [Route("{id}")]
+    [Authorize]
+    public async Task<ResponseDto> DeleteFlashcardContent([FromRoute] Guid id)
+    {
+        return await _flashcardContentService.DeleteFlashcardContent(id);
+    }
 }
