@@ -39,6 +39,25 @@ public class FlashcardContentRepository : BaseRepository<FlashcardContent>, IFla
         }
         
     }
+    public async Task<ResponseDto> UpdateFlashcardContent(FlashcardContent flashcard, Guid id)
+    {
+        var flashcardUpdate = await _entities.FirstOrDefaultAsync(x => x.Flashcard.UserId == id && x.Id == flashcard.Id);
+
+        if (flashcardUpdate == null)
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "Flashcard does not exist, maybe you need to own this flashcard");
+        }
+        flashcardUpdate.FlashcardContentAnswer = flashcard.FlashcardContentAnswer ?? flashcardUpdate.FlashcardContentAnswer;
+        flashcardUpdate.FlashcardContentQuestion = flashcard.FlashcardContentQuestion ?? flashcardUpdate.FlashcardContentQuestion;
+        flashcardUpdate.Image = flashcard.Image ?? flashcardUpdate.Image;
+        flashcardUpdate.Status = flashcard.Status ?? flashcardUpdate.Status;
+        flashcardUpdate.UpdatedAt = DateTime.Now;
+
+        _entities.Update(flashcardUpdate);
+        await _context.SaveChangesAsync();
+        return new ResponseDto(HttpStatusCode.OK, "Flashcard Content successfully updated.");
+    }
+
 
     private IQueryable<FlashcardContent> ApplyFilterSortAndSearch(IQueryable<FlashcardContent> flashcards, FlashcardQueryFilter queryFilter)
     {
@@ -66,4 +85,5 @@ public class FlashcardContentRepository : BaseRepository<FlashcardContent>, IFla
         };
         return flashcards;
     }
+    
 }

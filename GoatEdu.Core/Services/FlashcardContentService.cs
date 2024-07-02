@@ -71,4 +71,11 @@ public class FlashcardContentService : IFlashcardContentService
 
         return await _unitOfWork.FlashcardContentRepository.CreateFlashcardContent(newFlashcardContents);
     }
+    public async Task<ResponseDto> UpdateFlashcardContent(FlashcardContentDto flashcard, Guid id)
+    {
+        var userId = _claimsService.GetCurrentUserId;
+        var mapper = _mapper.Map<FlashcardContent>(flashcard);
+        mapper.Id = id;
+        return await _unitOfWork.FlashcardContentRepository.UpdateFlashcardContent(mapper, userId);
+    }
 }

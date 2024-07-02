@@ -142,6 +142,10 @@ public class MapperConfigController : Profile
         CreateMap<QuestionInQuizDto, QuestionInQuizCreateModel>().ReverseMap();
         CreateMap<QuestionInQuizDto, QuestionInQuizUpdateModel>().ReverseMap();
         CreateMap<QuestionInQuizDto, QuestionInQuizResponseModel>().ReverseMap();
+        
+        //FlashcardContent
+        CreateMap<FlashcardContentRequest, FlashcardContentDto>().ReverseMap();
+
 
         
         // Mapping for PageList
