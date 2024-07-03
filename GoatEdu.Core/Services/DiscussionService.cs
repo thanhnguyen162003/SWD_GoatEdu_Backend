@@ -49,11 +49,11 @@ public class DiscussionService : IDiscussionService
             return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
         }
 
-        var tag = await CheckAndAddTags(dto.Tags);
-        if (!tag.Any()) return new ResponseDto(HttpStatusCode.NotFound, "Có lỗi lúc add tag mới rồi!");
+        var tags = await CheckAndAddTags(dto.Tags);
+        if (!tags.Any()) return new ResponseDto(HttpStatusCode.NotFound, "Không đủ 4 tags");
 
         var mapper = _mapper.Map<Discussion>(dto);
-
+        
         if (dto.DiscussionImageConvert != null)
         {
             var image = await _cloudinaryService.UploadAsync(dto.DiscussionImageConvert);
@@ -64,8 +64,8 @@ public class DiscussionService : IDiscussionService
 
             mapper.DiscussionImage = image.Url.ToString();
         }
-
-        mapper.Tags = (ICollection<Tag>)tag;
+        
+        mapper.Tags = tags;
         mapper.IsSolved = false;
         mapper.DiscussionVote = 0;
         mapper.Status = StatusConstraint.UNAPPROVED;
@@ -76,7 +76,7 @@ public class DiscussionService : IDiscussionService
 
         await _unitOfWork.DiscussionRepository.AddAsync(mapper);
         var result = await _unitOfWork.SaveChangesAsync();
-
+        
         return result > 0
             ? new ResponseDto(HttpStatusCode.OK, "Add Successfully!")
             : new ResponseDto(HttpStatusCode.BadRequest, "Add Failed!");
@@ -107,9 +107,10 @@ public class DiscussionService : IDiscussionService
             }
 
             disscussion.Tags.Clear();
+            
             await _unitOfWork.SaveChangesAsync();
             
-            disscussion.Tags = (ICollection<Tag>)tag;
+            disscussion.Tags = tag;
         }
         
         if (dto.DiscussionImageConvert != null)
@@ -122,7 +123,6 @@ public class DiscussionService : IDiscussionService
             disscussion.DiscussionImage = image.Url.ToString();
         }
         
-
         disscussion.DiscussionName = dto.DiscussionName ?? disscussion.DiscussionName;
         disscussion.DiscussionBody = dto.DiscussionBody ?? disscussion.DiscussionBody;
         disscussion.DiscussionBodyHtml = dto.DiscussionBodyHtml ?? disscussion.DiscussionBodyHtml;
@@ -226,15 +226,15 @@ public class DiscussionService : IDiscussionService
         return PagedList<DiscussionDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
     }
 
-    private async Task<IEnumerable<Tag?>> CheckAndAddTags(IEnumerable<TagDto> tagDtos)
+    private async Task<List<Tag>> CheckAndAddTags(IEnumerable<TagDto> tagDtos)
     {
         var tagNames = tagDtos.Select(x => x.TagName.ToLower()).ToList();
-        var tagCheck = await _unitOfWork.TagRepository.GetTagByNamesAsync(tagNames);
+        var tagCheck = await _unitOfWork.TagRepository.CheckTagByNamesAsync(tagNames);
         var tagNameNoExist = tagNames.ExceptBy(tagCheck.Select(x => x.TagName).ToList(), x => x);
 
         if (tagNameNoExist.Any())
         {
-            var tags = tagNameNoExist.Select(x =>
+            var newTags = tagNameNoExist.Select(x =>
             {
                 var tag = new Tag
                 {
@@ -244,12 +244,11 @@ public class DiscussionService : IDiscussionService
                 };
                 return tag;
             }).ToList();
-            await _unitOfWork.TagRepository.AddRangeAsync(tags);
+            await _unitOfWork.TagRepository.AddRangeAsync(newTags);
             var save = await _unitOfWork.SaveChangesAsync();
-            if (save < 1) return Enumerable.Empty<Tag>();
+            if (save < 1) return new List<Tag>();  
         }
         
-        var tag = await _unitOfWork.TagRepository.GetTagByNamesAsync(tagNames);
-        return tag.Count() == 4 ? tag : Enumerable.Empty<Tag>();
+        return await _unitOfWork.TagRepository.GetTagByNames(tagNames);
     }
 }
