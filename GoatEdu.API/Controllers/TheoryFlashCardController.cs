@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GoatEdu.API.Controllers;
 
-[Route("api/theoryflashcard")]
+[Route("api/theory_flashcard")]
 [ApiController]
 public class TheoryFlashCardController : ControllerBase
 {

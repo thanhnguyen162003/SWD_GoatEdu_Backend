@@ -110,7 +110,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
     {
         discussions = queryFilter.sort.ToLower() switch
         {
-            "significant" => discussions.OrderByDescending(x=> x.Answers.Count).ThenByDescending(x => x.DiscussionVote),
+            "top" => discussions.OrderByDescending(x=> x.Answers.Count).ThenByDescending(x => x.DiscussionVote),
             _ => queryFilter.sort_direction.ToLower() == "desc"
                 ? discussions.OrderByDescending(x => x.CreatedAt).ThenBy(x => x.Id)
                 : discussions.OrderBy(x => x.CreatedAt).ThenBy(x => x.Id)
