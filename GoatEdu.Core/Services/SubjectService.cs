@@ -34,7 +34,7 @@ public class SubjectService : ISubjectService
         _validator = validator;
     }
 
-    public async Task<IEnumerable<SubjectDto>> GetAllSubjects(SubjectQueryFilter queryFilter)
+    public async Task<PagedList<SubjectDto>> GetAllSubjects(SubjectQueryFilter queryFilter)
     {
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;

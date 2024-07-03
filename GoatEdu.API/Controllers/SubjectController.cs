@@ -5,6 +5,7 @@ using AutoMapper;
 using FluentValidation;
 using GoatEdu.API.Request;
 using GoatEdu.API.Response;
+using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Enumerations;
@@ -12,6 +13,7 @@ using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace GoatEdu.API.Controllers;
 
@@ -33,7 +35,22 @@ public class SubjectController : ControllerBase
     public async Task<IEnumerable<SubjectResponseModel>> GetAllSubject([FromQuery, Required] SubjectQueryFilter queryFilter)
     {
         var listSubject = await _subjectService.GetAllSubjects(queryFilter);
+        
+        
+        var metadata = new Metadata
+        {
+            TotalCount = listSubject.TotalCount,
+            PageSize = listSubject.PageSize,
+            CurrentPage = listSubject.CurrentPage,
+            TotalPages = listSubject.TotalPages,
+            HasNextPage = listSubject.HasNextPage,
+            HasPreviousPage = listSubject.HasPreviousPage
+        };
+        
+        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+        
         var mapper = _mapper.Map<IEnumerable<SubjectResponseModel>>(listSubject);
+        
         return mapper;
     }
     [HttpGet("class")]
