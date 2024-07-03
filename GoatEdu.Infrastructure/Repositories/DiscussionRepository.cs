@@ -22,11 +22,12 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(x => x.Answers)
+            .AsSplitQuery()
             .AsQueryable();
         discussions = ApplyFilterSortAndSearch(discussions, queryFilter, userId);
         discussions =  ApplySorting(discussions, queryFilter);
         
-        return await discussions.AsSplitQuery().ToListAsync();
+        return await discussions.ToListAsync();
     }
 
     public async Task<Discussion?> GetById(Guid guid)
@@ -56,9 +57,23 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
         var discussions = _entities.AsNoTracking().Where(x => x.IsDeleted == false)
             .Include(x => x.Answers)
             .Include(x => x.User)
+            .AsSplitQuery()
             .AsQueryable();
         discussions = ApplySorting(discussions, queryFilter);
-        return await discussions.AsSplitQuery().ToListAsync();
+        return await discussions.ToListAsync();
+    }
+
+    public async Task<IEnumerable<Discussion>> GetRandomRelatedDiscussions(int quantity, IEnumerable<string> tagNames)
+    {
+        return await _context.Discussions
+            .Include(x => x.User)
+            .Include(x => x.Subject)
+            .AsSplitQuery()
+            .Include(x => x.Tags)
+            .Where(x => x.Tags.Any(t => tagNames.Any(name => name.Equals(t.TagName))))
+            .OrderBy(d => Guid.NewGuid())
+            .Take(quantity)
+            .ToListAsync();
     }
 
     private IQueryable<Discussion> ApplyFilterSortAndSearch(IQueryable<Discussion> discussions, DiscussionQueryFilter queryFilter, Guid? userId)

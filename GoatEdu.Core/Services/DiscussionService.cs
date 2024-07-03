@@ -92,8 +92,8 @@ public class DiscussionService : IDiscussionService
         }
 
         var userId = _claimsService.GetCurrentUserId;
-        var disscussion = await _unitOfWork.DiscussionRepository.GetDiscussionByIdAndUserId(guid, userId);
-        if (disscussion is null)
+        var discussion = await _unitOfWork.DiscussionRepository.GetDiscussionByIdAndUserId(guid, userId);
+        if (discussion is null)
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Không có quyền cập nhật");
         }
@@ -106,11 +106,11 @@ public class DiscussionService : IDiscussionService
                 return new ResponseDto(HttpStatusCode.NotFound, "Có lỗi lúc add tag mới rồi!");
             }
 
-            disscussion.Tags.Clear();
+            discussion.Tags.Clear();
             
             await _unitOfWork.SaveChangesAsync();
             
-            disscussion.Tags = tag;
+            discussion.Tags = tag;
         }
         
         if (dto.DiscussionImageConvert != null)
@@ -120,18 +120,18 @@ public class DiscussionService : IDiscussionService
             {
                 return new ResponseDto(HttpStatusCode.BadRequest, image.Error.Message);
             }
-            disscussion.DiscussionImage = image.Url.ToString();
+            discussion.DiscussionImage = image.Url.ToString();
         }
         
-        disscussion.DiscussionName = dto.DiscussionName ?? disscussion.DiscussionName;
-        disscussion.DiscussionBody = dto.DiscussionBody ?? disscussion.DiscussionBody;
-        disscussion.DiscussionBodyHtml = dto.DiscussionBodyHtml ?? disscussion.DiscussionBodyHtml;
-        disscussion.IsSolved = dto.IsSolved ?? disscussion.IsSolved;
-        disscussion.UpdatedBy = _claimsService.GetCurrentFullname;
-        disscussion.UpdatedAt = _currentTime.GetCurrentTime();
-        disscussion.Status = StatusConstraint.UNAPPROVED;
+        discussion.DiscussionName = dto.DiscussionName ?? discussion.DiscussionName;
+        discussion.DiscussionBody = dto.DiscussionBody ?? discussion.DiscussionBody;
+        discussion.DiscussionBodyHtml = dto.DiscussionBodyHtml ?? discussion.DiscussionBodyHtml;
+        discussion.IsSolved = dto.IsSolved ?? discussion.IsSolved;
+        discussion.UpdatedBy = _claimsService.GetCurrentFullname;
+        discussion.UpdatedAt = _currentTime.GetCurrentTime();
+        discussion.Status = StatusConstraint.UNAPPROVED;
 
-        _unitOfWork.DiscussionRepository.Update(disscussion);
+        _unitOfWork.DiscussionRepository.Update(discussion);
         var result = await _unitOfWork.SaveChangesAsync();
         return result > 0
             ? new ResponseDto(HttpStatusCode.OK, "Update Successfully!")
@@ -150,6 +150,14 @@ public class DiscussionService : IDiscussionService
         var mapper = _mapper.Map<IEnumerable<DiscussionDto>>(discussions);
         
         return PagedList<DiscussionDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
+    }
+    
+    public async Task<IEnumerable<DiscussionDto?>> GetRelatedDiscussions(int quantity, IEnumerable<string> tagNames)
+    {
+        var toLower = tagNames.Select(x => x.ToLower());
+        var discussions = await _unitOfWork.DiscussionRepository.GetRandomRelatedDiscussions(quantity, toLower);
+        var mapper = _mapper.Map<IEnumerable<DiscussionDto>>(discussions);
+        return mapper;
     }
 
     public async Task<ResponseDto> DeleteDiscussions(List<Guid> guids)

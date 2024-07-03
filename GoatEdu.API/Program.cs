@@ -219,7 +219,8 @@ app.UseCors(builder =>
 {
     builder.AllowAnyOrigin()
         .AllowAnyMethod()
-        .AllowAnyHeader();
+        .AllowAnyHeader()
+        .WithExposedHeaders("X-Pagination");
 });
 app.UseHttpsRedirection();
 

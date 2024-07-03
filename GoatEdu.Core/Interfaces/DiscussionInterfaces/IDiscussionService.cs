@@ -15,4 +15,5 @@ public interface IDiscussionService
     Task<ResponseDto> DeleteDiscussions(List<Guid> guids);
     Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionDto dto);
     Task<PagedList<DiscussionDto>> GetTopDiscussionByFilter(DiscussionQueryFilter queryFilter);
+    Task<IEnumerable<DiscussionDto?>> GetRelatedDiscussions(int quantity, IEnumerable<string> tagNames);
 }

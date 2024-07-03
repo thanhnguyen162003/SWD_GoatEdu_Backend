@@ -197,8 +197,18 @@ public class DiscussionController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-    
-    
+
+    [HttpGet("related_discussion")]
+    public async Task<ResponseDto> GetRelatedDiscussions([Required, FromQuery] int quantity,
+        [Required, FromQuery] IEnumerable<string> tags)
+    {
+            var result = await _discussionService.GetRelatedDiscussions(quantity, tags);
+
+            var mapper = _mapper.Map<IEnumerable<DiscussionResponseModel>>(result);
+            return mapper.Any()
+                ? new ResponseDto(HttpStatusCode.OK, "Found!", mapper)
+                : new ResponseDto(HttpStatusCode.NotFound, "Discussion not have any related discussions");
+    }
     
     
 }
