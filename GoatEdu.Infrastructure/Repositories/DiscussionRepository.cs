@@ -14,7 +14,6 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
         _context = context;
     }
 
-
     public async Task<IEnumerable<Discussion>> GetDiscussionByFilters(Guid? userId, DiscussionQueryFilter queryFilter)
     {
         var discussions = _entities
@@ -22,6 +21,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(x => x.Answers)
+            .Include(x => x.Subject)
             .AsSplitQuery()
             .AsQueryable();
         discussions = ApplyFilterSortAndSearch(discussions, queryFilter, userId);
@@ -50,17 +50,6 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
     public async Task SoftDelete(List<Guid> guids, Guid userId)
     {
         await _entities.Where(x => guids.Any(id => id == x.Id) && x.UserId == userId).ForEachAsync(a => a.IsDeleted = true);
-    }
-
-    public async Task<IEnumerable<Discussion>> GetSignificantDiscussionByFilter(DiscussionQueryFilter queryFilter)
-    {
-        var discussions = _entities.AsNoTracking().Where(x => x.IsDeleted == false)
-            .Include(x => x.Answers)
-            .Include(x => x.User)
-            .AsSplitQuery()
-            .AsQueryable();
-        discussions = ApplySorting(discussions, queryFilter);
-        return await discussions.ToListAsync();
     }
 
     public async Task<IEnumerable<Discussion>> GetRandomRelatedDiscussions(int quantity, IEnumerable<string> tagNames)

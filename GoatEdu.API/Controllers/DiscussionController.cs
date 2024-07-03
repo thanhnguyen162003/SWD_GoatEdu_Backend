@@ -139,35 +139,6 @@ public class DiscussionController : ControllerBase
         }
     }
     
-    [HttpGet("top_discussion")]
-    public async Task<IActionResult> GetTopDiscussionByFilter([FromQuery, Required] DiscussionQueryFilter queryFilter)
-    {
-        try
-        {
-            var result = await _discussionService.GetTopDiscussionByFilter(queryFilter);
-            
-            var metadata = new Metadata
-            {
-                TotalCount = result.TotalCount,
-                PageSize = result.PageSize,
-                CurrentPage = result.CurrentPage,
-                TotalPages = result.TotalPages,
-                HasNextPage = result.HasNextPage,
-                HasPreviousPage = result.HasPreviousPage
-            };
-            
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-
-            var mapper = _mapper.Map<PagedList<DiscussionResponseModel>>(result);
-            
-            return Ok(mapper);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-    }
-    
     [HttpGet("user")]
     [Authorize]
     public async Task<IActionResult> GetDiscussionByCurrentUser([FromQuery, Required] DiscussionQueryFilter queryFilter)

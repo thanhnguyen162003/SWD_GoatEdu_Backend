@@ -137,20 +137,6 @@ public class DiscussionService : IDiscussionService
             ? new ResponseDto(HttpStatusCode.OK, "Update Successfully!")
             : new ResponseDto(HttpStatusCode.BadRequest, "Update Failed!");
     }
-
-    public async Task<PagedList<DiscussionDto>> GetTopDiscussionByFilter(DiscussionQueryFilter queryFilter)
-    {
-        queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
-        queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
-
-        var discussions = await _unitOfWork.DiscussionRepository.GetSignificantDiscussionByFilter(queryFilter);
-
-        if (!discussions.Any()) return new PagedList<DiscussionDto>(new List<DiscussionDto>(), 0, 0, 0);
-
-        var mapper = _mapper.Map<IEnumerable<DiscussionDto>>(discussions);
-        
-        return PagedList<DiscussionDto>.Create(mapper, queryFilter.page_number, queryFilter.page_size);
-    }
     
     public async Task<IEnumerable<DiscussionDto?>> GetRelatedDiscussions(int quantity, IEnumerable<string> tagNames)
     {
