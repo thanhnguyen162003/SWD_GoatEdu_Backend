@@ -9,4 +9,6 @@ public interface IFlashcardContentRepository : IRepository<FlashcardContent>
 {
     Task<IEnumerable<FlashcardContent>> GetFlashcardContent(FlashcardQueryFilter queryFilter, Guid flashcardId);
     Task<ResponseDto> CreateFlashcardContent(List<FlashcardContent> flashcardContents);
+    Task<ResponseDto> UpdateFlashcardContent(FlashcardContent flashcard, Guid id);
+    Task<ResponseDto> DeleteFlashcardContent(Guid flashcardContentId, Guid userId);
 }

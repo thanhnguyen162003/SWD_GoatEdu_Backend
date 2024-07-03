@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using GoatEdu.API.Request;
 using GoatEdu.API.Response;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.FlashcardDto;
@@ -35,5 +36,21 @@ public class FlashcardContentController : ControllerBase
     public async Task<ResponseDto> CreateFlashcardContents(Guid flashcardId, [FromBody] List<FlashcardContentDto> listFlashcardContent)
     {
         return await _flashcardContentService.CreateFlashcardContent(listFlashcardContent, flashcardId);
+    }
+    
+    [HttpPatch]
+    [Route("{id}")]
+    [Authorize]
+    public async Task<ResponseDto> UpdateFlashcard([FromRoute] Guid id, [FromBody] FlashcardContentRequest flashcardUpdateModel)
+    {
+        var mapper = _mapper.Map<FlashcardContentDto>(flashcardUpdateModel);
+        return await _flashcardContentService.UpdateFlashcardContent(mapper, id);
+    }
+    [HttpDelete]
+    [Route("{id}")]
+    [Authorize]
+    public async Task<ResponseDto> DeleteFlashcardContent([FromRoute] Guid id)
+    {
+        return await _flashcardContentService.DeleteFlashcardContent(id);
     }
 }
