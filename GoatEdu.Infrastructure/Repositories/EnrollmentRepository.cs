@@ -46,6 +46,10 @@ public class EnrollmentRepository : BaseRepository<Enrollment>, IEnrollmentRepos
         subjects = ApplySorting(subjects, queryFilter);
         return await subjects.ToListAsync();
     }
+    public async Task<IEnumerable<Enrollment>> GetAllEnrollmentCheck(Guid userId)
+{
+    return await _entities.Where(e => e.UserId == userId).ToListAsync();
+}
     
     private IQueryable<Subject> ApplySorting(IQueryable<Subject> subjects, SubjectQueryFilter queryFilter)
     {

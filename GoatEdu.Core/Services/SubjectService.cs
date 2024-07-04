@@ -7,6 +7,7 @@ using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.ChapterDto;
 using GoatEdu.Core.DTOs.SubjectDto;
 using GoatEdu.Core.Interfaces;
+using GoatEdu.Core.Interfaces.ClaimInterfaces;
 using GoatEdu.Core.Interfaces.CloudinaryInterfaces;
 using GoatEdu.Core.Interfaces.SubjectInterfaces;
 using GoatEdu.Core.QueriesFilter;
@@ -22,16 +23,20 @@ public class SubjectService : ISubjectService
     private readonly PaginationOptions _paginationOptions;
     private readonly ICloudinaryService _cloudinaryService;
     private readonly IValidator<SubjectDto> _validator;
+    private readonly IClaimsService _claimsService;
 
 
     public SubjectService(
-        IUnitOfWork unitOfWork, IMapper mapper, IOptions<PaginationOptions> paginationOptions,ICloudinaryService cloudinaryService, IValidator<SubjectDto> validator)
+        IUnitOfWork unitOfWork, IMapper mapper, IOptions<PaginationOptions> paginationOptions,
+        ICloudinaryService cloudinaryService, IValidator<SubjectDto> validator,
+        IClaimsService claimsService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _paginationOptions = paginationOptions.Value;
         _cloudinaryService = cloudinaryService;
         _validator = validator;
+        _claimsService = claimsService; 
     }
 
     public async Task<IEnumerable<SubjectDto>> GetAllSubjects(SubjectQueryFilter queryFilter)
@@ -66,7 +71,20 @@ public class SubjectService : ISubjectService
 
     public async Task<SubjectDto> GetSubjectBySubjectId(Guid id)
     {
-        return await _unitOfWork.SubjectRepository.GetSubjectBySubjectId(id);
+    
+        var userId = _claimsService.GetCurrentUserId;
+        var subject = await _unitOfWork.SubjectRepository.GetSubjectBySubjectId(id);
+
+        var enrollmentList = await _unitOfWork.EnrollmentRepository.GetAllEnrollmentCheck(userId);
+        var isUserEnrolled = enrollmentList.Any(e => e.SubjectId == id);
+
+    
+        var subjectDto = _mapper.Map<SubjectDto>(subject);
+
+        // Add an additional property to indicate if the user is enrolled
+        subjectDto.IsEnroll = isUserEnrolled;
+
+        return subjectDto;
     }
 
     public async Task<ICollection<ChapterSubjectDto>> GetChaptersBySubject(Guid subjectId)

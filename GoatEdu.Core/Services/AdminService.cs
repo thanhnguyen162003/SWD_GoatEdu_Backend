@@ -69,7 +69,7 @@ public class AdminService : IAdminService
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
 
         var listUsers = await _unitOfWork.AdminRepository.GetUsers(queryFilter);
-
+    
         if (!listUsers.Any())
         {
             var emptyPagedList = new PagedList<UserMinimalDto>(new List<UserMinimalDto>(), 0, queryFilter.page_number, queryFilter.page_size);

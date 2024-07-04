@@ -18,5 +18,6 @@ public class SubjectDto
     public ICollection<ChapterSubjectDto>? Chapters { get; set; } 
     public int? NumberOfChapters { get; set; }
     public DateTime? CreatedAt { get; set; }
+    public bool? IsEnroll { get; set; }
     
 }
