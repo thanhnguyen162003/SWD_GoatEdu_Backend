@@ -133,6 +133,7 @@ public class FlashcardRepository : BaseRepository<Flashcard>, IFlashcardReposito
     {
         flashcards = queryFilter.sort.ToLower() switch
         {
+            "top" => flashcards.OrderByDescending(x => x.Star),
             "name" => queryFilter.sort_direction.ToLower() == "desc"
                 ? flashcards.OrderByDescending(x => x.Star)
                 : flashcards.OrderBy(x => x.Star),

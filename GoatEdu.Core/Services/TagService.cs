@@ -90,7 +90,7 @@ public class TagService : ITagService
         
         var listName = dtos.Select(x => x.TagName.ToLower()).ToList();
         
-        var listExistName = await _unitOfWork.TagRepository.GetTagByNamesAsync(listName);
+        var listExistName = await _unitOfWork.TagRepository.CheckTagByNamesAsync(listName);
 
         var tagIsDuplicated = new List<TagDto>();
         

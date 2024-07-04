@@ -64,7 +64,6 @@ public class MapperConfigProfile : Profile
             .ForMember(dest => dest.Role, opt => opt.Ignore());
         
         CreateMap<Discussion, DiscussionDto>()
-            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags))
             .ForMember(dest => dest.CommentCount, opt => opt.MapFrom(src => src.Answers.Count))
             .ForPath(dest => dest.UserAndSubject.UserId, opt => opt.MapFrom(src => src.UserId))
             .ForPath(dest => dest.UserAndSubject.UserName, opt => opt.MapFrom(src => src.User.Username))
@@ -72,9 +71,11 @@ public class MapperConfigProfile : Profile
             .ForPath(dest => dest.UserAndSubject.UserImage, opt => opt.MapFrom(src => src.User.Image))
             .ForPath(dest => dest.UserAndSubject.SubjectId, opt => opt.MapFrom(src => src.SubjectId))
             .ForPath(dest => dest.UserAndSubject.SubjectName, opt => opt.MapFrom(src => src.Subject.SubjectName))
-            .ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
       
+        CreateMap<DiscussionDto, Discussion>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+        
         CreateMap<User, LoginResponseDto>()
             .ForMember(dest => dest.userId, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.username, opt => opt.MapFrom(src => src.Username))

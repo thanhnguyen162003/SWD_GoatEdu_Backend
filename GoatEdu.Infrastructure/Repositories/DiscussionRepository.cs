@@ -14,7 +14,6 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
         _context = context;
     }
 
-
     public async Task<IEnumerable<Discussion>> GetDiscussionByFilters(Guid? userId, DiscussionQueryFilter queryFilter)
     {
         var discussions = _entities
@@ -22,11 +21,13 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(x => x.Answers)
+            .Include(x => x.Subject)
+            .AsSplitQuery()
             .AsQueryable();
         discussions = ApplyFilterSortAndSearch(discussions, queryFilter, userId);
         discussions =  ApplySorting(discussions, queryFilter);
         
-        return await discussions.AsSplitQuery().ToListAsync();
+        return await discussions.ToListAsync();
     }
 
     public async Task<Discussion?> GetById(Guid guid)
@@ -51,14 +52,17 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
         await _entities.Where(x => guids.Any(id => id == x.Id) && x.UserId == userId).ForEachAsync(a => a.IsDeleted = true);
     }
 
-    public async Task<IEnumerable<Discussion>> GetSignificantDiscussionByFilter(DiscussionQueryFilter queryFilter)
+    public async Task<IEnumerable<Discussion>> GetRandomRelatedDiscussions(int quantity, IEnumerable<string> tagNames)
     {
-        var discussions = _entities.AsNoTracking().Where(x => x.IsDeleted == false)
-            .Include(x => x.Answers)
+        return await _context.Discussions
             .Include(x => x.User)
-            .AsQueryable();
-        discussions = ApplySorting(discussions, queryFilter);
-        return await discussions.AsSplitQuery().ToListAsync();
+            .Include(x => x.Subject)
+            .AsSplitQuery()
+            .Include(x => x.Tags)
+            .Where(x => x.Tags.Any(t => tagNames.Any(name => name.Equals(t.TagName))))
+            .OrderBy(d => Guid.NewGuid())
+            .Take(quantity)
+            .ToListAsync();
     }
 
     private IQueryable<Discussion> ApplyFilterSortAndSearch(IQueryable<Discussion> discussions, DiscussionQueryFilter queryFilter, Guid? userId)
@@ -95,7 +99,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
     {
         discussions = queryFilter.sort.ToLower() switch
         {
-            "significant" => discussions.OrderByDescending(x=> x.Answers.Count).ThenByDescending(x => x.DiscussionVote),
+            "top" => discussions.OrderByDescending(x=> x.Answers.Count).ThenByDescending(x => x.DiscussionVote),
             _ => queryFilter.sort_direction.ToLower() == "desc"
                 ? discussions.OrderByDescending(x => x.CreatedAt).ThenBy(x => x.Id)
                 : discussions.OrderBy(x => x.CreatedAt).ThenBy(x => x.Id)

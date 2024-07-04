@@ -18,10 +18,10 @@ public class QuizRepository : BaseRepository<Quiz>, IQuizRepository
 
     public async Task<IEnumerable<Quiz>> GetQuizByFilters(QuizQueryFilter queryFilter)
     {
-        var quizzes = _entities.Include(x => x.QuestionInQuizzes).AsNoTracking().AsQueryable();
+        var quizzes = _entities.Include(x => x.QuestionInQuizzes).AsNoTracking().AsSplitQuery().AsQueryable();
         quizzes = ApplyFilterSortAndSearch(quizzes, queryFilter);
         quizzes = ApplySorting(quizzes, queryFilter);
-        return await quizzes.AsSplitQuery().ToListAsync();
+        return await quizzes.ToListAsync();
     }
 
     public async Task<Quiz?> GetQuizById(Guid quizId)
