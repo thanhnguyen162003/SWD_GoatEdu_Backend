@@ -44,6 +44,8 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
             {
                 Id = c.Id,
                 ChapterName = c.ChapterName,
+                SubjectId = c.SubjectId,
+                CreatedAt = c.CreatedAt,
                 ChapterLevel = c.ChapterLevel
             }).ToList(),
             NumberOfChapters = x.Chapters.Count // New field for number of chapters
