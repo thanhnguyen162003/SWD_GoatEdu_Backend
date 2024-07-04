@@ -45,10 +45,10 @@ public class SubjectController : ControllerBase
     }
     
     [HttpGet("{id}")]
-    public async Task<SubjectResponseModel> GetSubjectById(Guid id)
+    public async Task<SubjectDetailResponseModel> GetSubjectById(Guid id)
     {
         var subject = await _subjectService.GetSubjectBySubjectId(id);
-        var mapper = _mapper.Map<SubjectResponseModel>(subject);
+        var mapper = _mapper.Map<SubjectDetailResponseModel>(subject);
         return mapper;
     }
     [HttpGet("name")]

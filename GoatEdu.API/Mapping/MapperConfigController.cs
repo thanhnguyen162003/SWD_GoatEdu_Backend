@@ -37,6 +37,13 @@ public class MapperConfigController : Profile
             .ForMember(dest => dest.image, opt => opt.MapFrom(src => src.ImageConvert))
             .ReverseMap();
         CreateMap<SubjectDto, SubjectResponseModel>().ReverseMap();
+        CreateMap<IEnumerable<SubjectResponseModel>, SubjectEnrollResponseModel>()
+            .ForMember(dest => dest.NumberOfSubjectEnroll, opt => opt.MapFrom(src => src.Count()))
+            .ForMember(dest => dest.SubjectEnrollment, opt => opt.MapFrom(src => src))
+            ;
+        CreateMap<SubjectDto,SubjectDetailResponseModel>().ReverseMap();
+
+
         
         // Chapter
         CreateMap<ChapterDto, ChapterCreateModel>().ReverseMap();

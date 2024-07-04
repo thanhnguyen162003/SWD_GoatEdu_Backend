@@ -55,10 +55,11 @@ public class UserController : ControllerBase
         return await _enrollmentService.EnrollUserSubject(id);
     }
     [HttpGet("enroll")]
-    public async Task<IEnumerable<SubjectResponseModel>> GetAllSubject([FromQuery, Required] SubjectQueryFilter queryFilter)
+    public async Task<SubjectEnrollResponseModel> GetAllSubject([FromQuery, Required] SubjectQueryFilter queryFilter)
     {
         var listSubject = await _enrollmentService.GetUserEnrollments(queryFilter);
-        var mapper = _mapper.Map<IEnumerable<SubjectResponseModel>>(listSubject);
+        var mapperSubjectDto = _mapper.Map<IEnumerable<SubjectResponseModel>>(listSubject);
+        var mapper = _mapper.Map<SubjectEnrollResponseModel>(mapperSubjectDto);
         return mapper;
     }
 }

@@ -2,7 +2,7 @@ using GoatEdu.Core.DTOs.ChapterDto;
 
 namespace GoatEdu.API.Response;
 
-public class SubjectResponseModel
+public class SubjectDetailResponseModel
 {
     public Guid Id { get; set; } 
     public string? SubjectName { get; set; } 
@@ -10,9 +10,9 @@ public class SubjectResponseModel
     public string? SubjectCode { get; set; } 
     public string? Information { get; set; } 
     public string? Class { get; set; } 
-    // public string? Status { get; set; }
     public DateTime? CreatedAt { get; set; } 
 
     public ICollection<ChapterSubjectDto>? Chapters { get; set; } 
     public int? NumberOfChapters { get; set; }
+    public bool IsEnroll { get; set; } 
 }
