@@ -65,7 +65,7 @@ public class AnswerController : ControllerBase
     
     [HttpPost]
     [Authorize(Roles = $"{UserEnum.TEACHER}, {UserEnum.STUDENT}")]
-    public async Task<IActionResult> InsertAnswer([FromForm, Required] AnswerRequestModel model)
+    public async Task<IActionResult> InsertAnswer([FromBody, Required] AnswerRequestModel model)
     {
         try
         {
@@ -87,7 +87,7 @@ public class AnswerController : ControllerBase
     
     [HttpPatch("{answerId}")]
     [Authorize(Roles = $"{UserEnum.TEACHER}, {UserEnum.STUDENT}")]
-    public async Task<IActionResult> UpdateAnswer([FromRoute, Required] Guid answerId, AnswerRequestModel model)
+    public async Task<IActionResult> UpdateAnswer([FromRoute, Required] Guid answerId,[FromBody] AnswerRequestModel model)
     {
         try
         {

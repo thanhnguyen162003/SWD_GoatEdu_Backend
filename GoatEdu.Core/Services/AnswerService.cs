@@ -50,17 +50,6 @@ public class AnswerService : IAnswerService
         }
         
         var mapper = _mapper.Map<Answer>(dto);
-        
-        if (dto.AnswerImageConvert != null)
-        {
-            var image = await _cloudinaryService.UploadAsync(dto.AnswerImageConvert);
-            if (image.Error != null)
-            {
-                return new ResponseDto(HttpStatusCode.BadRequest, image.Error.Message);
-            }
-        
-            mapper.AnswerImage = image.Url.ToString();
-        }
 
         var userId = _claimsService.GetCurrentUserId;
 
@@ -132,17 +121,6 @@ public class AnswerService : IAnswerService
         var userId = _claimsService.GetCurrentUserId;
         var answer = await _unitOfWork.AnswerRepository.GetByIdAndUserId(answerId, userId);
         if (answer is null) return new ResponseDto(HttpStatusCode.NotFound, "You dont allow to update this answer!");
-        
-        if (dto.AnswerImageConvert != null)
-        {
-            var image = await _cloudinaryService.UploadAsync(dto.AnswerImageConvert);
-            if (image.Error != null)
-            {
-                return new ResponseDto(HttpStatusCode.BadRequest, image.Error.Message);
-            }
-        
-            answer.AnswerImage = image.Url.ToString();
-        }
         
         answer.AnswerBody = dto.AnswerBody ?? answer.AnswerBody;
         answer.AnswerBodyHtml = dto.AnswerBodyHtml ?? answer.AnswerBodyHtml;
