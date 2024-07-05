@@ -45,12 +45,22 @@ public class SubjectService : ISubjectService
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
         
         var listSubject = await _unitOfWork.SubjectRepository.GetAllSubjects(queryFilter);
+        var enrollmentCounts = await _unitOfWork.EnrollmentRepository.GetEnrollmentCounts();
         
         if (!listSubject.Any())
         {
             return new PagedList<SubjectDto>(new List<SubjectDto>(), 0, 0, 0);
         }
         var mapperList = _mapper.Map<List<SubjectDto>>(listSubject);
+        
+        //check and return number_of_enrollment that subject
+        foreach (var subject in mapperList)
+        {
+        if (enrollmentCounts.TryGetValue(subject.Id, out var count))
+        {
+            subject.NumberOfEnrollment = count;
+        }
+        }
         return PagedList<SubjectDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
 
@@ -60,12 +70,20 @@ public class SubjectService : ISubjectService
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
         
         var listSubject = await _unitOfWork.SubjectRepository.GetSubjectByClass(classes, queryFilter);
+        var enrollmentCounts = await _unitOfWork.EnrollmentRepository.GetEnrollmentCounts();
         
         if (!listSubject.Any())
         {
             return new PagedList<SubjectDto>(new List<SubjectDto>(), 0, 0, 0);
         }
         var mapperList = _mapper.Map<List<SubjectDto>>(listSubject);
+        foreach (var subject in mapperList)
+    {
+        if (enrollmentCounts.TryGetValue(subject.Id, out var count))
+        {
+            subject.NumberOfEnrollment = count;
+        }
+    }
         return PagedList<SubjectDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
 

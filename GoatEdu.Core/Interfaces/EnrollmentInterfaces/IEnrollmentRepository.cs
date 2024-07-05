@@ -10,4 +10,5 @@ public interface IEnrollmentRepository
     Task<bool> IsUserEnrolled(Guid userId, Guid subjectId);
     Task<IEnumerable<Subject>> GetEnrollments(Guid userId, SubjectQueryFilter queryFilter);
     Task<IEnumerable<Enrollment>> GetAllEnrollmentCheck(Guid userId);
+    Task<Dictionary<Guid, int>> GetEnrollmentCounts();
 }
