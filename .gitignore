@@ -4,3 +4,9 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 /.vs/GoatEdu
+.DS_Store
+.idea/.idea.GoatEdu/.idea/.name
+.idea/.idea.GoatEdu/.idea/dataSources.xml
+.idea/.idea.GoatEdu/.idea/encodings.xml
+.idea/.idea.GoatEdu/.idea/indexLayout.xml
+.idea/.idea.GoatEdu/.idea/vcs.xml
