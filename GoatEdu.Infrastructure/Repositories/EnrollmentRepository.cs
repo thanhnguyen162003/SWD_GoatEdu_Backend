@@ -64,5 +64,14 @@ public class EnrollmentRepository : BaseRepository<Enrollment>, IEnrollmentRepos
         };
         return subjects;
     }
-
+    public async Task<Dictionary<Guid, int>> GetEnrollmentCounts()
+    {
+    return await _entities
+    //Make a group that key is SubjectId, this group contain collection enrollment that have the key is subjectId
+        .GroupBy(e => e.SubjectId)
+        //the subjectId is the key, count the number of enrollment in that group
+        .Select(g => new { SubjectId = g.Key, Count = g.Count() })
+        //this is the return data, Guid and the number of enrollment count
+        .ToDictionaryAsync(x => x.SubjectId.GetValueOrDefault(), x => x.Count);
+    }
 }

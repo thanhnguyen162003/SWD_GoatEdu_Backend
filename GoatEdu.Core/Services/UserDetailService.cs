@@ -49,7 +49,7 @@ public class UserDetailService : IUserDetailService
         }
         else
         {
-            imageUrl = "https://camo.githubusercontent.com/65eac2eb9bb41fefaa3800d8ee40a7139fc25d9372037550944b5c5fb1e6a6fd/68747470733a2f2f7261772e6769746875622e636f6d2f68617368646f672f6e6f64652d6964656e7469636f6e2d6769746875622f6d61737465722f6578616d706c65732f696d616765732f6769746875622e706e67";
+            imageUrl = null;
         }
         
         User userUpdate = new User()
