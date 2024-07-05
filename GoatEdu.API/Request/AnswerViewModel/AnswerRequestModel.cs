@@ -11,5 +11,4 @@ public class AnswerRequestModel
     public string? AnswerBodyHtml { get; set; }
     [Required(ErrorMessage = "Question id is required.")]
     public Guid? QuestionId { get; set; }
-    public IFormFile? AnswerImage { get; set; }
 }
