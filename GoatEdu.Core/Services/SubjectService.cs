@@ -64,7 +64,7 @@ public class SubjectService : ISubjectService
         return PagedList<SubjectDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
 
-    public async Task<IEnumerable<SubjectDto>> GetSubjectByClass(SubjectQueryFilter queryFilter, string classes)
+    public async Task<PagedList<SubjectDto>> GetSubjectByClass(SubjectQueryFilter queryFilter, string classes)
     {
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;

@@ -11,7 +11,7 @@ namespace GoatEdu.Core.Interfaces.SubjectInterfaces;
 public interface ISubjectService
 {
     Task<PagedList<SubjectDto>> GetAllSubjects(SubjectQueryFilter queryFilter);
-    Task<IEnumerable<SubjectDto>> GetSubjectByClass(SubjectQueryFilter queryFilter, string classes);
+    Task<PagedList<SubjectDto>> GetSubjectByClass(SubjectQueryFilter queryFilter, string classes);
     Task<SubjectDto> GetSubjectBySubjectId(Guid id);
     Task<ICollection<ChapterSubjectDto>> GetChaptersBySubject(Guid subjectId);
     Task<ResponseDto> DeleteSubject(Guid id);

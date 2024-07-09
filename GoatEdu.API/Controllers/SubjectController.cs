@@ -57,7 +57,19 @@ public class SubjectController : ControllerBase
     public async Task<IEnumerable<SubjectResponseModel>> GetAllSubject([FromQuery, Required] SubjectQueryFilter queryFilter, [FromQuery,Required] string classes)
     {
         var listSubject = await _subjectService.GetSubjectByClass(queryFilter, classes);
+        var metadata = new Metadata
+        {
+            TotalCount = listSubject.TotalCount,
+            PageSize = listSubject.PageSize,
+            CurrentPage = listSubject.CurrentPage,
+            TotalPages = listSubject.TotalPages,
+            HasNextPage = listSubject.HasNextPage,
+            HasPreviousPage = listSubject.HasPreviousPage
+        };
+        
+        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
         var mapper = _mapper.Map<IEnumerable<SubjectResponseModel>>(listSubject);
+        
         return mapper;
     }
     

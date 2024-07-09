@@ -169,7 +169,7 @@ public class UserService : IUserService
         };
         //send confirm email here!!!
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "VerifyToken.cshtml");
-        await _mailService.SendUsingTemplateFromFile(filePath,"Dit me confirm cho tao", userMail);
+        await _mailService.SendUsingTemplateFromFile(filePath,"Confirm your GoatEdu account", userMail);
         if (result == null)
         {
             return new ResponseDto(HttpStatusCode.BadRequest, "Somethings has error!");
