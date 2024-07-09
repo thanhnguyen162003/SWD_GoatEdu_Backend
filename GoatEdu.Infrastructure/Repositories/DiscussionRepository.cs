@@ -1,4 +1,5 @@
 
+using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces.DiscussionInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure.Data;
@@ -59,6 +60,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
             .Include(x => x.Subject)
             .AsSplitQuery()
             .Include(x => x.Tags)
+            .Where((x => x.Status == StatusConstraint.APPROVED))
             .Where(x => x.Tags.Any(t => tagNames.Any(name => name.Equals(t.TagName))))
             .OrderBy(d => Guid.NewGuid())
             .Take(quantity)
@@ -76,7 +78,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
                 .Include(x => x.User);
         }
         
-        if (string.IsNullOrEmpty(queryFilter.status))
+        if (!string.IsNullOrEmpty(queryFilter.status))
         {
             discussions = discussions.Where(x => x.Status.Equals(queryFilter.status));
         }

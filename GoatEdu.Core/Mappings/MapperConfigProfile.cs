@@ -93,8 +93,10 @@ public class MapperConfigProfile : Profile
             .ForPath(dest => dest.UserInformation.UserId, opts => opts.MapFrom(src => src.UserId))
             .ForPath(dest => dest.UserInformation.UserImage, opts => opts.MapFrom(src => src.User.Image))
             .ForPath(dest => dest.UserInformation.FullName, opts => opts.MapFrom(src => src.User.Fullname))
-            .ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+        CreateMap<AnswerDto, Answer>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); ;
         
         CreateMap<Lesson, LessonDto>()
             .ForMember(dest => dest.QuizCount, opt => opt.MapFrom(src => src.Quizzes.Count))
