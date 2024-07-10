@@ -24,9 +24,8 @@ public class VoteService : IVoteService
         _hubContext = hubContext;
     }
 
-    public async Task<ResponseDto> DiscussionVoting(Guid discussionGuid)
+    public async Task<ResponseDto> DiscussionVoting(Guid userId, Guid discussionGuid)
     {
-        var userId = _claimsService.GetCurrentUserId;
         var discussion = await _unitOfWork.DiscussionRepository.GetByIdAsync(discussionGuid);
 
         if (discussion is null)
@@ -66,9 +65,8 @@ public class VoteService : IVoteService
         }
     }
 
-    public async Task<ResponseDto> AnswerVoting(Guid answerGuid)
+    public async Task<ResponseDto> AnswerVoting(Guid userId, Guid answerGuid)
     {
-        var userId = _claimsService.GetCurrentUserId;
         var answer = await _unitOfWork.AnswerRepository.GetByIdAsync(answerGuid);
 
         if (answer is null)
@@ -112,7 +110,7 @@ public class VoteService : IVoteService
         if (result > 0)
         {
             await _unitOfWork.CommitTransactionAsync();
-            await _hubContext.Clients.All.SendVote("Vote Successfully!");
+            // await _hubContext.Clients.All.SendVote("Vote Successfully!");
             return new ResponseDto(HttpStatusCode.OK, "Vote Successfully!");
         }
         await _unitOfWork.RollbackTransactionAsync();

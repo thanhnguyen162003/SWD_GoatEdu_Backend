@@ -5,8 +5,7 @@ namespace GoatEdu.Core.Interfaces.SignalR;
 
 public interface IHubService
 {
-    Task SendNotification(object eventData);
+    Task SendNotification(string method, object eventData);
     Task SendAnswer(object eventData);
-    Task SendVote(object eventData);
-    Task SendAsync(string mess);
+    Task SendVoteEvent(string method, string mess);
 }

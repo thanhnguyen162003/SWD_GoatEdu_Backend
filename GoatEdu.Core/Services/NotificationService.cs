@@ -81,7 +81,7 @@ public class NotificationService : INotificationService
         var result = await _unitOfWork.SaveChangesAsync();
 
         if (result <= 0) return new ResponseDto(HttpStatusCode.OK, "Add Failed !");
-        await _hubContext.Clients.All.SendNotification(new {notification.UserId, notification.NotificationName});
+        // await _hubContext.Clients.All.SendNotification(new {notification.UserId, notification.NotificationName});
         return new ResponseDto(HttpStatusCode.OK, "Add Successfully !");
     }
 
