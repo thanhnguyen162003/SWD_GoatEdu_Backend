@@ -3,8 +3,11 @@ using GoatEdu.Core.DTOs;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.ClaimInterfaces;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
+using GoatEdu.Core.Interfaces.SignalR;
 using GoatEdu.Core.Interfaces.VoteInterface;
+using GoatEdu.Core.Services.SignalR;
 using Infrastructure;
+using Microsoft.AspNetCore.SignalR;
 
 namespace GoatEdu.Core.Services;
 
@@ -12,11 +15,13 @@ public class VoteService : IVoteService
 {
     private readonly IClaimsService _claimsService;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IHubContext<HubService, IHubService> _hubContext;
 
-    public VoteService(IClaimsService claimsService, IUnitOfWork unitOfWork)
+    public VoteService(IClaimsService claimsService, IUnitOfWork unitOfWork, IHubContext<HubService, IHubService> hubContext)
     {
         _claimsService = claimsService;
         _unitOfWork = unitOfWork;
+        _hubContext = hubContext;
     }
 
     public async Task<ResponseDto> DiscussionVoting(Guid discussionGuid)
@@ -107,6 +112,7 @@ public class VoteService : IVoteService
         if (result > 0)
         {
             await _unitOfWork.CommitTransactionAsync();
+            await _hubContext.Clients.All.SendVote("Vote Successfully!");
             return new ResponseDto(HttpStatusCode.OK, "Vote Successfully!");
         }
         await _unitOfWork.RollbackTransactionAsync();

@@ -10,10 +10,10 @@ public class HubService : Hub<IHubService>
         await Clients.All.SendNotification(new { Type = "Notification", eventData });
     }
 
-    // public async Task SendVote(string username)
-    // {
-    //     await Clients.All.SendVote(new { Type = "Vote", Username = username });
-    // }
+    public async Task SendVote(string mess)
+    {
+        await Clients.All.SendVote(new { Type = "Vote", Message = mess });
+    }
     
     public async Task SendAnswer(object eventData)
     {
