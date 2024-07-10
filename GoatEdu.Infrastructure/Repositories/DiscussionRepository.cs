@@ -92,7 +92,7 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
         
         if (!string.IsNullOrEmpty(queryFilter.search))
         {
-            discussions = discussions.Where(x => x.DiscussionName.ToLower().Contains(queryFilter.search));
+            discussions = discussions.Where(x => x.DiscussionName.ToLower().Contains(queryFilter.search.ToLower()));
         }
         return discussions;
     }
