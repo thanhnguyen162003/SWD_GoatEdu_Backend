@@ -15,13 +15,11 @@ public class VoteService : IVoteService
 {
     private readonly IClaimsService _claimsService;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IHubContext<HubService, IHubService> _hubContext;
 
-    public VoteService(IClaimsService claimsService, IUnitOfWork unitOfWork, IHubContext<HubService, IHubService> hubContext)
+    public VoteService(IClaimsService claimsService, IUnitOfWork unitOfWork)
     {
         _claimsService = claimsService;
         _unitOfWork = unitOfWork;
-        _hubContext = hubContext;
     }
 
     public async Task<ResponseDto> DiscussionVoting(Guid userId, Guid discussionGuid)

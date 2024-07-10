@@ -4,8 +4,8 @@ using GoatEdu.Core.Interfaces.VoteInterface;
 using Microsoft.AspNetCore.SignalR;
 
 namespace GoatEdu.Core.Services.SignalR;
-
-public class HubService : Hub<IHubService>
+// <IHubService>
+public class HubService : Hub
 {
     private readonly IVoteService _voteService;
 
@@ -17,13 +17,13 @@ public class HubService : Hub<IHubService>
     public async Task SendVoteAnswer(Guid userId, Guid answerId)
     {
         var result = await _voteService.AnswerVoting(userId, answerId);
-        await Clients.All.SendVoteEvent("Voted", result.Message);
+        await Clients.All.SendAsync("Voted", result.Message);
     }
     
     public async Task SendVoteDiscussion(Guid userId, Guid discussionId)
     {
         var result = await _voteService.DiscussionVoting(userId, discussionId);
-        await Clients.All.SendVoteEvent("Voted", result.Message);
+        await Clients.All.SendAsync("Voted", result.Message);
     }
     
     // public async Task SendNotification(object eventData)
