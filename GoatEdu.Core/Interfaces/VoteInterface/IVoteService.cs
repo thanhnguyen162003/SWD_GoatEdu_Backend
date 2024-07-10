@@ -6,5 +6,4 @@ public interface IVoteService
 {
     Task<ResponseDto> DiscussionVoting(Guid userId, Guid discussionid);
     Task<ResponseDto> AnswerVoting(Guid userId, Guid answerGuid);
-
 }
