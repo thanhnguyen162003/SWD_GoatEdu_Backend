@@ -8,5 +8,5 @@ public interface IHubService
     Task SendNotification(object eventData);
     Task SendAnswer(object eventData);
     Task SendVote(object eventData);
-
+    Task SendAsync(string mess);
 }

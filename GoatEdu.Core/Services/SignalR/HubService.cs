@@ -19,4 +19,10 @@ public class HubService : Hub<IHubService>
     {
         await Clients.All.SendAnswer(new { Type = "Answer", eventData });
     }
+    
+    public override async Task OnConnectedAsync()
+    {
+        await Clients.All.SendAsync("ReceiverMessage" +  $"{Context.ConnectionId} has joined");
+        await base.OnConnectedAsync();
+    }
 }
