@@ -217,7 +217,7 @@ var selectedTheme = availableThemes[randomIndex];
 //Cors config
 app.UseCors(builder =>
 {
-    builder.WithOrigins("http://localhost:7260", "https://www.goatedu.tech")
+    builder.WithOrigins("http://localhost:3000", "https://www.goatedu.tech")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials()
