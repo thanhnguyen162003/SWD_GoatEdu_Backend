@@ -43,19 +43,20 @@ public class DiscussionRepository : BaseRepository<Discussion>, IDiscussionRepos
             .FirstOrDefaultAsync(x => x.Id == guid && x.IsDeleted == false);
     }
 
-    public async Task<Discussion?> GetDiscussionByIdAndUserId(Guid guid, Guid userId)
+    public async Task<Discussion?> GetDiscussionByIdAndUserId(Guid discussionId, Guid userId)
     {
-        return await _entities.Include(x => x.Tags).AsSplitQuery().FirstOrDefaultAsync(x => x.Id == guid && x.UserId == userId);
+        return await _entities.Include(x => x.Tags).FirstOrDefaultAsync(x => x.Id == discussionId && x.UserId == userId);
     }
 
-    public async Task SoftDelete(List<Guid> guids, Guid userId)
+    public async Task SoftDelete(Discussion discussion)
     {
-        await _entities.Where(x => guids.Any(id => id == x.Id) && x.UserId == userId).ForEachAsync(a => a.IsDeleted = true);
+        await _entities.Where(x => x.Id == discussion.Id).ForEachAsync(a => a.IsDeleted = true);
     }
 
     public async Task<IEnumerable<Discussion>> GetRandomRelatedDiscussions(int quantity, IEnumerable<string> tagNames)
     {
         return await _context.Discussions
+            .AsNoTracking()
             .Include(x => x.User)
             .Include(x => x.Subject)
             .AsSplitQuery()

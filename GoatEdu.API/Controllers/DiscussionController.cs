@@ -56,7 +56,7 @@ public class DiscussionController : ControllerBase
     }
     
     [HttpPatch ("{id}")]
-    [Authorize (Roles = $"{UserEnum.STUDENT}, {UserEnum.TEACHER}")]
+    [Authorize]
     public async Task<IActionResult> UpdateDiscussion(Guid id,[FromForm] DiscussionUpdateModel model)
     {
         try
@@ -77,13 +77,13 @@ public class DiscussionController : ControllerBase
         }
     }
     
-    [HttpDelete]
-    [Authorize (Roles = $"{UserEnum.MODERATOR},{UserEnum.STUDENT},{UserEnum.TEACHER}")]
-    public async Task<IActionResult> DeleteDiscussions([FromQuery, Required] List<Guid> ids)
+    [HttpDelete("{discussionId}")]
+    [Authorize]
+    public async Task<IActionResult> DeleteDiscussions([FromRoute, Required] Guid discussionId)
     {
         try
         {
-            var result = await _discussionService.DeleteDiscussions(ids);
+            var result = await _discussionService.DeleteDiscussions(discussionId);
             return Ok(result);
         }
         catch (Exception e)

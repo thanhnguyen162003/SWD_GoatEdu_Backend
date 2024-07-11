@@ -39,7 +39,7 @@ public class DiscussionService : IDiscussionService
         _cloudinaryService = cloudinaryService;
         _validator = validator;
     }
-    
+
     public async Task<ResponseDto> CreateDiscussion(DiscussionDto dto)
     {
         var validationResult = await _validator.ValidateAsync(dto);
@@ -53,7 +53,7 @@ public class DiscussionService : IDiscussionService
         if (!tags.Any()) return new ResponseDto(HttpStatusCode.NotFound, "Không đủ 4 tags");
 
         var mapper = _mapper.Map<Discussion>(dto);
-        
+
         if (dto.DiscussionImageConvert != null)
         {
             var image = await _cloudinaryService.UploadAsync(dto.DiscussionImageConvert);
@@ -64,7 +64,7 @@ public class DiscussionService : IDiscussionService
 
             mapper.DiscussionImage = image.Url.ToString();
         }
-        
+
         mapper.Tags = tags;
         mapper.IsSolved = false;
         mapper.DiscussionVote = 0;
@@ -76,13 +76,13 @@ public class DiscussionService : IDiscussionService
 
         await _unitOfWork.DiscussionRepository.AddAsync(mapper);
         var result = await _unitOfWork.SaveChangesAsync();
-        
+
         return result > 0
             ? new ResponseDto(HttpStatusCode.OK, "Add Successfully!")
             : new ResponseDto(HttpStatusCode.BadRequest, "Add Failed!");
     }
-    
-    public async Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionDto dto)
+
+    public async Task<ResponseDto> UpdateDiscussion(Guid discussionId, DiscussionDto dto)
     {
         var validationResult = await _validator.ValidateAsync(dto);
         if (!validationResult.IsValid)
@@ -92,10 +92,10 @@ public class DiscussionService : IDiscussionService
         }
 
         var userId = _claimsService.GetCurrentUserId;
-        var discussion = await _unitOfWork.DiscussionRepository.GetDiscussionByIdAndUserId(guid, userId);
+        var discussion = await _unitOfWork.DiscussionRepository.GetDiscussionByIdAndUserId(discussionId, userId);
         if (discussion is null)
         {
-            return new ResponseDto(HttpStatusCode.NotFound, "Không có quyền cập nhật");
+            return new ResponseDto(HttpStatusCode.NotFound, "No permission to update!");
         }
 
         if (dto.Tags.Count > 0)
@@ -103,16 +103,16 @@ public class DiscussionService : IDiscussionService
             var tag = await CheckAndAddTags(dto.Tags);
             if (!tag.Any())
             {
-                return new ResponseDto(HttpStatusCode.NotFound, "Có lỗi lúc add tag mới rồi!");
+                return new ResponseDto(HttpStatusCode.NotFound, "Something went wrong while adding new tags");
             }
 
             discussion.Tags.Clear();
-            
+
             await _unitOfWork.SaveChangesAsync();
-            
+
             discussion.Tags = tag;
         }
-        
+
         if (dto.DiscussionImageConvert != null)
         {
             var image = await _cloudinaryService.UploadAsync(dto.DiscussionImageConvert);
@@ -120,9 +120,10 @@ public class DiscussionService : IDiscussionService
             {
                 return new ResponseDto(HttpStatusCode.BadRequest, image.Error.Message);
             }
+
             discussion.DiscussionImage = image.Url.ToString();
         }
-        
+
         discussion.DiscussionName = dto.DiscussionName ?? discussion.DiscussionName;
         discussion.DiscussionBody = dto.DiscussionBody ?? discussion.DiscussionBody;
         discussion.DiscussionBodyHtml = dto.DiscussionBodyHtml ?? discussion.DiscussionBodyHtml;
@@ -137,7 +138,7 @@ public class DiscussionService : IDiscussionService
             ? new ResponseDto(HttpStatusCode.OK, "Update Successfully!")
             : new ResponseDto(HttpStatusCode.BadRequest, "Update Failed!");
     }
-    
+
     public async Task<IEnumerable<DiscussionDto?>> GetRelatedDiscussions(int quantity, IEnumerable<string> tagNames)
     {
         var toLower = tagNames.Select(x => x.ToLower());
@@ -146,10 +147,17 @@ public class DiscussionService : IDiscussionService
         return mapper;
     }
 
-    public async Task<ResponseDto> DeleteDiscussions(List<Guid> guids)
+    public async Task<ResponseDto> DeleteDiscussions(Guid discussionId)
     {
         var userId = _claimsService.GetCurrentUserId;
-        await _unitOfWork.DiscussionRepository.SoftDelete(guids, userId);
+
+        var discussion = await _unitOfWork.DiscussionRepository.GetDiscussionByIdAndUserId(discussionId, userId);
+        if (discussion is null)
+        {
+            return new ResponseDto(HttpStatusCode.NotFound, "No permission to delete!");
+        }
+
+        await _unitOfWork.DiscussionRepository.SoftDelete(discussion);
         var result = await _unitOfWork.SaveChangesAsync();
         return result > 0
             ? new ResponseDto(HttpStatusCode.OK, "Delete Successfully!")
@@ -164,10 +172,10 @@ public class DiscussionService : IDiscussionService
         var discussions = await _unitOfWork.DiscussionRepository.GetDiscussionByFilters(null, queryFilter);
 
         if (!discussions.Any()) return new PagedList<DiscussionDto>(new List<DiscussionDto>(), 0, 0, 0);
-        
+
         var userId = _claimsService.GetCurrentUserId;
         var discussionIdVote = new List<Guid?>();
-        
+
         if (userId != Guid.Empty)
         {
             var discussionIds = discussions.Select(x => x.Id);
@@ -192,7 +200,7 @@ public class DiscussionService : IDiscussionService
 
         var userId = _claimsService.GetCurrentUserId;
         var discussionIdVote = new List<Guid?>();
-        
+
         if (userId != Guid.Empty)
         {
             var discussionIds = new List<Guid>
@@ -201,6 +209,7 @@ public class DiscussionService : IDiscussionService
             };
             discussionIdVote = await _unitOfWork.VoteRepository.GetDiscussionVoteByUserId(userId, discussionIds);
         }
+
         var mapper = _mapper.Map<DiscussionDto>(result);
         mapper.IsUserVoted = userId != Guid.Empty && discussionIdVote.Contains(result.Id);
         return mapper;
@@ -210,7 +219,7 @@ public class DiscussionService : IDiscussionService
     {
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
-        
+
         var userId = _claimsService.GetCurrentUserId;
         var list = await _unitOfWork.DiscussionRepository.GetDiscussionByFilters(userId, queryFilter);
 
@@ -226,23 +235,37 @@ public class DiscussionService : IDiscussionService
         var tagCheck = await _unitOfWork.TagRepository.CheckTagByNamesAsync(tagNames);
         var tagNameNoExist = tagNames.ExceptBy(tagCheck.Select(x => x.TagName).ToList(), x => x);
 
-        if (tagNameNoExist.Any())
+        await _unitOfWork.BeginTransactionAsync();
+        try
         {
-            var newTags = tagNameNoExist.Select(x =>
+            if (tagNameNoExist.Any())
             {
-                var tag = new Tag
+                var newTags = tagNameNoExist.Select(x =>
                 {
-                    TagName = x,
-                    CreatedAt = _currentTime.GetCurrentTime(),
-                    IsDeleted = false
-                };
-                return tag;
-            }).ToList();
-            await _unitOfWork.TagRepository.AddRangeAsync(newTags);
-            var save = await _unitOfWork.SaveChangesAsync();
-            if (save < 1) return new List<Tag>();  
+                    var tag = new Tag
+                    {
+                        TagName = x,
+                        CreatedAt = _currentTime.GetCurrentTime(),
+                        IsDeleted = false
+                    };
+                    return tag;
+                }).ToList();
+                await _unitOfWork.TagRepository.AddRangeAsync(newTags);
+                var save = await _unitOfWork.SaveChangesAsync();
+
+                if (save < 1)
+                {
+                    await _unitOfWork.RollbackTransactionAsync();
+                    return new List<Tag>();
+                }
+            }
+            await _unitOfWork.CommitTransactionAsync();
+            return await _unitOfWork.TagRepository.GetTagByNames(tagNames);
         }
-        
-        return await _unitOfWork.TagRepository.GetTagByNames(tagNames);
+        catch (Exception)
+        {
+            await _unitOfWork.RollbackTransactionAsync();
+            return new List<Tag>();
+        }
     }
 }

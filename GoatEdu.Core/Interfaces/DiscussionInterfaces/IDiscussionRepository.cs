@@ -9,7 +9,7 @@ public interface IDiscussionRepository : IRepository<Discussion>
 {
     Task<IEnumerable<Discussion>> GetDiscussionByFilters(Guid? userId,DiscussionQueryFilter queryFilter); 
     Task<Discussion?> GetById(Guid guid);
-    Task<Discussion?> GetDiscussionByIdAndUserId(Guid guid, Guid userId);
-    Task SoftDelete(List<Guid> guids, Guid userId);
+    Task<Discussion?> GetDiscussionByIdAndUserId(Guid discussionId, Guid userId);
+    Task SoftDelete(Discussion discussion);
     Task<IEnumerable<Discussion>> GetRandomRelatedDiscussions(int quantity, IEnumerable<string> tagNames);
 }

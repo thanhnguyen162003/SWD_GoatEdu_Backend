@@ -12,7 +12,7 @@ public interface IDiscussionService
     Task<DiscussionDto?> GetDiscussionById(Guid guid);
     Task<PagedList<DiscussionDto>> GetDiscussionByUserId(DiscussionQueryFilter queryFilter);
     Task<ResponseDto> CreateDiscussion (DiscussionDto dto);
-    Task<ResponseDto> DeleteDiscussions(List<Guid> guids);
-    Task<ResponseDto> UpdateDiscussion(Guid guid, DiscussionDto dto);
+    Task<ResponseDto> DeleteDiscussions(Guid discussionId);
+    Task<ResponseDto> UpdateDiscussion(Guid discussionId, DiscussionDto dto);
     Task<IEnumerable<DiscussionDto?>> GetRelatedDiscussions(int quantity, IEnumerable<string> tagNames);
 }
