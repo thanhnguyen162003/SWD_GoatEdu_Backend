@@ -55,27 +55,27 @@ public class DiscussionController : ControllerBase
         }
     }
     
-    [HttpPatch ("{id}")]
-    [Authorize]
-    public async Task<IActionResult> UpdateDiscussion(Guid id,[FromForm] DiscussionUpdateModel model)
-    {
-        try
-        {
-            var tagsJson = Request.Form["Tags"];
-            if (!string.IsNullOrEmpty(tagsJson))
-            {
-                model.Tags = JsonConvert.DeserializeObject<List<TagUpdateModel>>(tagsJson);
-            }
-            
-            var mapper = _mapper.Map<DiscussionDto>(model);
-            var result = await _discussionService.UpdateDiscussion(id, mapper);
-            return Ok(result);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-    }
+    // [HttpPatch ("{id}")]
+    // [Authorize]
+    // public async Task<IActionResult> UpdateDiscussion(Guid id,[FromForm] DiscussionUpdateModel model)
+    // {
+    //     try
+    //     {
+    //         var tagsJson = Request.Form["Tags"];
+    //         if (!string.IsNullOrEmpty(tagsJson))
+    //         {
+    //             model.Tags = JsonConvert.DeserializeObject<List<TagUpdateModel>>(tagsJson);
+    //         }
+    //         
+    //         var mapper = _mapper.Map<DiscussionDto>(model);
+    //         var result = await _discussionService.UpdateDiscussion(id, mapper);
+    //         return Ok(result);
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         return BadRequest(e.Message);
+    //     }
+    // }
     
     [HttpDelete("{discussionId}")]
     [Authorize]

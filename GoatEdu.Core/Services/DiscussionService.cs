@@ -98,20 +98,20 @@ public class DiscussionService : IDiscussionService
             return new ResponseDto(HttpStatusCode.NotFound, "No permission to update!");
         }
 
-        if (dto.Tags.Count > 0)
-        {
-            var tag = await CheckAndAddTags(dto.Tags);
-            if (!tag.Any())
-            {
-                return new ResponseDto(HttpStatusCode.NotFound, "Something went wrong while adding new tags");
-            }
-
-            discussion.Tags.Clear();
-
-            await _unitOfWork.SaveChangesAsync();
-
-            discussion.Tags = tag;
-        }
+        // if (dto.Tags.Count > 0)
+        // {
+        //     var tag = await CheckAndAddTags(dto.Tags);
+        //     if (!tag.Any())
+        //     {
+        //         return new ResponseDto(HttpStatusCode.NotFound, "Something went wrong while adding new tags");
+        //     }
+        //
+        //     discussion.Tags.Clear();
+        //
+        //     await _unitOfWork.SaveChangesAsync();
+        //
+        //     discussion.Tags = tag;
+        // }
 
         if (dto.DiscussionImageConvert != null)
         {
@@ -127,7 +127,7 @@ public class DiscussionService : IDiscussionService
         discussion.DiscussionName = dto.DiscussionName ?? discussion.DiscussionName;
         discussion.DiscussionBody = dto.DiscussionBody ?? discussion.DiscussionBody;
         discussion.DiscussionBodyHtml = dto.DiscussionBodyHtml ?? discussion.DiscussionBodyHtml;
-        discussion.IsSolved = dto.IsSolved ?? discussion.IsSolved;
+        // discussion.IsSolved = dto.IsSolved ?? discussion.IsSolved;
         discussion.UpdatedBy = _claimsService.GetCurrentFullname;
         discussion.UpdatedAt = _currentTime.GetCurrentTime();
         discussion.Status = StatusConstraint.UNAPPROVED;
