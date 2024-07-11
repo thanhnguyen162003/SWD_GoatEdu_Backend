@@ -36,6 +36,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
@@ -195,6 +196,7 @@ builder.Services.Configure<FormOptions>(options =>
 });
 
 // Add SignalR
+builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 builder.Services.AddSignalR();
 
 var app = builder.Build();
@@ -217,7 +219,7 @@ var selectedTheme = availableThemes[randomIndex];
 //Cors config
 app.UseCors(builder =>
 {
-    builder.WithOrigins("http://localhost:3000", "https://www.goatedu.tech", "https://goat-edu-admin.vercel.app")
+    builder.WithOrigins("http://localhost:3000", "https://www.goatedu.tech", "https://goat-edu-admin.vercel.app","http://localhost:5500")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials()

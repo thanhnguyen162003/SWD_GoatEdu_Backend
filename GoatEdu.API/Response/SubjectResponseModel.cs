@@ -16,4 +16,5 @@ public class SubjectResponseModel
     public ICollection<ChapterSubjectDto>? Chapters { get; set; } 
     public int? NumberOfChapters { get; set; }
     public int NumberOfEnrollment { get; set; }
+    public bool IsEnroll { get; set; } 
 }

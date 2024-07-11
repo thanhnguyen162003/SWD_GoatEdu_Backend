@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using FluentEmail.Core;
 using GoatEdu.API.Request;
 using GoatEdu.API.Response;
 using GoatEdu.Core.DTOs;
@@ -58,7 +59,13 @@ public class UserController : ControllerBase
     public async Task<SubjectEnrollResponseModel> GetAllSubject([FromQuery, Required] SubjectQueryFilter queryFilter)
     {
         var listSubject = await _enrollmentService.GetUserEnrollments(queryFilter);
-        var mapperSubjectDto = _mapper.Map<IEnumerable<SubjectResponseModel>>(listSubject);
+        // var mapperSubjectDto = _mapper.Map<IEnumerable<SubjectResponseModel>>(listSubject);
+        var mapperSubjectDto = listSubject.Select(x =>
+        {
+            var subjectDto = _mapper.Map<SubjectResponseModel>(x);
+            subjectDto.IsEnroll = true;
+            return subjectDto;
+        });
         var mapper = _mapper.Map<SubjectEnrollResponseModel>(mapperSubjectDto);
         return mapper;
     }
