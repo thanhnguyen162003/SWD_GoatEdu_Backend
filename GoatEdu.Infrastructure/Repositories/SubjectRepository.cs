@@ -103,7 +103,7 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
     }
     public async Task<IEnumerable<Subject>> GetSubjectByClass(string classes,SubjectQueryFilter queryFilter)
     {
-        var subjects = _entities.AsNoTracking().Where(x=>x.Class.ToLower().Equals(classes.ToLower())).Include(x => x.Chapters).AsQueryable();
+        var subjects = _entities.AsNoTracking().Where(x=>x.Class.ToLower().Equals(classes.ToLower())).Include(x => x.Chapters.Where(y=>y.IsDeleted == false)).AsQueryable();
         subjects = ApplyFilterSortAndSearch(subjects, queryFilter);
         subjects = ApplySorting(subjects, queryFilter);
         return await subjects.ToListAsync();
@@ -138,7 +138,7 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
             Image = x.Image,
             CreatedAt = x.CreatedAt,
             NumberOfChapters = x.Chapters.Count,
-            Chapters = x.Chapters.Select(c => new ChapterSubjectDto()
+            Chapters = x.Chapters.Where(z=>z.IsDeleted == false).Select(c => new ChapterSubjectDto()
             {
                 Id = c.Id,
                 ChapterName = c.ChapterName,
