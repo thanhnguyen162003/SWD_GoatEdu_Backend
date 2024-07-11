@@ -24,7 +24,7 @@ public class QuestionQuizController : ControllerBase
     
     [HttpPost("quiz/{quizId}")]
     [Authorize(Roles = UserEnum.MODERATOR)]
-    public async Task<IActionResult> CreateQuestionInQuiz([FromRoute, Required] Guid chapterId, [FromBody] List<QuestionInQuizCreateModel>  model)
+    public async Task<IActionResult> CreateQuestionInQuiz([FromRoute, Required] Guid quizId, [FromBody] List<QuestionInQuizCreateModel>  model)
     {
         try
         {
@@ -34,7 +34,7 @@ public class QuestionQuizController : ControllerBase
             }
             
             var mapper = _mapper.Map<List<QuestionInQuizDto>>(model);
-            var result = await _questionQuizService.CreateQuestionQuiz(chapterId, mapper);
+            var result = await _questionQuizService.CreateQuestionQuiz(quizId, mapper);
             return Ok(result);
         }
         catch (Exception e)

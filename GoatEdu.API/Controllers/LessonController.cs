@@ -28,9 +28,9 @@ public class LessonController : ControllerBase
         _mapper = mapper;
     }
     
-    [HttpPost]
+    [HttpPost("chapter/{chapterId}")]
     [Authorize (Roles = UserEnum.MODERATOR)]
-    public async Task<IActionResult> CreateLesson([FromBody] LessonRequestModel model)
+    public async Task<IActionResult> CreateLesson([FromRoute, Required] Guid chapterId, [FromBody] LessonRequestModel model)
     {
         try
         {
@@ -40,7 +40,7 @@ public class LessonController : ControllerBase
             }
 
             var mapper = _mapper.Map<LessonDto>(model);
-            var result = await _lessonService.CreateLesson(mapper);
+            var result = await _lessonService.CreateLesson(chapterId, mapper);
             return Ok(result);
         }
         catch (Exception e)
@@ -50,14 +50,14 @@ public class LessonController : ControllerBase
         }
     }
     
-    [HttpPatch ("{lessionId}")]
+    [HttpPatch ("{lessonId}")]
     [Authorize (Roles = UserEnum.MODERATOR)]
-    public async Task<IActionResult> UpdateLesson([FromRoute, Required] Guid lessonnId, [FromBody] LessonUpdateModel model)
+    public async Task<IActionResult> UpdateLesson([FromRoute, Required] Guid lessonId, [FromBody] LessonUpdateModel model)
     {
         try
         {
             var mapper = _mapper.Map<LessonDto>(model);
-            var result = await _lessonService.UpdateLesson(lessonnId, mapper);
+            var result = await _lessonService.UpdateLesson(lessonId, mapper);
             return Ok(result);
         }
         catch (Exception e)
@@ -68,11 +68,11 @@ public class LessonController : ControllerBase
     
     [HttpDelete]
     [Authorize (Roles = UserEnum.MODERATOR)]
-    public async Task<IActionResult> DeleteLesson([FromQuery, Required] IEnumerable<Guid> lessonnId)
+    public async Task<IActionResult> DeleteLesson([FromQuery, Required] IEnumerable<Guid> lessonIds)
     {
         try
         {
-            var result = await _lessonService.DeleteLesson(lessonnId);
+            var result = await _lessonService.DeleteLesson(lessonIds);
             return Ok(result);
         }
         catch (Exception e)

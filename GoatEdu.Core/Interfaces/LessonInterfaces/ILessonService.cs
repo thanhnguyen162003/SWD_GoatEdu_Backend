@@ -7,7 +7,7 @@ namespace GoatEdu.Core.Interfaces.LessonInterfaces;
 
 public interface ILessonService
 {
-    Task<ResponseDto> CreateLesson(LessonDto dto);
+    Task<ResponseDto> CreateLesson(Guid chapterId , LessonDto dto);
     Task<ResponseDto> UpdateLesson(Guid lessonId, LessonDto dto);
     Task<ResponseDto> DeleteLesson(IEnumerable<Guid> guids);
     Task<LessonDto?> GetDetailLessonById(Guid lessonId);

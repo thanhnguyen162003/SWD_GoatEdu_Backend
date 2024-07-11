@@ -34,15 +34,16 @@ public class LessonService : ILessonService
         _paginationOptions = option.Value;
     }
 
-    public async Task<ResponseDto> CreateLesson(LessonDto dto)
+    public async Task<ResponseDto> CreateLesson(Guid chapterId, LessonDto dto)
     {
+        dto.ChapterId = chapterId;
         var validationResult = await _validator.ValidateAsync(dto);
         if (!validationResult.IsValid)
         {
             var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
             return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
         }
-
+        
         var mapper = _mapper.Map<Lesson>(dto);
 
         mapper.CreatedAt = _currentTime.GetCurrentTime();
