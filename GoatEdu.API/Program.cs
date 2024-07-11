@@ -217,9 +217,10 @@ var selectedTheme = availableThemes[randomIndex];
 //Cors config
 app.UseCors(builder =>
 {
-    builder.AllowAnyOrigin()
+    builder.WithOrigins("http://localhost:3000", "https://www.goatedu.tech")
         .AllowAnyMethod()
         .AllowAnyHeader()
+        .AllowCredentials()
         .WithExposedHeaders("X-Pagination");
 });
 app.UseHttpsRedirection();

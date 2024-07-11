@@ -3,8 +3,11 @@ using GoatEdu.Core.DTOs;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.ClaimInterfaces;
 using GoatEdu.Core.Interfaces.GenericInterfaces;
+using GoatEdu.Core.Interfaces.SignalR;
 using GoatEdu.Core.Interfaces.VoteInterface;
+using GoatEdu.Core.Services.SignalR;
 using Infrastructure;
+using Microsoft.AspNetCore.SignalR;
 
 namespace GoatEdu.Core.Services;
 
@@ -19,9 +22,8 @@ public class VoteService : IVoteService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<ResponseDto> DiscussionVoting(Guid discussionGuid)
+    public async Task<ResponseDto> DiscussionVoting(Guid userId, Guid discussionGuid)
     {
-        var userId = _claimsService.GetCurrentUserId;
         var discussion = await _unitOfWork.DiscussionRepository.GetByIdAsync(discussionGuid);
 
         if (discussion is null)
@@ -61,9 +63,8 @@ public class VoteService : IVoteService
         }
     }
 
-    public async Task<ResponseDto> AnswerVoting(Guid answerGuid)
+    public async Task<ResponseDto> AnswerVoting(Guid userId, Guid answerGuid)
     {
-        var userId = _claimsService.GetCurrentUserId;
         var answer = await _unitOfWork.AnswerRepository.GetByIdAsync(answerGuid);
 
         if (answer is null)
@@ -107,6 +108,7 @@ public class VoteService : IVoteService
         if (result > 0)
         {
             await _unitOfWork.CommitTransactionAsync();
+            // await _hubContext.Clients.All.SendVote("Vote Successfully!");
             return new ResponseDto(HttpStatusCode.OK, "Vote Successfully!");
         }
         await _unitOfWork.RollbackTransactionAsync();

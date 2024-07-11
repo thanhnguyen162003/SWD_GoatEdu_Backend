@@ -10,4 +10,5 @@ public interface IVoteRepository
     Task<List<Guid?>> GetAnswerVoteByUserId(Guid userId, IEnumerable<Guid> answerIds);
     Task<Vote?> GetDiscussionVote(Guid guid, Guid userId);
     Task<Vote?> GetAnswerVote(Guid guid, Guid userId);
+    Task<int> GetVotesNumber(Guid id, string type);
 }

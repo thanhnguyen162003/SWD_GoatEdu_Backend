@@ -49,4 +49,13 @@ public class VoteRepository : IVoteRepository
     {
         return await _context.Votes.FirstOrDefaultAsync(x => x.UserId == userId && x.AnswerId == guid);
     }
+
+    public async Task<int> GetVotesNumber(Guid id, string type)
+    {
+        return type.ToLower() switch
+        {
+            "answer" => await _context.Votes.CountAsync(x => x.AnswerId == id),
+            _ => await _context.Votes.CountAsync(x => x.DiscussionId == id)
+        };
+    }
 }

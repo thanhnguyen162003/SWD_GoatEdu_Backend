@@ -24,17 +24,17 @@ public class NotificationService : INotificationService
     private readonly IMapper _mapper;
     private readonly PaginationOptions _paginationOptions;
     private readonly IClaimsService _claimsService;
-    private readonly IHubContext<HubService, IHubService> _hubContext;
+    // private readonly IHubContext<HubService, IHubService> _hubContext;
     private readonly IValidator<NotificationDto> _validator;
 
-    public NotificationService(IUnitOfWork unitOfWork,IClaimsService claimsService, ICurrentTime currentTime, IMapper mapper, IOptions<PaginationOptions> options, IHubContext<HubService, IHubService> hubContext, IValidator<NotificationDto> validator)
+    public NotificationService(IUnitOfWork unitOfWork,IClaimsService claimsService, ICurrentTime currentTime, IMapper mapper, IOptions<PaginationOptions> options, IValidator<NotificationDto> validator)
     {
         _unitOfWork = unitOfWork;
         _currentTime = currentTime;
         _mapper = mapper;
         _paginationOptions = options.Value;
         _claimsService = claimsService;
-        _hubContext = hubContext;
+        // _hubContext = hubContext;
         _validator = validator;
     }
     
@@ -81,7 +81,7 @@ public class NotificationService : INotificationService
         var result = await _unitOfWork.SaveChangesAsync();
 
         if (result <= 0) return new ResponseDto(HttpStatusCode.OK, "Add Failed !");
-        await _hubContext.Clients.All.SendNotification(new {notification.UserId, notification.NotificationName});
+        // await _hubContext.Clients.All.SendNotification(new {notification.UserId, notification.NotificationName});
         return new ResponseDto(HttpStatusCode.OK, "Add Successfully !");
     }
 

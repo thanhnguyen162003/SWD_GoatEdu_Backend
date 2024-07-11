@@ -4,7 +4,6 @@ namespace GoatEdu.Core.Interfaces.VoteInterface;
 
 public interface IVoteService
 {
-    Task<ResponseDto> DiscussionVoting(Guid guid);
-    Task<ResponseDto> AnswerVoting(Guid answerGuid);
-
+    Task<ResponseDto> DiscussionVoting(Guid userId, Guid discussionid);
+    Task<ResponseDto> AnswerVoting(Guid userId, Guid answerGuid);
 }
