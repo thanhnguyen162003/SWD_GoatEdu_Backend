@@ -15,5 +15,6 @@ public interface IUserRepository : IRepository<User>
     Task<User> GetUserByUsernameNotGoogle(string username);
     Task<User> GetUserByUsernameWithEmailCheckRegister(string username, string email);
     Task<ICollection<UserMinimalDto>> GetUsersInRole(Guid roleId);
+    Task<bool> IdExistAsync(Guid userId);
 
 }

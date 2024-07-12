@@ -12,4 +12,5 @@ public interface INotificationService
     Task<PagedList<NotificationDto>> GetNotificationByCurrentUser(NotificationQueryFilter queryFilter);
     Task<ResponseDto> InsertNotification(NotificationDto notification);
     Task<ResponseDto> DeleteNotifications(List<Guid> ids);
+    Task SendNotification(Guid userId);
 }

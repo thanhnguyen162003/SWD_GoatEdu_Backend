@@ -18,12 +18,12 @@ public class ModeratorController : ControllerBase
         _moderatorService = moderatorService;
     }
     
-    [HttpPost("discussion")]
-    public async Task<IActionResult> ApproveDiscussion([Required]List<Guid> ids)
+    [HttpPost("discussion/{discussionId}")]
+    public async Task<IActionResult> ApproveDiscussion([FromRoute, Required] Guid discussionId)
     {
         try
         {
-            var result = await _moderatorService.ApprovedDiscussion(ids);
+            var result = await _moderatorService.ApprovedDiscussion(discussionId);
             return Ok(result);
         }
         catch (Exception e)

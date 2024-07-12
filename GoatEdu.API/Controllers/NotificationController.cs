@@ -7,6 +7,7 @@ using GoatEdu.API.Response;
 using GoatEdu.Core.CustomEntities;
 using GoatEdu.Core.DTOs;
 using GoatEdu.Core.DTOs.NotificationDto;
+using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces.NotificationInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using GoatEdu.Core.Validator;
@@ -76,25 +77,33 @@ public class NotificationController : ControllerBase
         }
     }
 
-    [HttpPost]
-    public async Task<IActionResult> AddNotifications([Required] NotificationRequestModel requestModel)
+    // [HttpPost]
+    // public async Task<IActionResult> AddNotifications([Required] NotificationRequestModel requestModel)
+    // {
+    //     try
+    //     {
+    //         // var validationResult = await _validator.ValidateAsync(requestDto);
+    //         // if (!validationResult.IsValid)
+    //         // {
+    //         //     return BadRequest(new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}"));
+    //         // }
+    //
+    //         var mapper = _mapper.Map<NotificationDto>(requestModel);
+    //         var result = await _notificationService.InsertNotification(mapper);
+    //         return Ok(result);
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         return BadRequest(e.Message);
+    //     }
+    // }
+    
+    
+    [Authorize(Roles = UserEnum.MODERATOR)]
+    [HttpPost("user/{userId}")]
+    public async Task AddNotifications([FromRoute, Required] Guid userId)
     {
-        try
-        {
-            // var validationResult = await _validator.ValidateAsync(requestDto);
-            // if (!validationResult.IsValid)
-            // {
-            //     return BadRequest(new ResponseDto(HttpStatusCode.BadRequest, $"{validationResult.Errors}"));
-            // }
-
-            var mapper = _mapper.Map<NotificationDto>(requestModel);
-            var result = await _notificationService.InsertNotification(mapper);
-            return Ok(result);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
+        await _notificationService.SendNotification(userId);
     }
 
     [HttpDelete]

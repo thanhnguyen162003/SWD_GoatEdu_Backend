@@ -14,8 +14,18 @@ public class ModeratorRepository : IModeratorRepository
         _context = context;
     }
     
-    public async Task ApprovedDiscussions(List<Guid> guids)
+    public async Task<Guid?> ApprovedDiscussions(Guid discussionId)
     {
-        await _context.Discussions.Where(x => guids.Any(id => id == x.Id)).ForEachAsync(a => a.Status = StatusConstraint.APPROVED);
+        var discussion = await _context.Discussions
+            .Where(x => x.Id == discussionId)
+            .FirstOrDefaultAsync();
+
+        if (discussion == null)
+        {
+            return null;
+        }
+        
+        discussion.Status = StatusConstraint.APPROVED;
+        return discussion.UserId;
     }
 }

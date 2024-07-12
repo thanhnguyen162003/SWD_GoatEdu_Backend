@@ -128,6 +128,23 @@ builder.Services.AddAuthentication(opt =>
             var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
             logger.LogInformation("Token validated for user: {0}", context.Principal.Identity.Name);
             return Task.CompletedTask;
+        },
+        OnMessageReceived = context =>
+        {
+            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+            logger.LogInformation("Token validated for message: {0}", context.Token);
+
+            var accessToken = context.Request.Query["access_token"];
+            
+            // check the request is for hub and token is not null
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) &&
+                (path.StartsWithSegments("/hub")))
+            {
+                // Get the token out of the query string and set to Context
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
         }
     };
 });
@@ -196,7 +213,6 @@ builder.Services.Configure<FormOptions>(options =>
 });
 
 // Add SignalR
-builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 builder.Services.AddSignalR();
 
 var app = builder.Build();

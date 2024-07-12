@@ -24,17 +24,17 @@ public class NotificationService : INotificationService
     private readonly IMapper _mapper;
     private readonly PaginationOptions _paginationOptions;
     private readonly IClaimsService _claimsService;
-    // private readonly IHubContext<HubService, IHubService> _hubContext;
+    private readonly IHubContext<HubService, IHubService> _hubContext;
     private readonly IValidator<NotificationDto> _validator;
 
-    public NotificationService(IUnitOfWork unitOfWork,IClaimsService claimsService, ICurrentTime currentTime, IMapper mapper, IOptions<PaginationOptions> options, IValidator<NotificationDto> validator)
+    public NotificationService(IUnitOfWork unitOfWork,IClaimsService claimsService, ICurrentTime currentTime, IMapper mapper, IOptions<PaginationOptions> options, IValidator<NotificationDto> validator, IHubContext<HubService, IHubService> hubContext)
     {
         _unitOfWork = unitOfWork;
         _currentTime = currentTime;
         _mapper = mapper;
         _paginationOptions = options.Value;
         _claimsService = claimsService;
-        // _hubContext = hubContext;
+        _hubContext = hubContext;
         _validator = validator;
     }
     
@@ -48,7 +48,7 @@ public class NotificationService : INotificationService
             var notiMapper = _mapper.Map<NotificationDto>(notiFound);
             return new ResponseDto(HttpStatusCode.OK, "", notiMapper);
         }
-        return new ResponseDto(HttpStatusCode.OK, "Kiếm không ra :))");
+        return new ResponseDto(HttpStatusCode.OK, "Not found");
     }
 
     public async Task<PagedList<NotificationDto>> GetNotificationByCurrentUser(NotificationQueryFilter queryFilter)
@@ -74,15 +74,16 @@ public class NotificationService : INotificationService
             var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
             return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
         }
-        
+
+        var userId = notification.UserId.ToString();
         var noti = _mapper.Map<Notification>(notification);
         noti.CreatedAt = _currentTime.GetCurrentTime();
         await _unitOfWork.NotificationRepository.AddAsync(noti);
         var result = await _unitOfWork.SaveChangesAsync();
 
-        if (result <= 0) return new ResponseDto(HttpStatusCode.OK, "Add Failed !");
-        // await _hubContext.Clients.All.SendNotification(new {notification.UserId, notification.NotificationName});
-        return new ResponseDto(HttpStatusCode.OK, "Add Successfully !");
+        return result <= 0 ? new ResponseDto(HttpStatusCode.OK, "Add Failed !") :
+            // await _hubContext.Clients.User(userId).SendNotification("You have new notification!");
+            new ResponseDto(HttpStatusCode.OK, "Add Successfully !");
     }
 
     public async Task<ResponseDto> DeleteNotifications(List<Guid> ids)
@@ -97,5 +98,10 @@ public class NotificationService : INotificationService
             return new ResponseDto(HttpStatusCode.OK, "Delete Successfully !");
         }
         return new ResponseDto(HttpStatusCode.OK, "Delete Failed !");
+    }
+
+    public async Task SendNotification(Guid userId)
+    {
+        await _hubContext.Clients.User(userId.ToString()).SendNotification("You have new notification!");
     }
 }

@@ -64,7 +64,12 @@ public class UserRepository : BaseRepository<User>, IUserRepository
             })
             .ToListAsync();
     }
-    
+
+    public async Task<bool> IdExistAsync(Guid userId)
+    {
+        return await _entities.AnyAsync(x => x.Id == userId);
+    }
+
     public async Task<User> AddUser(User user)
     {
         var result = await _entities.AddAsync(user);
