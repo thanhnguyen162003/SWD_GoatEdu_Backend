@@ -40,7 +40,10 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
             Information = x.Information,
             Image = x.Image,
             CreatedAt = x.CreatedAt,
-            Chapters = x.Chapters.Where(c => c.IsDeleted == false).Select(c => new ChapterSubjectDto()
+            Chapters = x.Chapters
+                .Where(c => c.IsDeleted == false)
+                .OrderBy(c => c.ChapterLevel)
+                .Select(c => new ChapterSubjectDto()
             {
                 Id = c.Id,
                 ChapterName = c.ChapterName,
