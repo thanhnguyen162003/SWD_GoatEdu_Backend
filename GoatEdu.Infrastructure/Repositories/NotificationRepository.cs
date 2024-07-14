@@ -34,6 +34,11 @@ public class NotificationRepository : INotificationRepository
         return await _context.Notifications.Where(x => ids.Any(id => id == x.Id) && x.UserId == userId).ToListAsync();
     }
 
+    public async Task<int> CountUnreadNotification(Guid userId)
+    {
+        return await _context.Notifications.CountAsync(x => x.UserId == userId && x.ReadAt.HasValue);
+    }
+
     public void DeleteAsync(IEnumerable<Notification> listNoti)
     {
         _context.Notifications.RemoveRange(listNoti);

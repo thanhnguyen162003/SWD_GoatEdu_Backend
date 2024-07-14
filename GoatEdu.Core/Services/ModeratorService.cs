@@ -49,8 +49,9 @@ public class ModeratorService : IModeratorService
         {
             return new ResponseDto(HttpStatusCode.OK, "Approved Successfully but Cannot Send Notification!");
         }
-        
-        await _hubContext.Clients.User(userId.ToString()).SendAsync("Notification" ,"You have new notification!");
+
+        var notiCount = await _unitOfWork.NotificationRepository.CountUnreadNotification((Guid)userId);
+        await _hubContext.Clients.User(userId.ToString()).SendAsync("Notification" ,"You have new notification!", notiCount);
         return new ResponseDto(HttpStatusCode.OK, "Approved And Send Notification Successfully!");
     }
 }
