@@ -27,7 +27,7 @@ public class MyHub : Hub
         var userId = Guid.Parse(userClaims);
         var result = await _voteService.AnswerVoting(userId, answerId);
         var votes = await _unitOfWork.VoteRepository.GetVotesNumber(answerId, "answer");
-        await Clients.All.SendAsync("VoteAnswer", result.Message, votes);
+        await Clients.All.SendAsync("VoteAnswer", result.Message, answerId ,votes);
     }
     
     [Authorize]
