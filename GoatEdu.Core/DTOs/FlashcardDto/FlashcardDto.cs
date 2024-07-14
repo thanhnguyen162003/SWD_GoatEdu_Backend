@@ -10,7 +10,6 @@ public class FlashcardDto
     public DateTime updatedAt { get; set; }
     public string userId { get; set; }
     public string fullName { get; set; }
-
     public string userImage { get; set; }
     public string subjectName { get; set; }
     public string subjectId { get; set; }

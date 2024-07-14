@@ -155,7 +155,7 @@ public class SubjectRepository : BaseRepository<Subject>, ISubjectRepository
         
         if (!string.IsNullOrEmpty(queryFilter.search))
         {
-            subjects = subjects.Where(x => x.SubjectName.Contains(queryFilter.search));
+            subjects = subjects.Where(x => x.SubjectName.ToLower().Contains(queryFilter.search.ToLower()));
         }
         return subjects;
     }

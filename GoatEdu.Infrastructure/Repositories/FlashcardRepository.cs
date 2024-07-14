@@ -25,7 +25,8 @@ public class FlashcardRepository : BaseRepository<Flashcard>, IFlashcardReposito
 
     public async Task<IEnumerable<Flashcard>> GetFlashcards(FlashcardQueryFilter queryFilter)
     {
-        var flashcards = _entities.Include(x=>x.User)
+        var flashcards = _entities
+            .Include(x=>x.User)
             .Include(y=> y.Subject)
             .Include(y=> y.FlashcardContents)
             .AsQueryable();
@@ -115,7 +116,7 @@ public class FlashcardRepository : BaseRepository<Flashcard>, IFlashcardReposito
         
         if (!string.IsNullOrEmpty(queryFilter.search))
         {
-            flashcards = flashcards.Where(x => x.FlashcardName.Contains(queryFilter.search));
+            flashcards = flashcards.Where(x => x.FlashcardName.ToLower().Contains(queryFilter.search.ToLower()));
         }
         return flashcards;
     }
