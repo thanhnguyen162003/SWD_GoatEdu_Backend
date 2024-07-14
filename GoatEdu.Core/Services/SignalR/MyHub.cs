@@ -9,12 +9,12 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace GoatEdu.Core.Services.SignalR;
 // <IHubService>
-public class HubService : Hub<IHubService>
+public class MyHub : Hub
 {
     private readonly IVoteService _voteService;
     private readonly IUnitOfWork _unitOfWork;
 
-    public HubService(IVoteService voteService, IUnitOfWork unitOfWork)
+    public MyHub(IVoteService voteService, IUnitOfWork unitOfWork)
     {
         _voteService = voteService;
         _unitOfWork = unitOfWork;
@@ -27,7 +27,7 @@ public class HubService : Hub<IHubService>
         var userId = Guid.Parse(userClaims);
         var result = await _voteService.AnswerVoting(userId, answerId);
         var votes = await _unitOfWork.VoteRepository.GetVotesNumber(answerId, "answer");
-        await Clients.All.Voted(result.Message, votes);
+        await Clients.All.SendAsync("Voted", result.Message, votes);
     }
     
     [Authorize]
@@ -37,16 +37,17 @@ public class HubService : Hub<IHubService>
         var userId = Guid.Parse(userClaims);
         var result = await _voteService.DiscussionVoting(userId, discussionId);
         var votes = await _unitOfWork.VoteRepository.GetVotesNumber(discussionId, "discussion");
-        await Clients.All.Voted(result.Message, votes);
+        await Clients.All.SendAsync("Voted", result.Message, votes);
     }
     
     // [Authorize(Roles = UserEnum.GOOGLE)]
-    // public async Task SendNotification(string mess)
+    // [Authorize]
+    // public async Task SendNotificationTo(string mess)
     // {
     //     var userId = Context.User?.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
     //     if (!string.IsNullOrEmpty(userId))
     //     {
-    //         await Clients.User(userId).SendAsync("You have new notification!");
+    //         await Clients.User(userId).SendNotification("You have new notification!");
     //     }
     // }
     
@@ -57,7 +58,7 @@ public class HubService : Hub<IHubService>
     
     public override async Task OnConnectedAsync()
     {
-        await Clients.All.SendAsync("ReceiverMessage: " +  $"{Context.User?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value} has joined");
+        await Clients.All.SendAsync("ReceiverMessage: " +  $"{Context.ConnectionId} has joined");
         await base.OnConnectedAsync();
     }
 }

@@ -16,9 +16,9 @@ public class ModeratorService : IModeratorService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly INotificationService _notificationService;
-    private readonly IHubContext<HubService, IHubService> _hubContext;
+    private readonly IHubContext<MyHub> _hubContext;
 
-    public ModeratorService(IUnitOfWork unitOfWork, IMapper mapper, INotificationService notificationService, IHubContext<HubService, IHubService> hubContext)
+    public ModeratorService(IUnitOfWork unitOfWork, IMapper mapper, INotificationService notificationService, IHubContext<MyHub> hubContext)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -37,7 +37,7 @@ public class ModeratorService : IModeratorService
         
         var notification = new NotificationDto
         {
-            NotificationName = "DISCUSSION APPROVED!",
+            NotificationName = "Discussion Approved!",
             NotificationMessage = "Your discussion has been reviewed and approved by the moderators.",
             UserId = userId
                 
@@ -50,7 +50,7 @@ public class ModeratorService : IModeratorService
             return new ResponseDto(HttpStatusCode.OK, "Approved Successfully but Cannot Send Notification!");
         }
         
-        await _hubContext.Clients.User(userId.ToString()).SendNotification("You have new notification!");
+        await _hubContext.Clients.User(userId.ToString()).SendAsync("Notification" ,"You have new notification!");
         return new ResponseDto(HttpStatusCode.OK, "Approved And Send Notification Successfully!");
     }
 }

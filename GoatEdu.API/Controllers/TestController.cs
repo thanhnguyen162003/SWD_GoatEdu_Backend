@@ -11,10 +11,10 @@ namespace GoatEdu.API.Controllers;
 [Route("/api/signalr")]
 public class TestController : ControllerBase
 {
-    private readonly IHubContext<HubService> _hubContext;
+    private readonly IHubContext<MyHub> _hubContext;
     private readonly IClaimsService _claimsService;
 
-    public TestController(IHubContext<HubService> hubContext, IClaimsService claimsService)
+    public TestController(IHubContext<MyHub> hubContext, IClaimsService claimsService)
     {
         _hubContext = hubContext;
         _claimsService = claimsService;
@@ -24,7 +24,8 @@ public class TestController : ControllerBase
     [Authorize]
     public async Task TestSignalR()
     {
-        var userId = _claimsService.GetCurrentUserId.ToString();
-        await _hubContext.Clients.User(userId).SendAsync("VotedForMe", "123");
+        var userId = _claimsService.GetCurrentUserId;
+        await _hubContext.Clients.User(userId.ToString()).SendAsync("VoteForMe" ,"OK BRO");
+        // await _hubContext.Clients.All.SendAsync("VoteForMe");
     }
 }

@@ -24,10 +24,10 @@ public class NotificationService : INotificationService
     private readonly IMapper _mapper;
     private readonly PaginationOptions _paginationOptions;
     private readonly IClaimsService _claimsService;
-    private readonly IHubContext<HubService, IHubService> _hubContext;
+    private readonly IHubContext<MyHub> _hubContext;
     private readonly IValidator<NotificationDto> _validator;
 
-    public NotificationService(IUnitOfWork unitOfWork,IClaimsService claimsService, ICurrentTime currentTime, IMapper mapper, IOptions<PaginationOptions> options, IValidator<NotificationDto> validator, IHubContext<HubService, IHubService> hubContext)
+    public NotificationService(IUnitOfWork unitOfWork,IClaimsService claimsService, ICurrentTime currentTime, IMapper mapper, IOptions<PaginationOptions> options, IValidator<NotificationDto> validator, IHubContext<MyHub> hubContext)
     {
         _unitOfWork = unitOfWork;
         _currentTime = currentTime;
@@ -38,17 +38,19 @@ public class NotificationService : INotificationService
         _validator = validator;
     }
     
-    public async Task<ResponseDto> GetNotificationById(Guid id)
+    public async Task<ResponseDto> MarkReadAllNotifications(Guid userId)
     {
-        var notiFound = await _unitOfWork.NotificationRepository.GetByIdAsync(id);
-        if (notiFound != null)
+        var notis = await _unitOfWork.NotificationRepository.GetNotificationByUserId(userId);
+        if (!notis.Any())
         {
-            notiFound.ReadAt ??= _currentTime.GetCurrentTime();
-            await _unitOfWork.SaveChangesAsync();
-            var notiMapper = _mapper.Map<NotificationDto>(notiFound);
-            return new ResponseDto(HttpStatusCode.OK, "", notiMapper);
+            return new ResponseDto(HttpStatusCode.OK, "Mark Failed");
         }
-        return new ResponseDto(HttpStatusCode.OK, "Not found");
+        foreach (var noti in notis)
+        {
+            noti.ReadAt ??= _currentTime.GetCurrentTime();
+        }
+        await _unitOfWork.SaveChangesAsync();
+        return new ResponseDto(HttpStatusCode.OK, "Mark Successfully!");
     }
 
     public async Task<PagedList<NotificationDto>> GetNotificationByCurrentUser(NotificationQueryFilter queryFilter)
@@ -102,6 +104,6 @@ public class NotificationService : INotificationService
 
     public async Task SendNotification(Guid userId)
     {
-        await _hubContext.Clients.User(userId.ToString()).SendNotification("You have new notification!");
+        await _hubContext.Clients.User(userId.ToString()).SendAsync("Notification", "You have new notification!");
     }
 }

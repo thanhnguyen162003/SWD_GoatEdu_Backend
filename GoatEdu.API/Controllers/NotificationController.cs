@@ -33,13 +33,13 @@ public class NotificationController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("user/{userId}")]
     [Authorize (Roles = "Student, Teacher")]
-    public async Task<IActionResult> GetDetailedNotificationById([Required] Guid id)
+    public async Task<IActionResult> MarkReadAllNotifications([Required] Guid userId)
     {
         try
         {
-            var result = await _notificationService.GetNotificationById(id);
+            var result = await _notificationService.MarkReadAllNotifications(userId);
             return Ok(result);
         }
         catch (Exception e)
@@ -101,7 +101,7 @@ public class NotificationController : ControllerBase
     
     [Authorize(Roles = UserEnum.MODERATOR)]
     [HttpPost("user/{userId}")]
-    public async Task AddNotifications([FromRoute, Required] Guid userId)
+    public async Task SendNotifications([FromRoute, Required] Guid userId)
     {
         await _notificationService.SendNotification(userId);
     }

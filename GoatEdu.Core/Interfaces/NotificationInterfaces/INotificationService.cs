@@ -8,7 +8,7 @@ namespace GoatEdu.Core.Interfaces.NotificationInterfaces;
 
 public interface INotificationService
 {
-    Task<ResponseDto> GetNotificationById(Guid id);
+    Task<ResponseDto> MarkReadAllNotifications(Guid userId);
     Task<PagedList<NotificationDto>> GetNotificationByCurrentUser(NotificationQueryFilter queryFilter);
     Task<ResponseDto> InsertNotification(NotificationDto notification);
     Task<ResponseDto> DeleteNotifications(List<Guid> ids);
