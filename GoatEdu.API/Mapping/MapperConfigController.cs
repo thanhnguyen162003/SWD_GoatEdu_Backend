@@ -138,7 +138,8 @@ public class MapperConfigController : Profile
         
         // TheoryFlashcard
         CreateMap<TheoryFlashcardContentsDto, TheoryFlashcardRequestModel>().ReverseMap();
-        CreateMap<TheoryFlashcardContentsDto, TheoryFlashcardUpdateModel>().ReverseMap();
+        CreateMap<TheoryFlashcardUpdateModel, TheoryFlashcardContentsDto>()
+            .ForMember(dest => dest.Id, opt => opt.ConvertUsing(new StringToGuidConverter()!, opt => opt.Id));
         CreateMap<TheoryFlashcardContentsDto, TheoryFlashcardResponseModel>().ReverseMap();
 
         // Quiz

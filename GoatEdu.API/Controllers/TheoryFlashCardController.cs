@@ -53,11 +53,6 @@ public class TheoryFlashCardController : ControllerBase
     {
         try
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            
             var mapper = _mapper.Map<List<TheoryFlashcardContentsDto>>(model);
             var result = await _theoryFlashcardContentService.UpdateTheTheoryFlashcardContent(theoryId, mapper);
             return Ok(result);

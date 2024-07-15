@@ -81,29 +81,62 @@ public class TheoryFlashcardContentService : ITheoryFlashcardContentService
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Theory not found!");
         }
-
-        var guids = dtos.Select(x => x.Id);
-        var theoryFlashcards = await _unitOfWork.TheoryFlashcardContentRepository.GetTheoryFlashCardContentByIds(theoryId, guids);
-
-        if (!theoryFlashcards.Any())
-        {
-            return new ResponseDto(HttpStatusCode.NotFound, "Theory not have any flashcards to update!");
-        }
         
-        foreach (var data in theoryFlashcards)
+        await _unitOfWork.BeginTransactionAsync();
+        try
         {
-            var dto = dtos.FirstOrDefault(x => x.Id == data.Id);
-            data.Question = dto.Question ?? data.Question;
-            data.Answer = dto.Answer ?? data.Answer;
-            data.Status = dto.Status ?? data.Status;
-            data.UpdatedAt = _currentTime.GetCurrentTime();
-        }
+            var theoryFlashcardsAdd = dtos.Where(x => x.Id == Guid.Empty).ToList();
+            
+            if (theoryFlashcardsAdd.Any())
+            {
+                foreach (var data in theoryFlashcardsAdd)
+                {
+                    data.Id = null;
+                }
 
-        _unitOfWork.TheoryFlashcardContentRepository.UpdateRange(theoryFlashcards);
-        var result = await _unitOfWork.SaveChangesAsync();
-        return result > 0
-            ? new ResponseDto(HttpStatusCode.OK, "Update TheoryFlashcards Successfully!")
-            : new ResponseDto(HttpStatusCode.BadRequest, "Update TheoryFlashcards Failed!");
+                var addresult = await CreateTheTheoryFlashcardContent(theoryId ,theoryFlashcardsAdd);
+                if (addresult.Status != HttpStatusCode.OK)
+                {
+                    await _unitOfWork.RollbackTransactionAsync();
+                    addresult.Message = "Failed at Create TheoryFlashcard";
+                    return addresult;
+                }
+            }
+            
+            var guids = dtos.Select(x => x.Id);
+            var theoryFlashcards = await _unitOfWork.TheoryFlashcardContentRepository.GetTheoryFlashCardContentByIds(theoryId, guids);
+
+            if (!theoryFlashcards.Any())
+            {
+                return new ResponseDto(HttpStatusCode.NotFound, "Theory not have any flashcards to update!");
+            }
+        
+            foreach (var data in theoryFlashcards)
+            {
+                var dto = dtos.FirstOrDefault(x => x.Id == data.Id);
+                data.Question = dto.Question ?? data.Question;
+                data.Answer = dto.Answer ?? data.Answer;
+                data.Status = dto.Status ?? data.Status;
+                data.UpdatedAt = _currentTime.GetCurrentTime();
+            }
+
+            _unitOfWork.TheoryFlashcardContentRepository.UpdateRange(theoryFlashcards);
+            var result = await _unitOfWork.SaveChangesAsync();
+            
+            if (result <= 0)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                return new ResponseDto(HttpStatusCode.BadRequest, "Update TheoryFlashcards Failed!");
+            }
+            
+            await _unitOfWork.CommitTransactionAsync();
+            return new ResponseDto(HttpStatusCode.OK, "Update TheoryFlashcards Successfully!");
+        }
+        catch (Exception e)
+        {
+            await _unitOfWork.RollbackTransactionAsync();
+            return new ResponseDto(HttpStatusCode.InternalServerError, "Server Error");
+        }
     }
 
     public async Task<ResponseDto> DeleteTheTheoryFlashcardContent(List<Guid> guids)
