@@ -50,9 +50,9 @@ public class FlashcardContentController : ControllerBase
     [HttpPatch]
     [Route("flashcard/{flashcardId}")]
     [Authorize]
-    public async Task<ResponseDto> UpdateFlashcards([FromRoute,Required] Guid flashcardId, [FromBody] IEnumerable<FlashcardContentRequest> flashcardUpdateModels)
+    public async Task<ResponseDto> UpdateFlashcards([FromRoute,Required] Guid flashcardId, [FromBody] List<FlashcardContentRequest> flashcardUpdateModels)
     {
-        var mapper = _mapper.Map<IEnumerable<FlashcardContentDto>>(flashcardUpdateModels);
+        var mapper = _mapper.Map<List<FlashcardContentDto>>(flashcardUpdateModels);
         return await _flashcardContentService.UpdateFlashcardContents(flashcardId, mapper);
     }
     

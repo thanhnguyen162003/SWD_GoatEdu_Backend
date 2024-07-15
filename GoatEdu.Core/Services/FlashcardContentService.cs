@@ -23,7 +23,8 @@ public class FlashcardContentService : IFlashcardContentService
     private readonly IClaimsService _claimsService;
     private readonly ICurrentTime _currentTime;
 
-    public FlashcardContentService(IUnitOfWork unitOfWork,IMapper mapper, IOptions<PaginationOptions> paginationOptions,IClaimsService claimsService, ICurrentTime currentTime)
+    public FlashcardContentService(IUnitOfWork unitOfWork, IMapper mapper,
+        IOptions<PaginationOptions> paginationOptions, IClaimsService claimsService, ICurrentTime currentTime)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -31,34 +32,40 @@ public class FlashcardContentService : IFlashcardContentService
         _claimsService = claimsService;
         _currentTime = currentTime;
     }
-    public async Task<IEnumerable<FlashcardContentDto>> GetFlashcards(FlashcardQueryFilter queryFilter, Guid flashcardId)
+
+    public async Task<IEnumerable<FlashcardContentDto>> GetFlashcards(FlashcardQueryFilter queryFilter,
+        Guid flashcardId)
     {
-        queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
+        queryFilter.page_number =
+            queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? 100 : queryFilter.page_size;
-        
+
         var listFlashcard = await _unitOfWork.FlashcardContentRepository.GetFlashcardContent(queryFilter, flashcardId);
-        
+
         if (!listFlashcard.Any())
         {
             return new PagedList<FlashcardContentDto>(new List<FlashcardContentDto>(), 0, 0, 0);
         }
+
         var mapperList = _mapper.Map<List<FlashcardContentDto>>(listFlashcard);
         return PagedList<FlashcardContentDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
     }
-    
-    public async Task<ResponseDto> CreateFlashcardContent(List<FlashcardContentDto> listFlashcardContent, Guid flashcardId)
+
+    public async Task<ResponseDto> CreateFlashcardContent(List<FlashcardContentDto> listFlashcardContent,
+        Guid flashcardId)
     {
-        
         var userId = _claimsService.GetCurrentUserId;
         var flashcard = await _unitOfWork.FlashcardRepository.GetFlashcardById(flashcardId);
         if (flashcard == null)
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Flashcard not found.");
         }
+
         if (flashcard.UserId != userId)
         {
             return new ResponseDto(HttpStatusCode.BadRequest, "This flashcard not own by you !!!.");
         }
+
         var fullname = _claimsService.GetCurrentFullname;
         var newFlashcardContents = listFlashcardContent.Select(contentDto => new FlashcardContent
         {
@@ -74,6 +81,7 @@ public class FlashcardContentService : IFlashcardContentService
 
         return await _unitOfWork.FlashcardContentRepository.CreateFlashcardContent(newFlashcardContents);
     }
+
     public async Task<ResponseDto> UpdateFlashcardContent(FlashcardContentDto flashcard, Guid id)
     {
         var userId = _claimsService.GetCurrentUserId;
@@ -85,39 +93,62 @@ public class FlashcardContentService : IFlashcardContentService
     public async Task<ResponseDto> UpdateFlashcardContents(Guid flashcardId, IEnumerable<FlashcardContentDto> flashcard)
     {
         var userId = _claimsService.GetCurrentUserId;
-        
-        var flashcardAdd = flashcard.Where(x => x.id is null).ToList();
 
-        var addresult = await CreateFlashcardContent(flashcardAdd, flashcardId);
+        await _unitOfWork.BeginTransactionAsync();
+        try
+        {
+            var flashcardAdd = flashcard.Where(x => x.id == Guid.Empty).ToList();
+            if (flashcardAdd.Any())
+            {
+                foreach (var data in flashcardAdd)
+                {
+                    data.id = null;
+                }
 
-        if (addresult.Status != HttpStatusCode.OK)
-        {
-            addresult.Message = "Failed at Create FlashcardContent";
-            return addresult;
-        }
-        
-        var flashcardUpdate = flashcard.Where(x => x.id != null);
-        var ids = flashcardUpdate.Select(x => x.id);
-        var flashcardContents = await _unitOfWork.FlashcardContentRepository.GetFlashcardContentByIds(userId, ids);
-        if (!flashcardContents.Any())
-        {
-            return new ResponseDto(HttpStatusCode.NotFound, "You dont own this flashcard");
-        }
+                var addresult = await CreateFlashcardContent(flashcardAdd, flashcardId);
+                if (addresult.Status != HttpStatusCode.OK)
+                {
+                    await _unitOfWork.RollbackTransactionAsync();
+                    addresult.Message = "Failed at Create FlashcardContent";
+                    return addresult;
+                }
+            }
+            
+            var flashcardUpdate = flashcard.Where(x => x.id != null);
 
-        foreach (var flashcardContent in flashcardContents)
-        {
-            var dto = flashcardUpdate.FirstOrDefault(x => x.id == flashcardContent.Id);
-            flashcardContent.FlashcardContentQuestion = dto.flashcardContentQuestion;
-            flashcardContent.FlashcardContentAnswer = dto.flashcardContentAnswer;
-            flashcardContent.UpdatedAt = _currentTime.GetCurrentTime();
-            flashcardContent.UpdatedBy = _claimsService.GetCurrentFullname;
+            var ids = flashcardUpdate.Select(x => x.id);
+            var flashcardContents = await _unitOfWork.FlashcardContentRepository.GetFlashcardContentByIds(userId, ids);
+            if (!flashcardContents.Any())
+            {
+                return new ResponseDto(HttpStatusCode.NotFound, "You dont own this flashcard");
+            }
+
+            foreach (var flashcardContent in flashcardContents)
+            {
+                var dto = flashcardUpdate.FirstOrDefault(x => x.id == flashcardContent.Id);
+                flashcardContent.FlashcardContentQuestion = dto.flashcardContentQuestion;
+                flashcardContent.FlashcardContentAnswer = dto.flashcardContentAnswer;
+                flashcardContent.UpdatedAt = _currentTime.GetCurrentTime();
+                flashcardContent.UpdatedBy = _claimsService.GetCurrentFullname;
+            }
+
+            _unitOfWork.FlashcardContentRepository.UpdateRange(flashcardContents);
+            var result = await _unitOfWork.SaveChangesAsync();
+
+            if (result <= 0)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                return new ResponseDto(HttpStatusCode.BadGateway, "Update Failed!");
+            }
+
+            await _unitOfWork.CommitTransactionAsync();
+            return new ResponseDto(HttpStatusCode.OK, "Update Successfully!");
         }
-        
-        _unitOfWork.FlashcardContentRepository.UpdateRange(flashcardContents);
-        var result = await _unitOfWork.SaveChangesAsync();
-        return result > 0
-            ? new ResponseDto(HttpStatusCode.OK, "Update Successfully!")
-            : new ResponseDto(HttpStatusCode.BadGateway, "Update Failed!");
+        catch (Exception)
+        {
+            await _unitOfWork.RollbackTransactionAsync();
+            return new ResponseDto(HttpStatusCode.InternalServerError, "Server Error");
+        }
     }
 
     public async Task<ResponseDto> DeleteFlashcardContent(Guid flashcardContentId)

@@ -56,8 +56,8 @@ public class PaymentsController : Controller
             {
                 { "CustomEmail", customdata }
             },
-            SuccessUrl = "https://goatedu.vercel.app/payment/success",
-            CancelUrl = "https://goatedu.vercel.app/payment/cancel",
+            SuccessUrl = "https://www.goatedu.tech/payment/success",
+            CancelUrl = "https://www.goatedu.tech/payment/cancel",
         };
 
         var service = new SessionService();

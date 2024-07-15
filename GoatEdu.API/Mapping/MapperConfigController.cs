@@ -153,7 +153,8 @@ public class MapperConfigController : Profile
         CreateMap<QuestionInQuizDto, QuestionInQuizResponseModel>().ReverseMap();
         
         //FlashcardContent
-        CreateMap<FlashcardContentRequest, FlashcardContentDto>().ReverseMap();
+        CreateMap<FlashcardContentRequest, FlashcardContentDto>()
+            .ForMember(dest => dest.id, opt => opt.ConvertUsing(new StringToGuidConverter()!, opt => opt.id));
 
 
         

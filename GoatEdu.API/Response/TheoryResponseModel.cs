@@ -4,7 +4,6 @@ public class TheoryResponseModel
 {
     public Guid? Id { get; set; }
     public string? TheoryName { get; set; }
-    public string? File { get; set; }
     public string? Image { get; set; }
     public string? TheoryContent { get; set; }
     public string? TheoryContentHtml { get; set; }
