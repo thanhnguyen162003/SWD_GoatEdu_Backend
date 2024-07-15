@@ -24,9 +24,14 @@ public class NotificationRepository : INotificationRepository
         await _context.Notifications.AddAsync(entitie);
     }
 
-    public async Task<IEnumerable<Notification>> GetNotificationByUserId(Guid? id)
+    public async Task<IEnumerable<Notification>> GetNotificationsByUserId(Guid? id)
     {
-        return await _context.Notifications.AsNoTracking().Where(x => x.UserId == id).OrderByDescending(x => x.CreatedAt).ToListAsync();
+        return await _context.Notifications.Where(x => x.UserId == id).OrderByDescending(x => x.CreatedAt).ToListAsync();
+    }
+
+    public async Task<Notification?> GetNotificationByUserId(Guid? userId, Guid notificationId)
+    {
+        return await _context.Notifications.FirstOrDefaultAsync(x => x.UserId == userId && x.Id == notificationId);
     }
 
     public async Task<IEnumerable<Notification>> GetNotificationByIds(List<Guid> ids, Guid userId)

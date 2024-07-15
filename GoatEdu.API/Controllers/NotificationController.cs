@@ -22,6 +22,7 @@ namespace GoatEdu.API.Controllers;
 
 [Route("api/notification")]
 [ApiController]
+[Authorize]
 public class NotificationController : ControllerBase
 {
     private readonly INotificationService _notificationService;
@@ -33,13 +34,26 @@ public class NotificationController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpGet("user/{userId}")]
-    [Authorize (Roles = "Student, Teacher")]
-    public async Task<IActionResult> MarkReadAllNotifications([Required] Guid userId)
+    [HttpPatch("user")]
+    public async Task<IActionResult> MarkReadAllNotifications()
     {
         try
         {
-            var result = await _notificationService.MarkReadAllNotifications(userId);
+            var result = await _notificationService.MarkReadAllNotifications();
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpPatch("{notificationId}")]
+    public async Task<IActionResult> MarkReadNotifications([Required] Guid notificationId)
+    {
+        try
+        {
+            var result = await _notificationService.MarkReadNotification(notificationId);
             return Ok(result);
         }
         catch (Exception e)
@@ -49,7 +63,6 @@ public class NotificationController : ControllerBase
     }
 
     [HttpGet("user")]
-    [Authorize (Roles = "Student, Teacher")]
     public async Task<IActionResult> GetNotificationByCurrentUser([FromQuery, Required] NotificationQueryFilter queryFilter)
     {
         try

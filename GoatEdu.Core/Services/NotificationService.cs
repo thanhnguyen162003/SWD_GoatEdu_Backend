@@ -38,19 +38,38 @@ public class NotificationService : INotificationService
         _validator = validator;
     }
     
-    public async Task<ResponseDto> MarkReadAllNotifications(Guid userId)
+    public async Task<ResponseDto> MarkReadAllNotifications()
     {
-        var notis = await _unitOfWork.NotificationRepository.GetNotificationByUserId(userId);
-        if (!notis.Any())
+        var userId = _claimsService.GetCurrentUserId;
+        var notifications = await _unitOfWork.NotificationRepository.GetNotificationsByUserId(userId);
+        if (!notifications.Any())
         {
-            return new ResponseDto(HttpStatusCode.OK, "Mark Failed");
+            return new ResponseDto(HttpStatusCode.OK, "You dont have permission!");
         }
-        foreach (var noti in notis)
+        foreach (var noti in notifications)
         {
             noti.ReadAt ??= _currentTime.GetCurrentTime();
         }
-        await _unitOfWork.SaveChangesAsync();
-        return new ResponseDto(HttpStatusCode.OK, "Mark Successfully!");
+        var result = await _unitOfWork.SaveChangesAsync();
+        return result > 0
+            ? new ResponseDto(HttpStatusCode.OK, "Mark Successfully!")
+            : new ResponseDto(HttpStatusCode.BadRequest, "Mark Failed!");
+    }
+
+    public async Task<ResponseDto> MarkReadNotification(Guid notificationId)
+    {
+        var userId = _claimsService.GetCurrentUserId;
+        var notification = await _unitOfWork.NotificationRepository.GetNotificationByUserId(userId, notificationId);
+        if (notification is null)
+        {
+            return new ResponseDto(HttpStatusCode.OK, "You dont have permission!");
+        }
+
+        notification.ReadAt ??= _currentTime.GetCurrentTime();
+        var result = await _unitOfWork.SaveChangesAsync();
+        return result > 0
+            ? new ResponseDto(HttpStatusCode.OK, "Mark Successfully!")
+            : new ResponseDto(HttpStatusCode.BadRequest, "Mark Failed!");
     }
 
     public async Task<PagedList<NotificationDto>> GetNotificationByCurrentUser(NotificationQueryFilter queryFilter)
@@ -58,7 +77,7 @@ public class NotificationService : INotificationService
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
         var userId = _claimsService.GetCurrentUserId;
-        var listNoti = await _unitOfWork.NotificationRepository.GetNotificationByUserId(userId);
+        var listNoti = await _unitOfWork.NotificationRepository.GetNotificationsByUserId(userId);
 
         if (!listNoti.Any())
         {

@@ -46,6 +46,15 @@ public class FlashcardContentController : ControllerBase
         var mapper = _mapper.Map<FlashcardContentDto>(flashcardUpdateModel);
         return await _flashcardContentService.UpdateFlashcardContent(mapper, id);
     }
+    
+    [HttpPatch]
+    [Authorize]
+    public async Task<ResponseDto> UpdateFlashcards([FromBody] IEnumerable<FlashcardContentRequest> flashcardUpdateModels)
+    {
+        var mapper = _mapper.Map<IEnumerable<FlashcardContentDto>>(flashcardUpdateModels);
+        return await _flashcardContentService.UpdateFlashcardContents(mapper);
+    }
+    
     [HttpDelete]
     [Route("{id}")]
     [Authorize]

@@ -78,6 +78,31 @@ public class FlashcardContentService : IFlashcardContentService
         mapper.Id = id;
         return await _unitOfWork.FlashcardContentRepository.UpdateFlashcardContent(mapper, userId);
     }
+
+    public async Task<ResponseDto> UpdateFlashcardContents(IEnumerable<FlashcardContentDto> flashcard)
+    {
+        var userId = _claimsService.GetCurrentUserId;
+        var ids = flashcard.Select(x => x.id);
+        var flashcardContents = await _unitOfWork.FlashcardContentRepository.GetFlashcardContentByIds(userId, ids);
+        if (!flashcardContents.Any())
+        {
+            return new ResponseDto(HttpStatusCode.NotFound, "You dont own this flashcard");
+        }
+
+        foreach (var flashcardContent in flashcardContents)
+        {
+            var dto = flashcard.FirstOrDefault(x => x.id == flashcardContent.Id);
+            flashcardContent.FlashcardContentQuestion = dto.flashcardContentQuestion;
+            flashcardContent.FlashcardContentAnswer = dto.flashcardContentAnswer;
+        }
+
+        _unitOfWork.FlashcardContentRepository.UpdateRange(flashcardContents);
+        var result = await _unitOfWork.SaveChangesAsync();
+        return result > 0
+            ? new ResponseDto(HttpStatusCode.OK, "Update Successfully!")
+            : new ResponseDto(HttpStatusCode.BadGateway, "Update Failed!");
+    }
+
     public async Task<ResponseDto> DeleteFlashcardContent(Guid flashcardContentId)
     {
         var userId = _claimsService.GetCurrentUserId;

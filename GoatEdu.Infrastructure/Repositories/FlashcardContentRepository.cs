@@ -25,6 +25,11 @@ public class FlashcardContentRepository : BaseRepository<FlashcardContent>, IFla
         return await flashcardContents.ToListAsync();
     }
 
+    public async Task<List<FlashcardContent>> GetFlashcardContentByIds(Guid userId, IEnumerable<Guid?> listId)
+    {
+        return await _entities.Where(x => listId.Any(id => id.Equals(x.Id)) && x.Flashcard.UserId == userId).ToListAsync();
+    }
+
     public async Task<ResponseDto> CreateFlashcardContent(List<FlashcardContent> flashcardContents)
     {
         try
