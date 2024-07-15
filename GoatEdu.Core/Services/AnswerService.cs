@@ -77,8 +77,11 @@ public class AnswerService : IAnswerService
     {
         var userId = _claimsService.GetCurrentUserId;
         var answer = await _unitOfWork.AnswerRepository.GetByIdAndUserId(answerId, userId);
-        if (answer is null) return new ResponseDto(HttpStatusCode.BadRequest, "");
-        answer.IsDeleted = false;
+        if (answer is null)
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "");
+        }
+        answer.IsDeleted = true;
         _unitOfWork.AnswerRepository.Update(answer);
         var result = await _unitOfWork.SaveChangesAsync();
         return result > 0
