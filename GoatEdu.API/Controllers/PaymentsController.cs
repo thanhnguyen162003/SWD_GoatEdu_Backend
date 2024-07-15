@@ -64,7 +64,7 @@ public class PaymentsController : Controller
         Session session = service.Create(options);
 
         Response.Headers.Add("Access-Control-Expose-Headers", "Location, X-Pagination");
-        Response.Headers.Add("Location", session.url);
+        Response.Headers.Add("Location", session.Url);
 
         return StatusCode(302);
     }
