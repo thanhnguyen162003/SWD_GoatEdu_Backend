@@ -26,8 +26,9 @@ public class AnswerService : IAnswerService
     private readonly PaginationOptions _paginationOptions;
     private readonly ICloudinaryService _cloudinaryService;
     private readonly IValidator<AnswerDto> _validator;
+    private readonly IHubContext<MyHub> _hubContext; 
 
-    public AnswerService(IUnitOfWork unitOfWork, IClaimsService claimsService, ICurrentTime currentTime, IMapper mapper, IOptions<PaginationOptions> options, ICloudinaryService cloudinaryService, IValidator<AnswerDto> validator)
+    public AnswerService(IUnitOfWork unitOfWork, IClaimsService claimsService, ICurrentTime currentTime, IMapper mapper, IOptions<PaginationOptions> options, ICloudinaryService cloudinaryService, IValidator<AnswerDto> validator, IHubContext<MyHub> hubContext)
     {
         _unitOfWork = unitOfWork;
         _claimsService = claimsService;
@@ -36,6 +37,7 @@ public class AnswerService : IAnswerService
         _paginationOptions = options.Value;
         _cloudinaryService = cloudinaryService;
         _validator = validator;
+        _hubContext = hubContext;
     }
 
     public async Task<ResponseDto> InsertAnswer(AnswerDto dto)
@@ -61,8 +63,12 @@ public class AnswerService : IAnswerService
         await _unitOfWork.AnswerRepository.AddAsync(mapper);
         var result = await _unitOfWork.SaveChangesAsync();
 
-        if (result <= 0) return new ResponseDto(HttpStatusCode.OK, "Add Failed !");
-        // await _hubContext.Clients.All.SendAnswer(new {userId, dto.QuestionId});
+        if (result <= 0)
+        {
+            return new ResponseDto(HttpStatusCode.BadRequest, "Add Failed !");
+        }
+        
+        await _hubContext.Clients.All.SendAsync("Answer", mapper);
         return new ResponseDto(HttpStatusCode.OK, "Add Successfully !");
 
     }

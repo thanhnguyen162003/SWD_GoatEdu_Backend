@@ -1,11 +1,13 @@
 using System.Net;
 using System.Security.Claims;
+using GoatEdu.Core.DTOs;
 using GoatEdu.Core.Enumerations;
 using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.SignalR;
 using GoatEdu.Core.Interfaces.VoteInterface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 
 namespace GoatEdu.Core.Services.SignalR;
 // <IHubService>
@@ -52,9 +54,13 @@ public class MyHub : Hub
     // }
     
     // [Authorize(Roles = $"{UserEnum.STUDENT}, {UserEnum.TEACHER}")]
-    // public async Task SendAnswer(object eventData)
+    // public async Task SendAnswer(AnswerDto  eventData)
     // {
-    //     await Clients.All.SendAnswer(new { Type = "Answer", eventData });
+    //     // var answer = JsonConvert.DeserializeObject<AnswerDto>(eventData);
+    //     Console.WriteLine(eventData);
+    //     // Console.WriteLine("abc: asdfsdfsad == " + answerDto);
+    //
+    //     // await Clients.All.SendAnswer(new { Type = "Answer", eventData });
     // }
     
     public override async Task OnConnectedAsync()

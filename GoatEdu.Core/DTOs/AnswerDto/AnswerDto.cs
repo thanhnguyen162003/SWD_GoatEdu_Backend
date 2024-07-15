@@ -4,7 +4,7 @@ namespace GoatEdu.Core.DTOs;
 
 public class AnswerDto
 {
-    public Guid Id { get; set; }
+    public Guid? Id { get; set; }
     public string? AnswerName { get; set; }
     public string? AnswerBody { get; set; }
     public string? AnswerBodyHtml { get; set; }

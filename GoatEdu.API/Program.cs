@@ -140,7 +140,7 @@ builder.Services.AddAuthentication(opt =>
             if (!string.IsNullOrEmpty(accessToken) &&
                 (path.StartsWithSegments("/hub")))
             {
-                logger.LogInformation("Token validated for message: {0}", accessToken);
+                // logger.LogInformation("Token validated for message: {0}");
                 // Get the token out of the query string and set to Context
                 context.Token = accessToken;
             }
