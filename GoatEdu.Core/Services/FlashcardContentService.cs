@@ -8,6 +8,7 @@ using GoatEdu.Core.Interfaces;
 using GoatEdu.Core.Interfaces.ClaimInterfaces;
 using GoatEdu.Core.Interfaces.FlashcardContentInterfaces;
 using GoatEdu.Core.Interfaces.FlashcardInterfaces;
+using GoatEdu.Core.Interfaces.GenericInterfaces;
 using GoatEdu.Core.QueriesFilter;
 using Infrastructure;
 using Microsoft.Extensions.Options;
@@ -20,13 +21,15 @@ public class FlashcardContentService : IFlashcardContentService
     private readonly IMapper _mapper;
     private readonly PaginationOptions _paginationOptions;
     private readonly IClaimsService _claimsService;
+    private readonly ICurrentTime _currentTime;
 
-    public FlashcardContentService(IUnitOfWork unitOfWork,IMapper mapper, IOptions<PaginationOptions> paginationOptions,IClaimsService claimsService)
+    public FlashcardContentService(IUnitOfWork unitOfWork,IMapper mapper, IOptions<PaginationOptions> paginationOptions,IClaimsService claimsService, ICurrentTime currentTime)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _paginationOptions = paginationOptions.Value;
         _claimsService = claimsService;
+        _currentTime = currentTime;
     }
     public async Task<IEnumerable<FlashcardContentDto>> GetFlashcards(FlashcardQueryFilter queryFilter, Guid flashcardId)
     {
@@ -79,10 +82,22 @@ public class FlashcardContentService : IFlashcardContentService
         return await _unitOfWork.FlashcardContentRepository.UpdateFlashcardContent(mapper, userId);
     }
 
-    public async Task<ResponseDto> UpdateFlashcardContents(IEnumerable<FlashcardContentDto> flashcard)
+    public async Task<ResponseDto> UpdateFlashcardContents(Guid flashcardId, IEnumerable<FlashcardContentDto> flashcard)
     {
         var userId = _claimsService.GetCurrentUserId;
-        var ids = flashcard.Select(x => x.id);
+        
+        var flashcardAdd = flashcard.Where(x => x.id is null).ToList();
+
+        var addresult = await CreateFlashcardContent(flashcardAdd, flashcardId);
+
+        if (addresult.Status == HttpStatusCode.BadRequest)
+        {
+            addresult.Message = "Failed at Create FlashcardContent";
+            return addresult;
+        }
+        
+        var flashcardUpdate = flashcard.Where(x => x.id is not null);
+        var ids = flashcardUpdate.Select(x => x.id);
         var flashcardContents = await _unitOfWork.FlashcardContentRepository.GetFlashcardContentByIds(userId, ids);
         if (!flashcardContents.Any())
         {
@@ -91,11 +106,13 @@ public class FlashcardContentService : IFlashcardContentService
 
         foreach (var flashcardContent in flashcardContents)
         {
-            var dto = flashcard.FirstOrDefault(x => x.id == flashcardContent.Id);
+            var dto = flashcardUpdate.FirstOrDefault(x => x.id == flashcardContent.Id);
             flashcardContent.FlashcardContentQuestion = dto.flashcardContentQuestion;
             flashcardContent.FlashcardContentAnswer = dto.flashcardContentAnswer;
+            flashcardContent.UpdatedAt = _currentTime.GetCurrentTime();
+            flashcardContent.UpdatedBy = _claimsService.GetCurrentFullname;
         }
-
+        
         _unitOfWork.FlashcardContentRepository.UpdateRange(flashcardContents);
         var result = await _unitOfWork.SaveChangesAsync();
         return result > 0
