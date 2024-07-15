@@ -51,7 +51,7 @@ public class PaymentsController : Controller
                 },
             },
             Mode = "payment",
-           
+
             Metadata = new Dictionary<string, string>
             {
                 { "CustomEmail", customdata }
@@ -63,7 +63,10 @@ public class PaymentsController : Controller
         var service = new SessionService();
         Session session = service.Create(options);
 
-        return Redirect(session.Url);
+        Response.Headers.Add("Access-Control-Expose-Headers", "Location, X-Pagination");
+        Response.Headers.Add("Location", session.url);
+
+        return StatusCode(302);
     }
 
     [HttpPost("webhook")]
