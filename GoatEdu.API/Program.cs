@@ -240,7 +240,7 @@ app.UseCors(builder =>
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials()
-        .WithExposedHeaders("X-Pagination");
+        .WithExposedHeaders("Location", "X-Pagination");
 });
 app.UseHttpsRedirection();
 
