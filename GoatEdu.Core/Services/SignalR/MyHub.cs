@@ -51,6 +51,7 @@ public class MyHub : Hub
     //     }
     // }
     
+    // [Authorize(Roles = $"{UserEnum.STUDENT}, {UserEnum.TEACHER}")]
     // public async Task SendAnswer(object eventData)
     // {
     //     await Clients.All.SendAnswer(new { Type = "Answer", eventData });

@@ -126,9 +126,15 @@ public class MapperConfigController : Profile
         CreateMap<LessonDto, LessonDetailResponseModel>().ReverseMap();
         
         // Theory
-        CreateMap<TheoryDto, TheoryRequestModel>().ReverseMap();
-        CreateMap<TheoryDto, TheoryUpdateModel>().ReverseMap();
-        CreateMap<TheoryDto, TheoryResponseModel>().ReverseMap();
+        CreateMap<TheoryDto, TheoryRequestModel>()
+            .ForMember(dest => dest.TheoryContentHtml, opt => opt.MapFrom(src => src.File))
+            .ReverseMap();
+        CreateMap<TheoryDto, TheoryUpdateModel>()
+            .ForMember(dest => dest.TheoryContentHtml, opt => opt.MapFrom(src => src.File))
+            .ReverseMap();
+        CreateMap<TheoryDto, TheoryResponseModel>()
+            .ForMember(dest => dest.TheoryContentHtml, opt => opt.MapFrom(src => src.File))
+            .ReverseMap();
         
         // TheoryFlashcard
         CreateMap<TheoryFlashcardContentsDto, TheoryFlashcardRequestModel>().ReverseMap();

@@ -9,8 +9,9 @@ public class TheoryRequestModel
     public string? TheoryName { get; set; }
     [Required(ErrorMessage = "Theory content is required!")]
     public string? TheoryContent { get; set; }
-    public IFormFile? FormFile { get; set; }
-    public IFormFile? ImageFile { get; set; } 
+    [Required(ErrorMessage = "Theory content html is required!")]
+    public string? TheoryContentHtml { get; set; }
+    // public IFormFile? ImageFile { get; set; } 
     [Required(ErrorMessage = "Lesson id is required!")]
     public Guid? LessonId { get; set; }
 }

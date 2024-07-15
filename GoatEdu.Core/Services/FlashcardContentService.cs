@@ -90,13 +90,13 @@ public class FlashcardContentService : IFlashcardContentService
 
         var addresult = await CreateFlashcardContent(flashcardAdd, flashcardId);
 
-        if (addresult.Status == HttpStatusCode.BadRequest)
+        if (addresult.Status != HttpStatusCode.OK)
         {
             addresult.Message = "Failed at Create FlashcardContent";
             return addresult;
         }
         
-        var flashcardUpdate = flashcard.Where(x => x.id is not null);
+        var flashcardUpdate = flashcard.Where(x => x.id != null);
         var ids = flashcardUpdate.Select(x => x.id);
         var flashcardContents = await _unitOfWork.FlashcardContentRepository.GetFlashcardContentByIds(userId, ids);
         if (!flashcardContents.Any())

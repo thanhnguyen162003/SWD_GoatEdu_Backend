@@ -19,16 +19,15 @@ public class TheoryDtoValidator : AbstractValidator<TheoryDto>
         
         RuleFor(x => x.TheoryContent)
             .NotEmpty().WithMessage("Theory content is required!")
-            .Unless(x => x.TheoryContent is null);
+            .Unless(x => x.TheoryContent is null && x.File is null);
+        
+        RuleFor(x => x.File)
+            .NotEmpty().WithMessage("Theory content is required!")
+            .Unless(x => x.File is null && x.TheoryContent is null);
         
         RuleFor(x => x.LessonId)
             .MustAsync(async (id, cancellationtoken) => await lessonRepository.LessonIdExistAsync(id))
             .WithMessage("Lesson id must exist!")
             .Unless(x => x.LessonId is null);
-        
-        RuleFor(x => x.FormFile)
-            .Must(data => data.Length > 0).WithMessage("File is empty.")
-            .PermittedExtensions(allowedContentTypes)
-            .Unless(x => x.FormFile is null);
     }
 }

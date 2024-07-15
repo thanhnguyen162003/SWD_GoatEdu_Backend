@@ -49,21 +49,21 @@ public class TheoryService : ITheoryService
 
         var theory = _mapper.Map<Theory>(dto);
 
-        if (dto.FormFile != null)
-        {
-            var form = await _cloudService.UploadFileAsync(dto.FormFile, ObjectName.THEORY);
-            theory.File = form;
-        }
-
-        if (dto.ImageFile != null)
-        {
-            var image = await _cloudinaryService.UploadAsync(dto.ImageFile);
-            if (image.Error != null)
-            {
-                return new ResponseDto(HttpStatusCode.BadRequest, image.Error.Message);
-            }
-            theory.Image = image.Url.ToString();
-        }
+        // if (dto.FormFile != null)
+        // {
+        //     var form = await _cloudService.UploadFileAsync(dto.FormFile, ObjectName.THEORY);
+        //     theory.File = form;
+        // }
+        //
+        // if (dto.ImageFile != null)
+        // {
+        //     var image = await _cloudinaryService.UploadAsync(dto.ImageFile);
+        //     if (image.Error != null)
+        //     {
+        //         return new ResponseDto(HttpStatusCode.BadRequest, image.Error.Message);
+        //     }
+        //     theory.Image = image.Url.ToString();
+        // }
 
         theory.CreatedAt = _currentTime.GetCurrentTime();
         theory.IsDeleted = false;
@@ -91,34 +91,35 @@ public class TheoryService : ITheoryService
             return new ResponseDto(HttpStatusCode.NotFound, "Theory not found!");
         }
         
-        if (dto.FormFile != null)
-        {
-            var objectName = ExtractObjectName(theory.File);
-            if (objectName is null)
-            {
-                return new ResponseDto(HttpStatusCode.BadRequest, "File is not found");
-            }
-            await _cloudService.DeleteFileAsync(objectName);
-            var form = await _cloudService.UploadFileAsync(dto.FormFile, ObjectName.THEORY);
-            if (form is null)
-            {
-                return new ResponseDto(HttpStatusCode.BadRequest, "Upload File Failed!");
-            }
-            theory.File = form;
-        }
-
-        if (dto.ImageFile != null)
-        {
-            var image = await _cloudinaryService.UploadAsync(dto.ImageFile);
-            if (image.Error != null)
-            {
-                return new ResponseDto(HttpStatusCode.BadRequest, image.Error.Message);
-            }
-            theory.Image = image.Url.ToString();
-        }
+        // if (dto.FormFile != null)
+        // {
+        //     var objectName = ExtractObjectName(theory.File);
+        //     if (objectName is null)
+        //     {
+        //         return new ResponseDto(HttpStatusCode.BadRequest, "File is not found");
+        //     }
+        //     await _cloudService.DeleteFileAsync(objectName);
+        //     var form = await _cloudService.UploadFileAsync(dto.FormFile, ObjectName.THEORY);
+        //     if (form is null)
+        //     {
+        //         return new ResponseDto(HttpStatusCode.BadRequest, "Upload File Failed!");
+        //     }
+        //     theory.File = form;
+        // }
+        //
+        // if (dto.ImageFile != null)
+        // {
+        //     var image = await _cloudinaryService.UploadAsync(dto.ImageFile);
+        //     if (image.Error != null)
+        //     {
+        //         return new ResponseDto(HttpStatusCode.BadRequest, image.Error.Message);
+        //     }
+        //     theory.Image = image.Url.ToString();
+        // }
         
         theory.TheoryName = dto.TheoryName ?? theory.TheoryName;
         theory.TheoryContent = dto.TheoryContent ?? theory.TheoryContent;
+        theory.File = dto.File ?? theory.File;
         theory.UpdatedAt = _currentTime.GetCurrentTime();
         
         _unitOfWork.TheoryRepository.Update(theory);
