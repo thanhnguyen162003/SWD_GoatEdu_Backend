@@ -14,6 +14,7 @@ using GoatEdu.Core.Services.SignalR;
 using Infrastructure;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace GoatEdu.Core.Services;
 
@@ -67,10 +68,10 @@ public class AnswerService : IAnswerService
         {
             return new ResponseDto(HttpStatusCode.BadRequest, "Add Failed !");
         }
-        
-        await _hubContext.Clients.All.SendAsync("Answer", mapper);
-        return new ResponseDto(HttpStatusCode.OK, "Add Successfully !");
 
+        var answerNew = JsonConvert.SerializeObject(mapper);
+        await _hubContext.Clients.All.SendAsync("Answer", answerNew);
+        return new ResponseDto(HttpStatusCode.OK, "Add Successfully !");
     }
 
     public async Task<ResponseDto> DeleteAnswer(Guid answerId)
