@@ -29,7 +29,7 @@ public class PaymentsController : Controller
 
     [Authorize]
     [HttpPost("create-checkout-session")]
-    public ActionResult CreateCheckoutSession()
+    public ActionResult<string> CreateCheckoutSession()
     {
         var customdata = _claimsService.GetCurrentUsername;
         var options = new SessionCreateOptions
@@ -51,7 +51,7 @@ public class PaymentsController : Controller
                 },
             },
             Mode = "payment",
-           
+
             Metadata = new Dictionary<string, string>
             {
                 { "CustomEmail", customdata }
@@ -62,8 +62,7 @@ public class PaymentsController : Controller
 
         var service = new SessionService();
         Session session = service.Create(options);
-
-        return Redirect(session.Url);
+        return Content(session.Url, "text/plain");
     }
 
     [HttpPost("webhook")]
