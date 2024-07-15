@@ -29,7 +29,7 @@ public class PaymentsController : Controller
 
     [Authorize]
     [HttpPost("create-checkout-session")]
-    public ActionResult CreateCheckoutSession()
+    public ActionResult<string> CreateCheckoutSession()
     {
         var customdata = _claimsService.GetCurrentUsername;
         var options = new SessionCreateOptions
@@ -62,11 +62,7 @@ public class PaymentsController : Controller
 
         var service = new SessionService();
         Session session = service.Create(options);
-
-        Response.Headers.Add("Access-Control-Expose-Headers", "Location, X-Pagination");
-        Response.Headers.Add("Location", session.Url);
-
-        return StatusCode(302);
+        return Content(session.Url, "text/plain");
     }
 
     [HttpPost("webhook")]
