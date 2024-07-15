@@ -10,6 +10,8 @@ public interface IModeratorService
     Task<ResponseDto> ApprovedDiscussion(Guid discussionId);
     Task<PagedList<SubjectDto>> GetSubjectByClass(SubjectQueryFilter queryFilter, string classes);
     Task<SubjectDto> GetSubjectBySubjectId(Guid id);
+    Task<PagedList<SubjectDto>> GetAllSubjects(SubjectQueryFilter queryFilter);
+
     
 
 }

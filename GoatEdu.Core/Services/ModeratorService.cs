@@ -67,7 +67,7 @@ public class ModeratorService : IModeratorService
             queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
         queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
 
-        var listSubject = await _unitOfWork.SubjectRepository.GetSubjectByClass(classes, queryFilter);
+        var listSubject = await _unitOfWork.ModeratorRepository.GetSubjectByClass(classes, queryFilter);
 
         if (!listSubject.Any())
         {
@@ -80,10 +80,29 @@ public class ModeratorService : IModeratorService
 
     public async Task<SubjectDto> GetSubjectBySubjectId(Guid id)
     {
-        var subject = await _unitOfWork.SubjectRepository.GetSubjectBySubjectId(id);
+        var subject = await _unitOfWork.ModeratorRepository.GetSubjectBySubjectId(id);
         
         var subjectDto = _mapper.Map<SubjectDto>(subject);
         
         return subjectDto;
+    }
+
+    public async Task<PagedList<SubjectDto>> GetAllSubjects(SubjectQueryFilter queryFilter)
+    {
+        queryFilter.page_number =
+            queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
+        queryFilter.page_size = queryFilter.page_size == 0 ? _paginationOptions.DefaultPageSize : queryFilter.page_size;
+
+        var listSubject = await _unitOfWork.ModeratorRepository.GetAllSubjects(queryFilter);
+
+        if (!listSubject.Any())
+        {
+            return new PagedList<SubjectDto>(new List<SubjectDto>(), 0, 0, 0);
+        }
+
+        var mapperList = _mapper.Map<List<SubjectDto>>(listSubject);
+        
+        return PagedList<SubjectDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);
+        
     }
 }

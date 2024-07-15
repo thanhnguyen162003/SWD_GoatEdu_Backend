@@ -66,7 +66,17 @@ public class ModeratorRepository : IModeratorRepository
         subjects = ApplySorting(subjects, queryFilter);
         return await subjects.ToListAsync();
     }
-    
+
+    public async Task<IEnumerable<Subject>> GetAllSubjects(SubjectQueryFilter queryFilter)
+    {
+        var subjects = _context.Subjects
+            .Include(x => x.Chapters.Where(chapter => chapter.IsDeleted == false))
+            .AsQueryable();
+        subjects = ApplyFilterSortAndSearch(subjects, queryFilter);
+        subjects = ApplySorting(subjects, queryFilter);
+        return await subjects.ToListAsync();
+    }
+
     private IQueryable<Subject> ApplyFilterSortAndSearch(IQueryable<Subject> subjects, SubjectQueryFilter queryFilter)
     {
         subjects = subjects.Where(x => x.IsDeleted == false);

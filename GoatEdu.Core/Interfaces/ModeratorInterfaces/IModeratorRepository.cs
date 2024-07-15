@@ -9,5 +9,5 @@ public interface IModeratorRepository
     Task<Guid?> ApprovedDiscussions(Guid discussionId);
     Task<SubjectDto> GetSubjectBySubjectId(Guid id);
     Task<IEnumerable<Subject>> GetSubjectByClass(string classes, SubjectQueryFilter queryFilter);
-
+    Task<IEnumerable<Subject>> GetAllSubjects(SubjectQueryFilter queryFilter);
 }

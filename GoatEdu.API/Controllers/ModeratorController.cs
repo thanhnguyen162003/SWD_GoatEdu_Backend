@@ -18,13 +18,11 @@ namespace GoatEdu.API.Controllers;
 public class ModeratorController : ControllerBase
 {
     private readonly IModeratorService _moderatorService;
-    private readonly ISubjectService _subjectService;
     private readonly IMapper _mapper;
 
-    public ModeratorController(IModeratorService moderatorService, ISubjectService subjectService, IMapper mapper)
+    public ModeratorController(IModeratorService moderatorService, IMapper mapper)
     {
         _moderatorService = moderatorService;
-        _subjectService = subjectService;
         _mapper = mapper;
     }
 
@@ -45,7 +43,7 @@ public class ModeratorController : ControllerBase
     [HttpGet("subject/class")]
     public async Task<IEnumerable<SubjectResponseModel>> GetAllSubject([FromQuery, Required] SubjectQueryFilter queryFilter, [FromQuery,Required] string classes)
     {
-        var listSubject = await _subjectService.GetSubjectByClass(queryFilter, classes);
+        var listSubject = await _moderatorService.GetSubjectByClass(queryFilter, classes);
         var metadata = new Metadata
         {
             TotalCount = listSubject.TotalCount,
@@ -65,8 +63,31 @@ public class ModeratorController : ControllerBase
     [HttpGet("subject/{id}")]
     public async Task<SubjectDetailResponseModel> GetSubjectById(Guid id)
     {
-        var subject = await _subjectService.GetSubjectBySubjectId(id);
+        var subject = await _moderatorService.GetSubjectBySubjectId(id);
         var mapper = _mapper.Map<SubjectDetailResponseModel>(subject);
+        return mapper;
+    }
+    
+    [HttpGet]
+    public async Task<IEnumerable<SubjectResponseModel>> GetAllSubject([FromQuery, Required] SubjectQueryFilter queryFilter)
+    {
+        var listSubject = await _moderatorService.GetAllSubjects(queryFilter);
+        
+        
+        var metadata = new Metadata
+        {
+            TotalCount = listSubject.TotalCount,
+            PageSize = listSubject.PageSize,
+            CurrentPage = listSubject.CurrentPage,
+            TotalPages = listSubject.TotalPages,
+            HasNextPage = listSubject.HasNextPage,
+            HasPreviousPage = listSubject.HasPreviousPage
+        };
+        
+        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+        
+        var mapper = _mapper.Map<IEnumerable<SubjectResponseModel>>(listSubject);
+        
         return mapper;
     }
 }
