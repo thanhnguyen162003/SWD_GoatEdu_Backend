@@ -75,21 +75,3 @@ This project is licensed under the MIT License - see the [LICENSE.md]() [main]()
 file for details.
 
 ## Documented
-How to use stripe payment in fe:
-First you need to send request to stripe to get tokenId with published key with card <img width="448" alt="image" src="https://github.com/huscongao1692003/SWD_GoatEdu_Backend/assets/72685335/119e00bf-c0cf-4584-8ca7-faa772be10d0">  <img width="419" alt="image" src="https://github.com/huscongao1692003/SWD_GoatEdu_Backend/assets/72685335/54df3ed1-50fd-4418-98f1-143c593939e4"> 
-<img width="642" alt="image" src="https://github.com/huscongao1692003/SWD_GoatEdu_Backend/assets/72685335/71170c04-e45c-4e5d-a765-2e7a7a82b825">
-this is example in js file. then use that tokenId , send the request to backend /api/stripe/customer with fomat 
-{
-  "stripeToken": "tok_1EHT7e2eZvKYlo2CljWykUEn",
-  "email": "john.doe@example.com",
-  "name": "John Doe"
-}
-then the response will have customerId.
-<img width="350" alt="image" src="https://github.com/huscongao1692003/SWD_GoatEdu_Backend/assets/72685335/fa94d858-4152-4847-a821-5deb30a5d9f4">
-save that for later request, for the charge payment.
-If user pay some things call the api/stripe/charge and add that customerId to it, by fomat <img width="216" alt="image" src="https://github.com/huscongao1692003/SWD_GoatEdu_Backend/assets/72685335/049d8ed3-a6b7-4577-9e38-7afc6dad2ac2">
-the backend will automatic save your transtraction.
-
-
-
-
