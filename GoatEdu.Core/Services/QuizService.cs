@@ -52,6 +52,7 @@ public class QuizService : IQuizService
 
         quiz.CreatedAt = _currentTime.GetCurrentTime();
         quiz.ChapterId = chapterId;
+        quiz.IsDeleted = false;
 
         await _unitOfWork.QuizRepository.AddAsync(quiz);
         var result = await _unitOfWork.SaveChangesAsync();
@@ -80,6 +81,7 @@ public class QuizService : IQuizService
 
         quiz.CreatedAt = _currentTime.GetCurrentTime();
         quiz.LessonId = lessonId;
+        quiz.IsDeleted = false;
 
         await _unitOfWork.QuizRepository.AddAsync(quiz);
         var result = await _unitOfWork.SaveChangesAsync();
@@ -108,7 +110,8 @@ public class QuizService : IQuizService
 
         quiz.CreatedAt = _currentTime.GetCurrentTime();
         quiz.ChapterId = subjectId;
-
+        quiz.IsDeleted = false;
+        
         await _unitOfWork.QuizRepository.AddAsync(quiz);
         var result = await _unitOfWork.SaveChangesAsync();
         return result > 0
@@ -170,6 +173,7 @@ public class QuizService : IQuizService
         {
             return new PagedList<QuizDto>(new List<QuizDto>(), 0, 0, 0);
         }
+        
         var mapperList = _mapper.Map<List<QuizDto>>(quizzes);
         
         return PagedList<QuizDto>.Create(mapperList, queryFilter.page_number, queryFilter.page_size);

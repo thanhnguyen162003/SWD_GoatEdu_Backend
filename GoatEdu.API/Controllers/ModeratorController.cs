@@ -61,7 +61,7 @@ public class ModeratorController : ControllerBase
     }
     
     [HttpGet("subject/{id}")]
-    public async Task<SubjectDetailResponseModel> GetSubjectById(Guid id)
+    public async Task<SubjectDetailResponseModel> GetSubjectById([Required] Guid id)
     {
         var subject = await _moderatorService.GetSubjectBySubjectId(id);
         var mapper = _mapper.Map<SubjectDetailResponseModel>(subject);
@@ -69,6 +69,7 @@ public class ModeratorController : ControllerBase
     }
     
     [HttpGet]
+    [Route("subject")]
     public async Task<IEnumerable<SubjectResponseModel>> GetAllSubject([FromQuery, Required] SubjectQueryFilter queryFilter)
     {
         var listSubject = await _moderatorService.GetAllSubjects(queryFilter);
