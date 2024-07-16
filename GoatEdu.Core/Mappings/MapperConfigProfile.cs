@@ -24,7 +24,7 @@ public class MapperConfigProfile : Profile
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         
         CreateMap<Subject, SubjectDto>()
-            .ForMember(dest => dest.NumberOfChapters, opt => opt.MapFrom(src => src.Chapters.Count))
+            .ForMember(dest => dest.NumberOfChapters, opt => opt.MapFrom(src => src.Chapters.Count(x => x.IsDeleted == false)))
             .ForMember(dest => dest.Chapters, opt => opt.MapFrom(src => src.Chapters))
             .ReverseMap();
 
@@ -33,7 +33,7 @@ public class MapperConfigProfile : Profile
         CreateMap<FlashcardContent, FlashcardContentDto>().ReverseMap();
         
         CreateMap<Flashcard, FlashcardDto>()
-            .ForMember(dest => dest.numberOfFlashcardContent, opt => opt.MapFrom(src => src.FlashcardContents.Count))
+            .ForMember(dest => dest.numberOfFlashcardContent, opt => opt.MapFrom(src => src.FlashcardContents.Count(x => x.IsDeleted == false)))
             .ForMember(dest => dest.fullName, opt => opt.MapFrom(src => src.User.Fullname))
             .ForMember(dest => dest.userImage, opt => opt.MapFrom(src => src.User.Image))
             .ForMember(dest => dest.subjectName, opt => opt.MapFrom(src => src.Subject.SubjectName))
@@ -64,7 +64,7 @@ public class MapperConfigProfile : Profile
             .ForMember(dest => dest.Role, opt => opt.Ignore());
         
         CreateMap<Discussion, DiscussionDto>()
-            .ForMember(dest => dest.CommentCount, opt => opt.MapFrom(src => src.Answers.Count))
+            .ForMember(dest => dest.CommentCount, opt => opt.MapFrom(src => src.Answers.Count(x => x.IsDeleted == false)))
             .ForPath(dest => dest.UserAndSubject.UserId, opt => opt.MapFrom(src => src.UserId))
             .ForPath(dest => dest.UserAndSubject.UserName, opt => opt.MapFrom(src => src.User.Username))
             .ForPath(dest => dest.UserAndSubject.FullName, opt => opt.MapFrom(src => src.User.Fullname))
@@ -99,13 +99,13 @@ public class MapperConfigProfile : Profile
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); ;
         
         CreateMap<Lesson, LessonDto>()
-            .ForMember(dest => dest.QuizCount, opt => opt.MapFrom(src => src.Quizzes.Count))
-            .ForMember(dest => dest.TheoryCount, opt => opt.MapFrom(src => src.Theories.Count))
+            .ForMember(dest => dest.QuizCount, opt => opt.MapFrom(src => src.Quizzes.Count(x => x.IsDeleted == false)))
+            .ForMember(dest => dest.TheoryCount, opt => opt.MapFrom(src => src.Theories.Count(x => x.IsDeleted == false)))
             .ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         
         CreateMap<Theory, TheoryDto>()
-            .ForMember(dest => dest.FlashcardCount, opts => opts.MapFrom(src => src.TheoryFlashCardContents.Count))
+            .ForMember(dest => dest.FlashcardCount, opts => opts.MapFrom(src => src.TheoryFlashCardContents.Count(x => x.IsDeleted == false)))
             .ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
@@ -114,7 +114,7 @@ public class MapperConfigProfile : Profile
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
         CreateMap<Quiz, QuizDto>()
-            .ForMember(dest => dest.QuestionCount, opts => opts.MapFrom(src => src.QuestionInQuizzes.Count))
+            .ForMember(dest => dest.QuestionCount, opts => opts.MapFrom(src => src.QuestionInQuizzes.Count(x => x.IsDeleted == false)))
             .ForMember(dest => dest.QuestionInQuizzes, opts => opts.MapFrom(src => src.QuestionInQuizzes))
             .ReverseMap()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); ;
