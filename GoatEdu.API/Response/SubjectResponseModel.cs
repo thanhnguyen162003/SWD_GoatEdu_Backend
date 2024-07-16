@@ -17,4 +17,5 @@ public class SubjectResponseModel
     public int? NumberOfChapters { get; set; }
     public int NumberOfEnrollment { get; set; }
     public bool IsEnroll { get; set; } 
+    public bool? IsDeleted { get; set; }
 }
