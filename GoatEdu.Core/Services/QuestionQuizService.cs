@@ -18,7 +18,8 @@ public class QuestionQuizService : IQuestionQuizService
     private readonly IMapper _mapper;
     private readonly IValidator<QuestionInQuizDto> _validator;
 
-    public QuestionQuizService(IUnitOfWork unitOfWork, ICurrentTime currentTime, IMapper mapper, IValidator<QuestionInQuizDto> validator)
+    public QuestionQuizService(IUnitOfWork unitOfWork, ICurrentTime currentTime, IMapper mapper,
+        IValidator<QuestionInQuizDto> validator)
     {
         _unitOfWork = unitOfWork;
         _currentTime = currentTime;
@@ -43,7 +44,7 @@ public class QuestionQuizService : IQuestionQuizService
         {
             return new ResponseDto(HttpStatusCode.NotFound, "Quiz not found!");
         }
-        
+
         var mapper = dtos.Select(x =>
         {
             var questionInQuiz = _mapper.Map<QuestionInQuiz>(x);
@@ -62,6 +63,12 @@ public class QuestionQuizService : IQuestionQuizService
 
     public async Task<ResponseDto> UpdateQuestionQuiz(Guid quizId, List<QuestionInQuizDto> dtos)
     {
+        var quiz = await _unitOfWork.QuizRepository.QuizIdExistAsync(quizId);
+        if (quiz is false)
+        {
+            return new ResponseDto(HttpStatusCode.NotFound, "Quiz not found!");
+        }
+        
         foreach (var data in dtos)
         {
             var validationResult = await _validator.ValidateAsync(data);
@@ -71,37 +78,66 @@ public class QuestionQuizService : IQuestionQuizService
                 return new ResponseDto(HttpStatusCode.BadRequest, "Validation Errors", errors);
             }
         }
-        
-        var quiz = await _unitOfWork.QuizRepository.QuizIdExistAsync(quizId);
-        if (quiz is false)
-        {
-            return new ResponseDto(HttpStatusCode.NotFound, "Quiz not found!");
-        }
 
-        var guids = dtos.Select(x => x.Id);
-        var questions = await _unitOfWork.QuestionQuizRepository.GetQuestionInQuizByIds(quizId, guids);
-
-        if (!questions.Any())
+        await _unitOfWork.BeginTransactionAsync();
+        try
         {
-            return new ResponseDto(HttpStatusCode.NotFound, "Quiz not have any question to update!");
-        }
-        
-        foreach (var data in questions)
-        {
-            var dto = dtos.FirstOrDefault(x => x.Id == data.Id);
-            data.QuizQuestion = dto.QuizQuestion ?? data.QuizQuestion;
-            data.QuizAnswer1 = dto.QuizAnswer1 ?? data.QuizAnswer1;
-            data.QuizAnswer2 = dto.QuizAnswer2 ?? data.QuizAnswer2;
-            data.QuizAnswer3 = dto.QuizAnswer3 ?? data.QuizAnswer3;
-            data.QuizCorrect = dto.QuizCorrect ?? data.QuizCorrect;
-            data.UpdatedAt = _currentTime.GetCurrentTime();
-        }
+            var questionAdd = dtos.Where(x => x.Id == Guid.Empty).ToList();
+            if (questionAdd.Any())
+            {
+                foreach (var data in questionAdd)
+                {
+                    data.Id = null;
+                }
 
-        _unitOfWork.QuestionQuizRepository.UpdateRange(questions);
-        var result = await _unitOfWork.SaveChangesAsync();
-        return result > 0
-            ? new ResponseDto(HttpStatusCode.OK, "Update Questions Successfully!")
-            : new ResponseDto(HttpStatusCode.BadRequest, "Update Questions Failed!");
+                var addResult = await CreateQuestionQuiz(quizId, questionAdd);
+                if (addResult.Status != HttpStatusCode.OK)
+                {
+                    await _unitOfWork.RollbackTransactionAsync();
+                    addResult.Message = "Failed at Create New Questions";
+                    return addResult;
+                }
+            }
+
+            var questionUpdate = dtos.Except(questionAdd).ToList();
+            
+            var guids = questionUpdate.Select(x => x.Id);
+            
+            var questions = await _unitOfWork.QuestionQuizRepository.GetQuestionInQuizByIds(quizId, guids);
+
+            if (!questions.Any())
+            {
+                return new ResponseDto(HttpStatusCode.NotFound, "Quiz not have any question to update!");
+            }
+
+            foreach (var data in questions)
+            {
+                var dto = dtos.FirstOrDefault(x => x.Id == data.Id);
+                data.QuizQuestion = dto.QuizQuestion ?? data.QuizQuestion;
+                data.QuizAnswer1 = dto.QuizAnswer1 ?? data.QuizAnswer1;
+                data.QuizAnswer2 = dto.QuizAnswer2 ?? data.QuizAnswer2;
+                data.QuizAnswer3 = dto.QuizAnswer3 ?? data.QuizAnswer3;
+                data.QuizCorrect = dto.QuizCorrect ?? data.QuizCorrect;
+                data.UpdatedAt = _currentTime.GetCurrentTime();
+            }
+
+            _unitOfWork.QuestionQuizRepository.UpdateRange(questions);
+            var result = await _unitOfWork.SaveChangesAsync();
+            
+            if (result <= 0)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                return new ResponseDto(HttpStatusCode.BadGateway, "Update Failed!");
+            }
+            
+            await _unitOfWork.CommitTransactionAsync();
+            return new ResponseDto(HttpStatusCode.OK, "Update Successfully!");
+        }
+        catch (Exception)
+        {
+            await _unitOfWork.RollbackTransactionAsync();
+            return new ResponseDto(HttpStatusCode.InternalServerError, "Server Error");
+        }
     }
 
     public async Task<ResponseDto> DeleteQuestionQuiz(IEnumerable<Guid> guids)
