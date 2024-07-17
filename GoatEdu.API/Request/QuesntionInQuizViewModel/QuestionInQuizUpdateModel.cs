@@ -4,7 +4,6 @@ namespace GoatEdu.API.Request;
 
 public class QuestionInQuizUpdateModel
 {
-    [Required(ErrorMessage = "Id is required!")]
     public string? Id { get; set; }
     public string? QuizQuestion { get; set; }
     public string? QuizAnswer1 { get; set; }
