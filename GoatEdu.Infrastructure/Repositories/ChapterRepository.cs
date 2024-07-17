@@ -31,6 +31,7 @@ public class ChapterRepository : BaseRepository<Chapter>, IChapterRepository
         return await _entities
             .AsNoTracking()
             .Where(c => c.SubjectId == subject_id && c.IsDeleted == false)
+            .OrderBy(x => x.ChapterLevel)
             .ToListAsync();
     }
 
