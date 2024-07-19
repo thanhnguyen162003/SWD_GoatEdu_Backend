@@ -18,7 +18,7 @@ public class QuizRepository : BaseRepository<Quiz>, IQuizRepository
 
     public async Task<IEnumerable<Quiz>> GetQuizByFilters(QuizQueryFilter queryFilter)
     {
-        var quizzes = _entities.Include(x => x.QuestionInQuizzes).AsNoTracking().AsSplitQuery().AsQueryable();
+        var quizzes = _entities.Include(x => x.QuestionInQuizzes.Where(q => q.IsDeleted == false)).AsNoTracking().AsSplitQuery().AsQueryable();
         quizzes = ApplyFilterSortAndSearch(quizzes, queryFilter);
         quizzes = ApplySorting(quizzes, queryFilter);
         return await quizzes.ToListAsync();
@@ -26,7 +26,9 @@ public class QuizRepository : BaseRepository<Quiz>, IQuizRepository
 
     public async Task<Quiz?> GetQuizById(Guid quizId)
     {
-        return await _entities.Include(x => x.QuestionInQuizzes).FirstOrDefaultAsync(x => x.Id == quizId);
+        return await _entities
+            .Include(x => x.QuestionInQuizzes.Where(q => q.IsDeleted == false))
+            .FirstOrDefaultAsync(x => x.Id == quizId);
     }
 
     public async Task<bool> QuizIdExistAsync(Guid quizId)
