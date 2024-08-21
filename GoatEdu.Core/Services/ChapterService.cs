@@ -27,7 +27,6 @@ public class ChapterService : IChapterService
         _paginationOptions = paginationOptions.Value;
         _validator = validator;
     }
-
     public async Task<ICollection<ChapterDto>> GetChapters(ChapterQueryFilter queryFilter)
     {
         queryFilter.page_number = queryFilter.page_number == 0 ? _paginationOptions.DefaultPageNumber : queryFilter.page_number;
